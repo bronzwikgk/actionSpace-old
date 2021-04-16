@@ -1,40 +1,51 @@
-#actionSpaceContainer{
-    height: 100%;
-   
-}
-
-#actionSpace{
-
-    flex-direction: column;
-    padding:1em;
-    width: 54%;
-    height: inherit;
-    margin: auto;
-    background-color: var(--light);
-    /*
+/*
+#actionSpace:hover{
+  /*
     https://shadows.brumm.af/
     */
-
+/*
  box-shadow:
   0 6.7px 5px rgba(0, 0, 0, 0.048),
   0 14px 40px rgba(0, 0, 0, 0.07)
 ;
 
 
-
 }
-[contenteditable = 'true']:focus {
-   box-shadow:
-  0 2.8px 2.2px rgba(0, 0, 0, 0.02),
-  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
-  0 12.5px 10px rgba(0, 0, 0, 0.035),
-  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
-  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
-  0 100px 80px rgba(0, 0, 0, 0.07);
 
+*/
+#actionSpace{
+    height: inherit;
+    flex-direction: column;
+    padding:1em;
+    margin: auto;
+    width: 100%; 
+    background-color: var(--white);
+}
+
+#logo{
+   height: 34px;
+}
+a,button{
+    color: var(--gray-dark);
+    cursor: pointer;
+    text-decoration: none;
+    padding-left:  .8em;
+    padding-right:  .8em;
+    background-color: transparent;
+    border: none; 
+}
+a{
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+#actionSpace:hover {
+ box-shadow:
+  0 6.7px 5px rgba(0, 0, 0, 0.048),
+  0 14px 40px rgba(0, 0, 0, 0.07)
+;
     cursor: text;
 }
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -74,4 +85,97 @@ input {
 }
 #output:hover::before{
   visibility: visible;
+}
+
+
+#actionSearch{
+    padding-left: 21px;
+    width: 34vw;
+    height: 34px;
+    align-self: center;
+    background-color: var(--gray);
+    color: var(--light);
+    font-family: 'poppins';
+
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.icon{
+    padding: 0.2em;
+}
+
+.item:hover{
+    background-color:var(--blue);
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 1px;
+  background-color: #f1f1f1;
+  min-width:221px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 99;
+}
+
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+.parent:hover .nested{display: block;}
+
+.parent {
+  
+    cursor: pointer;
+    -webkit-user-select: none;
+    /* Safari 3.1+ */
+    -moz-user-select: none;
+    /* Firefox 2+ */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+}
+.nested{
+ 
+    padding-left: 1em;
+}
+.parent::before {
+        content: "\25B6";
+        color:var(--gray-dark);
+        display: inline-block;
+        margin-right: 6px;
+        }
+
+.parent-down::before {
+    -ms-transform: rotate(90deg);
+    /* IE 9 */
+    -webkit-transform: rotate(90deg);
+    /* Safari */
+    transform: rotate(90deg);
+}
+.nested {
+    display: none;
+}
+.active {
+            display: block;
+       }
+
+#sideBar {
+    flex-basis: 100%;
+    padding:1em;
+    resize: horizontal;
+    overflow: hidden;
+    min-width: 221px;
+    width: 13% !important;
+    max-width: 18%;  
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+   
 }

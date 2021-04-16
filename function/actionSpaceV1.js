@@ -185,8 +185,8 @@ class Caret extends ActionSpaceEditor {
         }
     }
 }
-console.log("I Am Loaded", actionSpaceModel)
-var newEntity = new Entity(actionSpaceModel,document.createElement('div'));
+var userDashboardInstace = userDashboard;
+console.log("I Am Loaded", userDashboardInstace)
+var newEntity = new Entity(userDashboard,document.createElement('div'));
 console.log("here",newEntity.entity, window['actionSpace']);
 var actionSpaceEditorInstance = new ActionSpaceEditor(window['actionSpace'], newEntity.entity);
-console.log(window[ActionSpaceEditor],actionSpaceEditorInstance);
