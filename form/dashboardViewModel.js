@@ -1,9 +1,11 @@
 
 var leftSideNavBar = {
     name: 'section',
-    id:'leftSideNavBar',
+    id: 'leftSideNavBar',
+    class:'darkTheme',
     section1: {
         name: 'span',
+        class: '',
         itemCollection1: {
             name: 'a',
             id:'recentFilesShortCut',
@@ -678,8 +680,8 @@ var userDashboardTopNav = {
 
 var userDashboard = {
     userDashboard: {
-    name: 'div',
-        class: 'container full-width row full-height' ,
+        name: 'div',
+        class: 'container full-width row full-height',
         id: 'userDashboard',
         topNav: { name: 'div', class: 'container row full-width ', id: 'topNav',userDashboardTopNav },
         workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer',userDashboardWorkSpaceBody },

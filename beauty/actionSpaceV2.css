@@ -1,11 +1,8 @@
 
-#actionSpace{
-   
-  
-  
+#actionSpace{  
     margin: auto;
     width: 100%; 
-    height: inherit;
+    height: 100%;
     background-color: var(--white);
 }
 #logo{
@@ -22,8 +19,8 @@ a,button{
     border: none; 
 }
 a{
-    margin-left: .5em;
-    margin-right: .5em;
+    margin-left: .3em;
+    margin-right: .3em;
 }
 
 .dropdown-content {
@@ -78,6 +75,16 @@ input {
     font-family: 'poppins';
 
 }
+#workSpaceBody{
+    height: 100%;
+    padding-top: 21px;
+    padding-right: 21px;
+   padding-left: 21px;
+}
+#recentStoriesCollectionView{
+    margin-top: 21px;
+   
+}
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -88,9 +95,7 @@ input {
     padding: 0.1em;
 }
 
-.item:hover{
-    background-color:var(--blue);
-}
+
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
@@ -145,18 +150,25 @@ input {
 .active {
             display: block;
        }
-
+/*
 #sideBar {
     flex-basis: 100%;
     padding:1em;
     resize: horizontal;
     overflow: hidden;
     min-width: 221px;
-    width: 13% !important;
+    width: 260px !important;
     height: 100%;
     max-width: 18%;  
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-   
+     
+}
+.sidebar {
+    min-width: 260px;
+    max-width: 260px;
+    transition: margin-left .35s ease-in-out,left .35s ease-in-out,margin-right .35s ease-in-out,right .35s ease-in-out;
+    direction: ltr;
+    background: #293042;
 }

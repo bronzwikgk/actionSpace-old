@@ -24,5 +24,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=Montserrat&family=Open+Sans&family=Poppins"
         rel="stylesheet">
+        <script>
+            window.onload = function () {
+                var loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+                console.log(window.location.pathname, 'Page load time is ' + loadTime);
+            }
+
+        </script>
 </body>
 </html>
