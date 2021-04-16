@@ -1,31 +1,17 @@
-/*
-#actionSpace:hover{
-  /*
-    https://shadows.brumm.af/
-    */
-/*
- box-shadow:
-  0 6.7px 5px rgba(0, 0, 0, 0.048),
-  0 14px 40px rgba(0, 0, 0, 0.07)
-;
 
-
-}
-
-*/
 #actionSpace{
    
   
   
     margin: auto;
     width: 100%; 
-
+    height: inherit;
     background-color: var(--white);
 }
-
 #logo{
    height: 34px;
 }
+
 a,button{
     color: var(--gray-dark);
     cursor: pointer;
@@ -40,13 +26,6 @@ a{
     margin-right: .5em;
 }
 
-#actionSpace:hover {
- box-shadow:
-  0 6.7px 5px rgba(0, 0, 0, 0.048),
-  0 14px 40px rgba(0, 0, 0, 0.07)
-;
-    cursor: text;
-}
 .dropdown-content {
   display: none;
   position: absolute;
@@ -94,7 +73,7 @@ input {
     width: 34vw;
     height: 34px;
     align-self: center;
-    background-color: var(--gray);
+    background-color: var(--light);
     color: var(--light);
     font-family: 'poppins';
 
@@ -106,7 +85,7 @@ input {
   display: inline-block;
 }
 .icon{
-    padding: 0.2em;
+    padding: 0.1em;
 }
 
 .item:hover{
@@ -174,6 +153,7 @@ input {
     overflow: hidden;
     min-width: 221px;
     width: 13% !important;
+    height: 100%;
     max-width: 18%;  
     -webkit-box-direction: normal;
     -ms-flex-direction: column;

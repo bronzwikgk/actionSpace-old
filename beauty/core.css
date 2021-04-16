@@ -10,11 +10,11 @@
 
 
    .position-left{
-       background-color: aliceblue;
+      
    }
 
    .position-right{
-       background-color: aliceblue;
+     
    }
 
    .position-sticky:{
@@ -28,11 +28,12 @@
        position: -webkit-sticky;
    }
 
-   full-width{
-background-color: blanchedalmond;
+  .full-width{
+       width: 100%;
+
 } 
-full-height{
-background-color: rebeccapurple;
+.full-height{
+    height: 100%;
 }
 .container{
   display: -webkit-box;
