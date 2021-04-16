@@ -544,7 +544,7 @@ var brand = {
     content: {
         name: 'a',
         'href': '#welcome',
-        class: 'align_center itemsContainer ',
+       // class: 'align_center itemsContainer ',
         logo: {
             'name': 'img',
             'id': 'logo',
@@ -670,22 +670,42 @@ var actionSpaceHeaderUserMenu = {
             'textContent': 'more_vert',
         } 
 }
+
 var userDashboardTopNav = {
-    name:'div',
-    class:'container align_center justify_SpaceBetween full-width',
+    name: 'div',
+   class: 'container',
     'brand': brand,
     'search': searchBar,
-    'appNav': actionSpaceHeaderUserMenu,
+   // 'appNav': actionSpaceHeaderUserMenu,
 }
-
 var userDashboard = {
     userDashboard: {
         name: 'div',
-        class: 'container full-width row full-height',
+       class: 'container full-width row full-height',
         id: 'userDashboard',
-        topNav: { name: 'div', class: 'container row full-width ', id: 'topNav',userDashboardTopNav },
+        topNav: {
+            name: 'div',
+            class: 'container row full-width ',
+            id: 'topNav', userDashboardTopNav
+        },
         workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer',userDashboardWorkSpaceBody },
   
     }
     
+}
+
+var dashBoardUserV2 = {
+    userDashboard: {
+        name: 'div',
+        class: 'container full-width row full-height',
+        id: 'userDashboard',
+        topNav: {
+            name: 'div',
+            class: 'container',
+            id: 'topNav',
+            userDashboardTopNav
+        },
+        //  workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer', userDashboardWorkSpaceBody },
+
+    }
 }

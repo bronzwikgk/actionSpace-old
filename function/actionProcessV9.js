@@ -1,7 +1,7 @@
 
 class process {
     static processReq(input, output, key, value) {
-        // console.log("process req", input, output, operate.is(input),typeof input)
+    //   console.log("process req", input, output, operate.is(input),typeof input)
         if (typeof input === 'object') {
             //  console.log("process req", input, output)
             var buffer = process.iterateObj(input, output, key);
@@ -14,9 +14,10 @@ class process {
         return buffer;
     }
     static iterateObj(input, output) {
+     //   console.log("iterate Obj",input, output);
         for (var key in input) {
             var value = input[key];
-            //  console.log("found",key,input[key])
+          //  console.log("found",key,input[key])
             if (operate.is(value) === 'Object') {
                 // console.log("Object",output);
                 var buffer = Entity.create(input, output, value.name);
