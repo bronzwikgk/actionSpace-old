@@ -559,7 +559,7 @@ var brand = {
 }
 var searchBar = {
     name: 'span',
-    class: 'container item',
+    class: 'container',
     id:'searchBarItem',
     input: {
         'name': 'input',
@@ -673,7 +673,7 @@ var actionSpaceHeaderUserMenu = {
 
 var userDashboardTopNav = {
     name: 'div',
-   class: 'container',
+   class: 'container row',
     'brand': brand,
     'search': searchBar,
    // 'appNav': actionSpaceHeaderUserMenu,
