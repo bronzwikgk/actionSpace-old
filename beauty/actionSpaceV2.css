@@ -1,69 +1,7 @@
 
-#actionSpace{  
-    margin: auto;
-    width: 100%; 
-    height: 100%;
-    background-color: var(--white);
-}
 #logo{
    height: 34px;
 }
-
-a,button{
-    color: var(--gray-dark);
-    cursor: pointer;
-    text-decoration: none;
-    padding-left:  .8em;
-    padding-right:  .8em;
-    background-color: transparent;
-    border: none; 
-}
-a{
-    margin-left: .3em;
-    margin-right: .3em;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0 3px 5px rgba(71, 71, 71, 0.121) ;
-  z-index: 25;
-   flex-direction: column;
- 
-}
-
-.dropdown:hover .dropdown-content {display: block;}
-
-
-input {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    font-size: 15px;
-    line-height: 26px;
-    padding: 4px 10px;
-    position: relative;
-    border-radius: 3px;
-    box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset;
-    cursor: text;
-    margin-top: 4px;
-    margin-bottom: 8px;
-}
-
-#output::before{
-  content: attr(id);
-  position: relative;
-  top: -1em;
-  margin-bottom: -1em;
-  visibility: hidden;
-}
-#output:hover::before{
-  visibility: visible;
-}
-
 
 #actionSearch{
     padding-left: 21px;
@@ -75,44 +13,7 @@ input {
     font-family: 'poppins';
 
 }
-#workSpaceBody{
-    height: 100%;
-    padding-top: 21px;
-    padding-right: 21px;
-   padding-left: 21px;
-}
-#recentStoriesCollectionView{
-    margin-top: 21px;
-   
-}
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-.icon{
-    padding: 0.1em;
-}
-
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  left: 1px;
-  background-color: #f1f1f1;
-  min-width:221px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 99;
-}
-
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
 .parent:hover .nested{display: block;}
 
 .parent {
@@ -150,25 +51,43 @@ input {
 .active {
             display: block;
        }
-/*
+
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+       
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 1px;
+  background-color: #f1f1f1;
+  min-width:221px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 99;
+}
+
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+.parent:hover .nested{display: block;}
+
 #sideBar {
     flex-basis: 100%;
     padding:1em;
     resize: horizontal;
     overflow: hidden;
     min-width: 221px;
-    width: 260px !important;
-    height: 100%;
+    width: 13% !important;
     max-width: 18%;  
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-     
-}
-.sidebar {
-    min-width: 260px;
-    max-width: 260px;
-    transition: margin-left .35s ease-in-out,left .35s ease-in-out,margin-right .35s ease-in-out,right .35s ease-in-out;
-    direction: ltr;
-    background: #293042;
+   
 }

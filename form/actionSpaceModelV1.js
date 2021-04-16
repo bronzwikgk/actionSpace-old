@@ -18,7 +18,7 @@ var userInputViewModel = {
 }
 var actionSpaceModel = {
     name: "div",
-    class: 'container row full- height',
+    class: 'container row full-height',
     id: uid(),
     title: {
         name: 'div',
@@ -28,7 +28,7 @@ var actionSpaceModel = {
     editor:{
         name:'div',
         id: 'actionSpaceEditor',
-        class: 'container full-width full-height',
+        class: 'container',
         contextMenu: 'contextMenu',
         insertMenu: 'insertMenu',
         userInput: userInputViewModel,
