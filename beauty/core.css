@@ -1,0 +1,62 @@
+    * {
+ outline: none;
+ box-sizing: border-box;
+  border:none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-box-sizing: border-box;
+}
+
+
+   .position-left{
+       background-color: aliceblue;
+   }
+
+   .position-right{
+       background-color: aliceblue;
+   }
+
+   .position-sticky:{
+       position: -webkit-sticky;
+   }
+
+   .position-fixed:{
+       position: -webkit-sticky;
+   }
+   .position-compact:{
+       position: -webkit-sticky;
+   }
+
+   full-width{
+background-color: blanchedalmond;
+} 
+full-height{
+background-color: rebeccapurple;
+}
+.container{
+    display: flex;
+    
+}
+
+
+/**
+[state="mouseover"]::before{
+  font-family: 'Material Icons';
+  content: "add";
+  
+  color: #1e2326;
+  position: absolute;
+  z-index: 1;
+  display: inline-block;
+
+}
+[state="mouseover"]::before{
+   font-family: 'Material Icons';
+    content: "add";
+    color: #1e2326;
+    position: absolute;
+    z-index: 1;
+    display: inline-block;
+    
+  }
+  

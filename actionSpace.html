@@ -4,78 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>actionSpace</title>
+        <link rel="stylesheet" href="beauty/core.css">
+        <link rel="stylesheet" href="beauty/theme.css">
+        <link rel="stylesheet" href="beauty/actionSpace.css">
+
+    <title>actionSpace Ver 1.O</title>
 </head>
-<style>
-      * {
-    outline: none;
-    box-sizing: border-box;
-     border:none;
-     user-select: none;
-     -webkit-user-select: none;
-     -webkit-box-sizing: border-box;
-   }
-   position-left{
-       background-color: aliceblue;
-   }
-   position-right{
-       background-color: aliceblue;
-   }
-   position-sticky:{
-       position: -webkit-sticky;
-   }
-   
-   position-fixed:{
-       position: -webkit-sticky;
-   }
-   position-compact:{
-       position: -webkit-sticky;
-   }
-html,body{
-    display: flex;
-    width: 100%;
-    height:100%;
-    
-    background-color: var(--lighter);
-    color: var(--gray-dark);
-    font-family: 'Poppins' , sans-serif;
-    list-style-type: none;
-    font: 'poppins';
-    font-size: 1.8vh;
-    font-weight: 400;
-    font-style: normal;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-  
-    
-}
-.container{
-    display: flex;
-    
-}
-#actionEditor{
 
-    flex-direction: column;
-    padding:1em;
-    width: 54%;
-    height: inherit;
-    margin: auto;
-    background-color: var(--light);
-    /*
-    https://shadows.brumm.af/
-    */
-
- box-shadow:
-  0 6.7px 5px rgba(0, 0, 0, 0.048),
-  0 14px 40px rgba(0, 0, 0, 0.07)
-;
-
-
-
-}
-</style>
 <body>
     <div id="actionSpace" class ='container'></div>
+    <script type="text/javascript" src="form/appDataSet.js"></script>
     <script type="text/javascript" src="form/actionSpaceModelV1.js"></script>
     <script type="text/javascript" src="function/operateV8.js"></script>
     <script type="text/javascript" src="function/actionProcessV9.js"></script>

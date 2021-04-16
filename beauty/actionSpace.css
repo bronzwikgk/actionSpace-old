@@ -1,0 +1,77 @@
+#actionSpaceContainer{
+    height: 100%;
+   
+}
+
+#actionSpace{
+
+    flex-direction: column;
+    padding:1em;
+    width: 54%;
+    height: inherit;
+    margin: auto;
+    background-color: var(--light);
+    /*
+    https://shadows.brumm.af/
+    */
+
+ box-shadow:
+  0 6.7px 5px rgba(0, 0, 0, 0.048),
+  0 14px 40px rgba(0, 0, 0, 0.07)
+;
+
+
+
+}
+[contenteditable = 'true']:focus {
+   box-shadow:
+  0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+  0 12.5px 10px rgba(0, 0, 0, 0.035),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+  0 100px 80px rgba(0, 0, 0, 0.07);
+
+    cursor: text;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0 3px 5px rgba(71, 71, 71, 0.121) ;
+  z-index: 25;
+   flex-direction: column;
+ 
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+
+input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 15px;
+    line-height: 26px;
+    padding: 4px 10px;
+    position: relative;
+    border-radius: 3px;
+    box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset;
+    cursor: text;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+#output::before{
+  content: attr(id);
+  position: relative;
+  top: -1em;
+  margin-bottom: -1em;
+  visibility: hidden;
+}
+#output:hover::before{
+  visibility: visible;
+}

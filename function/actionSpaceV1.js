@@ -1,9 +1,9 @@
 class ActionSpaceEditor{
-    constructor(entity) {
-       
-      
-        this.entityCollection = JSON.parse(localStorage.getItem('entityCollection')) || new WeakSet();
-  
+    constructor(parentElement, editor) {
+        console.log(parentElement,editor)
+        this._parentElement = parentElement;
+        this._parentElement.appendChild(editor);
+      //  this.entityCollection = JSON.parse(localStorage.getItem('entityCollection')) || new WeakSet();
      //   this._entity.push(entity);
         console.log('Action Space Editor')
         //        this._entity[entity]['caret'] = new Caret(window.Selection());
@@ -185,8 +185,8 @@ class Caret extends ActionSpaceEditor {
         }
     }
 }
-console.log("I Am Loaded")
-var newEntity = new Entity(actionSpaceModel);
-console.log(newEntity);
-var actionSpaceEditorInstance = new ActionSpaceEditor(window[ActionSpaceEditor]);
+console.log("I Am Loaded", actionSpaceModel)
+var newEntity = new Entity(actionSpaceModel,document.createElement('div'));
+console.log("here",newEntity.entity, window['actionSpace']);
+var actionSpaceEditorInstance = new ActionSpaceEditor(window['actionSpace'], newEntity.entity);
 console.log(window[ActionSpaceEditor],actionSpaceEditorInstance);

@@ -37,7 +37,7 @@ class Entity {
         this.entity = process.processReq(input, output);
     }
     static create(input, output, key, value,) {
-        //  console.log('create request for ',output,key)
+        console.log('create request for ',output,key)
         if (operate.is(output).includes("HTML")) { //Only HTML creation
             // var response = Object.create(output.constructor.prototype)
             if (operate.isInt(parseInt(key))) {
@@ -313,6 +313,8 @@ class Entity {
     }
     
 }
+
+
 var obj = {
     'a': [
         {
