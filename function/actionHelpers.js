@@ -132,12 +132,6 @@ class AutoComplete {
 }
 
 
-function* createIndex() {
-    let number = 1;
-    while (true)
-        yield number++;
-}
-
 
 let cache = new Map();
 
