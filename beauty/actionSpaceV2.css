@@ -1,4 +1,25 @@
 
+#navigationSection {
+    flex-basis: 100%;
+    height: 100%;
+    padding:1em;
+    resize: horizontal;
+    overflow: hidden;
+    width:max-content;
+    align-items: center;
+
+}
+
+.contextMenu{
+  
+    padding-top: 21px;
+    padding-bottom: 13px;
+    width:max-content;
+    height: max-content;
+    background-color: wheat;
+   z-index: 999;
+    
+}
 #logo{
    height: 34px;
 }

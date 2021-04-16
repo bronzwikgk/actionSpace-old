@@ -9,7 +9,7 @@ var leftSideNavBar = {
         itemCollection1: {
             name: 'a',
             id:'recentFilesShortCut',
-            class: 'item row align_center justify_SpaceBetween',
+            class: '',
             'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
             //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
             item1: {
@@ -19,7 +19,7 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'span',
-                'class': "collection_name",
+                'class': "",
                 'textContent': 'recent stories',
             }
         },
@@ -27,7 +27,7 @@ var leftSideNavBar = {
             name: 'a',
             'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('draftsCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
           //  'href': `#action:loadObject2Dom[storage,draft,workspacebody]`,
-            class: 'item row justify_SpaceBetween',
+            class: '',
             item1: {
                 name: 'i',
                 'class': "material-icons icon mr - 10",
@@ -35,14 +35,14 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'div',
-                'class': "collection_name",
+                'class': "",
                 'textContent': 'drafts',
             }
         },
         itemCollection3: {
             name: 'a',
             'href': '#create:?workspaceBody/newStory',
-            class: 'item row justify_SpaceBetween',
+            class: '',
             item1: {
                 name: 'i',
                 'class': "material-icons icon mr - 10",
@@ -96,15 +96,15 @@ var leftSideNavBar = {
         },
         sideBar_Collection_withDropDown: {
             name: 'div',
-            class: 'collection_list',
+          //  class: 'collection_list',
             collectionTitle: {
                 name: 'div',
-                class: "medium",
+           //     class: "medium",
                 textContent: "actionStories & Collections",
             },
             collectionItem: {
                 name: 'div',
-                class: "container column",
+            //    class: "container column",
                 innerHTML: `
                       <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
                       <ul class="nested container column">
@@ -246,7 +246,7 @@ var leftSideNavBar = {
             },
             collectionItem2: {
                 name: 'div',
-                class: "container column",
+              //  class: "container column",
                 id: 'sideLinks',
                 li1: {
                     name: 'ul',
