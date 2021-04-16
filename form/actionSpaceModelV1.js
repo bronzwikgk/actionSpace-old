@@ -19,7 +19,7 @@ var userInputViewModel = {
 var actionSpaceModel = {
     name: "div",
     class: 'container row full-height',
-    id: uid(),
+  //  id: uid(),
     title: {
         name: 'div',
         class: 'title h1',
