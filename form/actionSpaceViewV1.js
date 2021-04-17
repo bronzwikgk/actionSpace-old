@@ -166,17 +166,34 @@ var selectBox = {
 }
 var actionSpaceBody = {
     name: 'div',
-    class: 'container ',
+    class: 'container row full-width',
     id: 'actionSpaceBody',
-    title: {
-        name: 'h1',
-      
-        textContent: "Title",
+    editor: {
+        name: 'div',
+        id: 'actionSpaceEditor',
+        class: 'container',
+        title: {
+            name: 'h1',
+            textContent: "Title",
+        },
+        hr: {
+            name: 'hr',
+            class: 'hr row',
+
+        },
+        contextMenu: 'contextMenu',
+        insertMenu: 'insertMenu',
+        userInput: 'userInputViewModel',
+        blocks: 'actionBlocks',
+        hr: {
+            name: 'div',
+            class: 'hr',
+        },
+        footer: 'actionEditorFooter',
+
     },
-    hr: {
-        name: 'hr',
-     
-    },
+   
+   
    
     
 }

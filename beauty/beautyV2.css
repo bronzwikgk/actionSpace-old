@@ -65,6 +65,15 @@ a,button {
 
 }
 
+.row{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+ }
+ 
+.full-width{
+  width: 100%;
+ }
 a:hover{
   color: var(--darkest);
     
@@ -100,7 +109,7 @@ input{
 }
 .hr{
     width: 100%;
-    margin: auto;
+    display: block;
     border-style: dotted;
     border-bottom: --var(--gray-dark);
 }
