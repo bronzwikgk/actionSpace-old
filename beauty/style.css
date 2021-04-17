@@ -1,11 +1,49 @@
 body {margin:0;font-family:Arial}
+.container{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; 
+}
+.item{
+  display: inline;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+ }
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+.brand{
+  height:34px;
+}
 
+.full-width{
+  width: 100%;
+ }
+.full-height{
+    min-height: 100% !important;
+}
+.center{
+  margin: auto auto;
+}
+.img{
+  height:34px;
+  align-self: center;
+
+}
 .topnav {
   overflow: hidden;
   background-color: #333;
+  height: 54px;
+  align-items: center;
 }
 
-.topnav a {
+a {
   float: left;
   display: block;
   color: #f2f2f2;

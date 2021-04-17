@@ -4,7 +4,7 @@
     "manifest_version": 2,
     "description": "everythingHappenHere.InTestVO_1",
     "icons": {
-        "128": "images/icons_221x.png"
+        "128": "assets/images/icons_221x.png"
     },
     "browser_action": {
         "default_popup": "popup.html"
