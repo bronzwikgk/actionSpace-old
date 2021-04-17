@@ -673,7 +673,7 @@ var actionSpaceHeaderUserMenu = {
 
 var userDashboardTopNav = {
     name: 'div',
-   class: 'container row',
+    class: 'container row full-width justify_SpaceBetween align_center ',
     'brand': brand,
     'search': searchBar,
    // 'appNav': actionSpaceHeaderUserMenu,
