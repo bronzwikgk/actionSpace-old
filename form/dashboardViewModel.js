@@ -681,14 +681,19 @@ var userDashboardTopNav = {
 var userDashboard = {
     userDashboard: {
         name: 'div',
-       class: 'container full-width row full-height',
+        class: 'container full-width row full-height',
         id: 'userDashboard',
         topNav: {
             name: 'div',
             class: 'container row full-width ',
             id: 'topNav', userDashboardTopNav
         },
-        workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer',userDashboardWorkSpaceBody },
+        workSpaceBodyContainer: {
+            name: 'div',
+            class: 'container row full-width ',
+            id: 'workSpaceBodyContainer',
+            userDashboardWorkSpaceBody
+        },
   
     }
     
