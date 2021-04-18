@@ -31,7 +31,7 @@ class entityCollection {
 }
 class Entity {
     constructor(input, output) {
-    //    console.log("entity", input, output)
+       console.log("entity", input, output)
         this.input = input;
         this.output = output;
         this.entity = process.processReq(input, output);
@@ -107,7 +107,7 @@ class Entity {
         return response;
     }
     static set(input, output, key, value) {
-        //  console.log("setting",key, value,"in",output)
+      // console.log("setting",key, value,"in",output)
         if (operate.is(output).includes("HTML")) { //Only HTML creation
 
             if (operate.isInsideArray(key, htmlAttributesListV2)) {
@@ -317,8 +317,6 @@ class Entity {
     }
     
 }
-
-
 var obj = {
     'a': [
         {

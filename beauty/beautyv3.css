@@ -91,6 +91,11 @@ input{
     align-content: center;
     align-self: center;
 }
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 3;
+ }
 
 .full-width{
   width: 100%;
@@ -129,7 +134,15 @@ input{
     height: 8vh;
     align-items: center;
     overflow: hidden;
+    margin-bottom: 1vh;
  }
+ 
+#topNav:hover{
+  /*
+    https://shadows.brumm.af/
+    */
+ box-shadow:  0 6.7px 5px rgba(0, 0, 0, 0.048);
+}
 #actionSearch {
     width: 34vw;
    padding-left: 1vw; 
@@ -174,4 +187,9 @@ input{
 
 
 }
-
+#activeStoryTree{
+  display: inline-block;
+  padding:1%;
+  height:34%;
+  background-color: rgba(0, 0, 0, 0.048);
+}
