@@ -19,7 +19,7 @@ html{
 body{
      width: 100%;
     height: 100%;
-    background-color:var(--light);
+    background-color:var(--white);
     color: var(--gray-dark);
     font-family: 'Poppins' , sans-serif;
     list-style-type: none;
@@ -30,7 +30,7 @@ body{
     
 }
 h1{
-    display: inline-flexbox;
+   
     font-size: 4.6rem;
     height: max-content;
 }
@@ -64,7 +64,6 @@ a,button {
    padding-right: 1vw; 
 
 }
-
 .row{
   display: flex;
   flex-direction: row;
@@ -94,7 +93,7 @@ a:hover{
   align-self: center;
 }
  .container{
-    display: -webkit-box;
+   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
  }
@@ -107,20 +106,15 @@ input{
     font-size: 15px;
     
 }
+.border-bottom{
+  width: 100%;
+  background-color: royalblue;
+    border-bottom: red;
+}
 .hr{
     width: 100%;
-    display: block;
-    border-style: dotted;
-    border-bottom: --var(--gray-dark);
-}
-
-#actionSpace {
-  width: inherit; 
-  height: inherit;
- background-color: var(--light);
-  padding-left: 21px;
-  padding-right: 21px;
-  transition: margin-left .3s;
+    margin: auto;
+    border-bottom: red;
 }
 
 body > *{
@@ -132,6 +126,13 @@ body > *{
     font-style: normal;
 }
 
+#actionSpace {
+  background-color: red;
+  padding-left: 21px;
+  padding-right: 21px;
+  transition: margin-left .3s;
+}
+
 #topNav{
     padding-right: 21px;
     padding-left: 21px;
@@ -139,12 +140,12 @@ body > *{
     height: 5vh;
     align-items: center;
     overflow: hidden;
-    background-color: var(--white);
-    margin-bottom: 5px;
+    background-color: var(--light);
+   
  }
  
 #actionSearch{
-  width: 34vw;
+    width: 34vw;
    padding-left: 1vw; 
    padding-right: .5vw; 
    padding-top: .3vw;
@@ -152,16 +153,24 @@ body > *{
    align-self: center;
    font-family: 'poppins';
    border-radius: 3px;
-   box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset;
+  background-color: var(--white);
     cursor: text;
     justify-content: space-between;
 
 }
 #actionSpaceBody{
-    padding-top: 5vw;
-    padding-left: 13vw;
-    height: inherit;
-    
-    
-    background-color: var(--white);
+ 
+    padding-top: .5vw;
+    padding-left: 8vw;
+   margin: auto auto;
+    background-color: var(--light);
+
+}
+#actionSpaceEditor{
+  display: flex;
+  margin:auto auto;
+  height: 100%;
+  width: 54vw;
+  padding-left:8vw;
+  background-color: var(--darkest);
 }

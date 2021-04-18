@@ -143,7 +143,7 @@ var actionSpaceHeaderUserMenu = {
 var topNav = {
     name: 'div',
     id: 'topNav',
-    class:'container row full-width',
+    class:'row full-width',
   //  class: 'topnav row container full-width ',
     item1: brand2,
     item2: searchBar,
@@ -166,29 +166,36 @@ var selectBox = {
 }
 var actionSpaceBody = {
     name: 'div',
-    class: 'container row full-width',
+   // class: 'container row full-width',
     id: 'actionSpaceBody',
     editor: {
         name: 'div',
         id: 'actionSpaceEditor',
-        class: 'container',
-        title: {
-            name: 'h1',
-            textContent: "Title",
-        },
-        hr: {
-            name: 'hr',
-            class: 'hr row',
+      //  class: 'row',
+        userInputSpace: {
+            name: 'div',
+            id: 'userInputSpace',
+            activeActionStory: {
+                title: {
+                    name: 'h1',
+                    textContent: "Title",
+                },
 
+                empty: {
+                    name: 'div',
+                    class: 'border-bottom'
+                },
+                hr: {
+                    name: 'hr',
+                    class: 'hr',
+
+                },
+                blocks: 'actionBlocks',
+            },
         },
+        richTextMenu:'richTextMenu',
         contextMenu: 'contextMenu',
         insertMenu: 'insertMenu',
-        userInput: 'userInputViewModel',
-        blocks: 'actionBlocks',
-        hr: {
-            name: 'div',
-            class: 'hr',
-        },
         footer: 'actionEditorFooter',
 
     },

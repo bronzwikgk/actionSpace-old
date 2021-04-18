@@ -1,0 +1,98 @@
+* {
+    box-sizing: none;
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    outline: none;
+  border:none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-box-sizing: border-box;
+ }
+
+body {
+     width: 100%;
+    height: 100%;
+    background-color:var(--light);
+    color: var(--darkest);
+    font-family: 'Poppins' , sans-serif;
+    list-style-type: none;
+    font: 'poppins';
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+.clickable{
+    cursor: pointer;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+}
+
+.full-width{
+  width: 100%;
+ }
+ 
+#appLogo{
+  height: 21px;  
+  align-self: center;
+}
+.appTitle{
+  padding-left: 1vw; 
+   padding-right: 1vw; 
+  text-align: center;
+  align-self: center;
+}
+#actionSpace {  
+ background-color: red;
+ display: block;
+  height: 100%;
+  padding-left: 21px;
+  padding-right: 21px;
+  transition: margin-left .2s;
+}
+
+#topNav{
+    display: flex;
+    padding-right: 21px;
+    padding-left: 21px;
+    justify-content: space-between;
+    height: 5vh;
+    align-items: center;
+    overflow: hidden;
+  
+   
+ }
+ 
+#actionSearch{
+    width: 34vw;
+   padding-left: 1vw; 
+   padding-right: .5vw; 
+   padding-top: .3vw;
+   padding-bottom: .3vw;
+   align-self: center;
+   font-family: 'poppins';
+   border-radius: 3px;
+  background-color: var(--white);
+    cursor: text;
+    justify-content: space-between;
+
+}
+#actionSpaceBody{
+ 
+    padding-top: .5vw;
+    padding-left: 8vw;
+   margin: auto auto;
+    background-color: var(--light);
+
+}
+#actionSpaceEditor{
+  display: flex;
+  margin:auto auto;
+  height: 100%;
+  width: 54vw;
+  padding-left:8vw;
+  background-color: var(--darkest);
+}
