@@ -143,7 +143,7 @@ var actionSpaceHeaderUserMenu = {
 var topNav = {
     name: 'div',
     id: 'topNav',
-    class:'row full-width',
+    class:'container row full-width',
   //  class: 'topnav row container full-width ',
     item1: brand2,
     item2: searchBar,
@@ -180,17 +180,10 @@ var actionSpaceBody = {
                     name: 'h1',
                     textContent: "Title",
                 },
-
-                empty: {
-                    name: 'div',
-                    class: 'border-bottom'
-                },
                 hr: {
-                    name: 'hr',
-                    class: 'hr',
+                    name:"hr",
+                }
 
-                },
-                blocks: 'actionBlocks',
             },
         },
         richTextMenu:'richTextMenu',
@@ -206,7 +199,7 @@ var actionSpaceBody = {
 }
 var activeViewModelV1 = {
     name: 'actionSpace',
- //   class: 'container row full-width full-height',
+    class:'full-width',
     id: 'actionSpace',
   //  textContent: 'Active View',
     topNav: topNav,
