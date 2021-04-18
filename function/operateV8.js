@@ -14,7 +14,7 @@ class operate {
     static isNotEmpty(argA) { return argA !== '' && argA !== null && typeof argA !== 'undefined' ? true : false }
     //returs the data Type of the input.
     static is(argA) {
-        //  console.log(argA);
+       // console.log(argA);
         return Object.getPrototypeOf(argA).constructor.name;
     }
     static isInt(argA) { return Number.isInteger(argA); }

@@ -311,6 +311,10 @@ class Entity {
         }
         return req;
     }
+
+    static bindObject(arg1,arg2){
+
+    }
     
 }
 

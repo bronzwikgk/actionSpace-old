@@ -9,7 +9,7 @@ var leftSideNavBar = {
         itemCollection1: {
             name: 'a',
             id:'recentFilesShortCut',
-            class: 'item row align_center justify_SpaceBetween',
+            class: '',
             'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
             //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
             item1: {
@@ -19,7 +19,7 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'span',
-                'class': "collection_name",
+                'class': "",
                 'textContent': 'recent stories',
             }
         },
@@ -27,7 +27,7 @@ var leftSideNavBar = {
             name: 'a',
             'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('draftsCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
           //  'href': `#action:loadObject2Dom[storage,draft,workspacebody]`,
-            class: 'item row justify_SpaceBetween',
+            class: '',
             item1: {
                 name: 'i',
                 'class': "material-icons icon mr - 10",
@@ -35,14 +35,14 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'div',
-                'class': "collection_name",
+                'class': "",
                 'textContent': 'drafts',
             }
         },
         itemCollection3: {
             name: 'a',
             'href': '#create:?workspaceBody/newStory',
-            class: 'item row justify_SpaceBetween',
+            class: '',
             item1: {
                 name: 'i',
                 'class': "material-icons icon mr - 10",
@@ -96,15 +96,15 @@ var leftSideNavBar = {
         },
         sideBar_Collection_withDropDown: {
             name: 'div',
-            class: 'collection_list',
+          //  class: 'collection_list',
             collectionTitle: {
                 name: 'div',
-                class: "medium",
+           //     class: "medium",
                 textContent: "actionStories & Collections",
             },
             collectionItem: {
                 name: 'div',
-                class: "container column",
+            //    class: "container column",
                 innerHTML: `
                       <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
                       <ul class="nested container column">
@@ -246,7 +246,7 @@ var leftSideNavBar = {
             },
             collectionItem2: {
                 name: 'div',
-                class: "container column",
+              //  class: "container column",
                 id: 'sideLinks',
                 li1: {
                     name: 'ul',
@@ -544,7 +544,7 @@ var brand = {
     content: {
         name: 'a',
         'href': '#welcome',
-        class: 'align_center itemsContainer ',
+       // class: 'align_center itemsContainer ',
         logo: {
             'name': 'img',
             'id': 'logo',
@@ -559,7 +559,7 @@ var brand = {
 }
 var searchBar = {
     name: 'span',
-    class: 'container item',
+    class: 'container',
     id:'searchBarItem',
     input: {
         'name': 'input',
@@ -670,22 +670,47 @@ var actionSpaceHeaderUserMenu = {
             'textContent': 'more_vert',
         } 
 }
+
 var userDashboardTopNav = {
-    name:'div',
-    class:'container align_center justify_SpaceBetween full-width',
+    name: 'div',
+    class: 'container row full-width justify_SpaceBetween align_center ',
     'brand': brand,
     'search': searchBar,
-    'appNav': actionSpaceHeaderUserMenu,
+   // 'appNav': actionSpaceHeaderUserMenu,
 }
-
 var userDashboard = {
     userDashboard: {
         name: 'div',
         class: 'container full-width row full-height',
         id: 'userDashboard',
-        topNav: { name: 'div', class: 'container row full-width ', id: 'topNav',userDashboardTopNav },
-        workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer',userDashboardWorkSpaceBody },
+        topNav: {
+            name: 'div',
+            class: 'container row full-width ',
+            id: 'topNav', userDashboardTopNav
+        },
+        workSpaceBodyContainer: {
+            name: 'div',
+            class: 'container row full-width ',
+            id: 'workSpaceBodyContainer',
+            userDashboardWorkSpaceBody
+        },
   
     }
     
+}
+
+var dashBoardUserV2 = {
+    userDashboard: {
+        name: 'div',
+        class: 'container full-width row full-height',
+        id: 'userDashboard',
+        topNav: {
+            name: 'div',
+            class: 'container',
+            id: 'topNav',
+            userDashboardTopNav
+        },
+        //  workSpaceBodyContainer: { name: 'div', class: 'container row full-width ', id: 'workSpaceBodyContainer', userDashboardWorkSpaceBody },
+
+    }
 }

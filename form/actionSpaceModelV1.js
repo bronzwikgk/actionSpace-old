@@ -18,17 +18,18 @@ var userInputViewModel = {
 }
 var actionSpaceModel = {
     name: "div",
-    class: 'container row full- height',
-    id: uid(),
+    id:'actionSpaceContainer',
+    class: 'container',
+  //  id: uid(),
     title: {
         name: 'div',
-        class: 'title h1',
+        class: 'h1',
         textContent:"Title",
     },
     editor:{
         name:'div',
         id: 'actionSpaceEditor',
-        class: 'container full-width full-height',
+        class: 'container',
         contextMenu: 'contextMenu',
         insertMenu: 'insertMenu',
         userInput: userInputViewModel,

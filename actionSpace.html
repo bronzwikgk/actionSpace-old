@@ -4,23 +4,84 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="beauty/corev2.css">
+
         <link rel="stylesheet" href="beauty/themeV2.css">
-        <link rel="stylesheet" href="beauty/actionSpaceV2.css">
+
+<link rel="stylesheet" href="beauty/sidebar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
     <title>actionSpace Ver 1.O</title>
 </head>
 
 <body>
-    <div id="actionSpace" class ='container row full-height'></div>
+
+<div class="topnav" id="myTopnav">
+  <a href="?loadFile:home" class="active">Home</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+  <span class="dropdown">
+    <button class="dropbtn">Dropdown 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+  </span> 
+  <a href="#about">About</a>
+  <a href="javascript:void(0);" style="font-size:15px;" class="icon" id:'hamburgerMenu' onclick="myFunction()">&#9776;</a>
+</div>
+
+<div class='contentBlocks' style="padding-left:16px">
+  <h2>Responsive Topnav with Dropdown</h2>
+  <p>Resize the browser window to see how it works.</p>
+  <p>Hover over the dropdown button to open the dropdown menu.</p>
+</div>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>
+
+<h2>Animated Sidenav Example</h2>
+<p>Click on the element below to open the side navigation menu.</p>
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+
+<script>
+  function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }
+</script>
+
+
+    <div id="actionSpace" class ='container row full-height full-width'></div>
     <script type="text/javascript" src="form/appDataSet.js"></script>
     <script type="text/javascript" src="form/sampleStoriesV1.js"></script>
     <script type="text/javascript" src="form/userDataSetModel.js"></script>
-    <script type="text/javascript" src="form/dashboardViewModel.js"></script>
+    <script type="text/javascript" src="form/actionSpaceViewV1.js"></script>
     <script type="text/javascript" src="function/operateV8.js"></script>
     <script type="text/javascript" src="function/actionProcessV9.js"></script>
     <script type="text/javascript" src="function/actionEntityV8.js"></script>
-    <script type="text/javascript" src="function/actionSpaceV1.js"></script>
+    <script type="text/javascript" src="function/actionSpaceV2.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=Montserrat&family=Open+Sans&family=Poppins"
         rel="stylesheet">

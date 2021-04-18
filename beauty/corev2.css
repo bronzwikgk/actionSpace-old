@@ -1,14 +1,9 @@
     * {
- outline: none;
- box-sizing: border-box;
-  border:none;
-  user-select: none;
-  -webkit-user-select: none;
+        outline: none;
+         box-sizing: border-box;
+           border:none;
+           user-select: none;  -webkit-user-select: none;
   -webkit-box-sizing: border-box;
-}
-html,body{
-    width:100%;
-    height: 100%;   
 }
 
 .container{
@@ -25,9 +20,9 @@ html,body{
 .column {
   display: flex;
   flex-direction: column;
-
+  flex-basis: 100%;
+  flex: 1;
 }
-
 .alignSelf-left{
 align-self: flex-start;  
   
@@ -66,10 +61,8 @@ align-self: flex-start;
 }
 
 .full-width{
-  width: 60%;
-  background-color: lawngreen;
-}
+  width: 100%;
+ }
 .full-height{
     min-height: 100% !important;
 }
-
