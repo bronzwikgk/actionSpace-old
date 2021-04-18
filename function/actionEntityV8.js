@@ -329,10 +329,10 @@ var obj = {
     ]
 };
 
-var req = ['recentStoriesCollectionView','workSpaceBody']
-console.log('testing req', req, typeof req)
-var req1 = ['a', '0', 'b', 'c'];
-var req2 = 'a[0].b.c';
+// var req = ['recentStoriesCollectionView','workSpaceBody']
+// console.log('testing req', req, typeof req)
+// var req1 = ['a', '0', 'b', 'c'];
+// var req2 = 'a[0].b.c';
 
 // var newWalkModelReq = walkReqModel;
 // newWalkModelReq['argument'] = req;

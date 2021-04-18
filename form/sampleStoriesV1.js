@@ -1,10 +1,4 @@
-var activeActionStory = {
-    name: 'div',
-    id: 'activeActionStory',
-    title: 'activeActionStory',
-    resource: '/form/sampleActionStoriesV1.js',
-    textContent:sampleIntroStory,
-}
+
 var sampleIntroStory = `Honour the past
 Be honest about the present
 Be hopeful about the future
@@ -22,8 +16,9 @@ Free spirit responsible human being.
 var activeActionStory = {
     name: 'div',
     id: 'activeActionStory',
+    mode: 'edit',
     title: 'activeActionStory',
-    resource: '/form/sampleActionStoriesV1.js',
+    // resource: '/form/sampleActionStoriesV1.js',
     textContent: sampleIntroStory,
 }
 //console.log(sampleIntroStory);

@@ -164,28 +164,44 @@ var selectBox = {
         textContent:"Select",
     }
 }
+
+var activeStoryTree = {
+    name: 'span',
+    class:'sticky verticle',
+    id: 'activeStoryTree',
+    textContent: 'activeStoryTree',
+    innerHTML:'createTreeElement'
+}
+
 var actionSpaceBody = {
     name: 'div',
    // class: 'container row full-width',
     id: 'actionSpaceBody',
+    "activeStoryTree":activeStoryTree,
     editor: {
         name: 'div',
         id: 'actionSpaceEditor',
-      //  class: 'row',
+        mimeType: 'richText',
+        //  class: 'row',
         userInputSpace: {
             name: 'div',
+            class:'full-width',
             id: 'userInputSpace',
             activeActionStory: {
+                name: 'div',
+                id:'activeActionStory',
                 title: {
                     name: 'h1',
-                    textContent: "Title",
+                    textContent: activeActionStory.title,
                 },
                 hr: {
                     name:"hr",
-                }
+                },
+                actionStory: activeActionStory,
 
             },
         },
+        editorMenu:'editorMenu',
         richTextMenu:'richTextMenu',
         contextMenu: 'contextMenu',
         insertMenu: 'insertMenu',
@@ -209,4 +225,303 @@ var activeViewModelV1 = {
 
 }
 
-  
+var leftSideNavBar = {
+    name: 'section',
+    id: 'leftSideNavBar',
+    class: 'darkTheme',
+    section1: {
+        name: 'span',
+        class: '',
+        itemCollection1: {
+            name: 'a',
+            id: 'recentFilesShortCut',
+            class: '',
+            'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
+            //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
+            item1: {
+                name: 'i',
+                'class': "material-icons icon",
+                'textContent': 'schedule',
+            },
+            item2: {
+                name: 'span',
+                'class': "",
+                'textContent': 'recent stories',
+            }
+        },
+        itemCollection2: {
+            name: 'a',
+            'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('draftsCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
+            //  'href': `#action:loadObject2Dom[storage,draft,workspacebody]`,
+            class: '',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'insert_drive_file',
+            },
+            item2: {
+                name: 'div',
+                'class': "",
+                'textContent': 'drafts',
+            }
+        },
+        itemCollection3: {
+            name: 'a',
+            'href': '#create:?workspaceBody/newStory',
+            class: '',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'add',
+            },
+            item2: {
+                name: 'div',
+                'class': "collection_name",
+                'textContent': 'new actionStory',
+                //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+            }
+        },
+        itemCollection4: {
+            name: 'a',
+            'href': '#open:?workspaceBody/openFile',
+            class: 'item row justify_SpaceBetween',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'upload_file',
+            },
+            item2: {
+                name: 'div',
+                'class': "collection_name",
+                'textContent': 'open file',
+            }
+        },
+        itemCollection5: {
+            name: 'a',
+            'href': '#open:?workspaceBody/openFolder',
+            class: 'item row justify_SpaceBetween',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'folder_open',
+            },
+            item2: {
+                name: 'div',
+                'class': "collection_name",
+                'textContent': 'add to collection',
+
+
+
+
+                //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+            }
+        },
+        hr: {
+            name: 'div',
+            class: 'hr',
+        },
+        sideBar_Collection_withDropDown: {
+            name: 'div',
+            //  class: 'collection_list',
+            collectionTitle: {
+                name: 'div',
+                //     class: "medium",
+                textContent: "actionStories & Collections",
+            },
+            collectionItem: {
+                name: 'div',
+                //    class: "container column",
+                innerHTML: `
+                      <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
+                      <ul class="nested container column">
+                      <li class='item row'>story 1</li>
+                    <li class='item row'>story 2</li>
+                    <li class='item row' >story 3</li>
+                    <li class='item row'>story 4</li>
+                    <li class='item row' >
+                        <li class='item row'><span class="parent">my Nested Stories</span>
+                            <ul class="nested">
+                                <li class='item row'>story 1</li>
+                                <li class='item row'>story 2</li>
+                                <li class='item row'>story 3</li>
+                                <li class='item row'>story 4</li>
+                            </ul>
+                        </li>
+                        errands
+                    </li>
+
+                    <li><span class="parent">recent Stories</span>
+                        <ul class="nested">
+                            <li>leaf</li>
+                            <li>leaf</li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <span class="hozintalLine"></span>
+            <li><span class="parent">Recent Files</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <span class="hozintalLine"></span>
+            <li><span class="parent">Starred</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <li><span class="parent">Tags</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <li><span class="parent">Trash</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>`
+            },
+            collectionItem2: {
+                name: 'div',
+                //  class: "container column",
+                id: 'sideLinks',
+                li1: {
+                    name: 'ul',
+                    class: 'row item',
+                    parent: {
+                        name: 'span',
+                        class: 'parent',
+                        textContent: 'myCollection'
+                    },
+                    ul: {
+                        name: 'ul',
+                        class: 'nested container column children item-collection',
+                        items1: {
+                            name: 'li',
+                            class: 'item row',
+                            textContent: 'story/file 1',
+                        },
+                        items2: {
+                            name: 'a',
+                            class: 'item row',
+                            href: '/load/file2',
+                            textContent: 'story/file 2',
+                        },
+                        parent: {
+                            name: 'span',
+                            class: 'parent',
+                            textContent: 'Folder 1'
+                        },
+                        ul: {
+                            name: 'ul',
+                            class: 'nested container column children item-collection',
+                            items1: {
+                                name: 'li',
+                                class: 'item row',
+                                textContent: 'files in folder',
+                            },
+                            items2: {
+                                name: 'a',
+                                class: 'item row',
+                                href: '/load/file2',
+                                textContent: 'story/file 2',
+                            },
+
+                        },
+
+                    },
+                },
+
+            },
+        },
+    },
+}
