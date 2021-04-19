@@ -297,7 +297,7 @@ class Entity {
         return req;
     }
 /**
- * This method is supposed to bind 2 Elements.
+ * This method is supposed to bind 2 Elements. Work in progress
  * @param {*} arg1 
  * @param {*} arg2 
  */
