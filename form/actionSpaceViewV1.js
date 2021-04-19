@@ -2,13 +2,110 @@
 var leftSideNavBar = {
     name: 'section',
     id: 'mySidenav',
-    class: 'sidenav column',
-    close: {
-        name: 'span',
-        'class': "material-icons closebtn right",
-        onclick:"closeNav()",
-        'textContent': 'close',
+    class: 'sidenav',
+    item: {
+        name: 'div',
+        class:'right clickable',
+        onclick: "closeNav()",
+        close: {
+            name: 'i',
+            'class': "material-icons",
+            'textContent': 'close',
+        },
     },
+    section1: {
+        name: 'a',
+        class: '',
+        itemCollection1: {
+            name: 'div',
+            id: 'recentFilesShortCut',
+            class: '',
+            'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
+            //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
+            item1: {
+                name: 'i',
+                'class': "material-icons",
+                'textContent': 'schedule',
+            },
+            item2: {
+                name: 'span',
+                'class': "content",
+                'textContent': 'recent stories',
+            }
+        },
+        itemCollection2: {
+            name: 'a',
+            'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('draftsCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
+            //  'href': `#action:loadObject2Dom[storage,draft,workspacebody]`,
+            class: 'clickable',
+            item1: {
+                name: 'i',
+                'class': "material-icons",
+                'textContent': 'insert_drive_file',
+            },
+            item2: {
+                name: 'span',
+             
+                'textContent': 'drafts',
+            }
+        },
+        itemCollection3: {
+            name: 'a',
+            'href': '#create:?workspaceBody/newStory',
+            class: 'clickable',
+            item1: {
+                name: 'i',
+                'class': "material-icons",
+                'textContent': 'add',
+            },
+            item2: {
+                name: 'span',
+                
+                'textContent': 'new actionStory',
+                //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+            }
+        },
+        itemCollection4: {
+            name: 'a',
+            'href': '#open:?workspaceBody/openFile',
+            class: 'item row justify_SpaceBetween',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'upload_file',
+            },
+            item2: {
+                name: 'div',
+                'class': "collection_name",
+                'textContent': 'open file',
+            }
+        },
+        itemCollection5: {
+            name: 'a',
+            'href': '#open:?workspaceBody/openFolder',
+            class: 'item row justify_SpaceBetween',
+            item1: {
+                name: 'i',
+                'class': "material-icons icon mr - 10",
+                'textContent': 'folder_open',
+            },
+            item2: {
+                name: 'div',
+                'class': "collection_name",
+                'textContent': 'add to collection',
+
+
+
+
+                //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+            }
+        },
+        hr: {
+            name: 'div',
+            class: 'hr',
+        },
+    }
+    
 
 }
 var brand2 = {
