@@ -62,8 +62,11 @@ document.onmouseleave = (event => {
    // console.log("mouseLeftFrom", event.target)
 })
 document.onkeypress = (event => {
-    console.log("onkeypress", event.target, event.key)
     
+    if (event.target.id === 'searchInput') {
+        console.log("onkeypress", event.target, event.key)
+        
+    }
 })
 
 

@@ -1,6 +1,6 @@
 var viewToolBar = {
     name: 'div',
-    class: 'toolbar right',
+    class: 'toolbar right clickable',
     id:'viewToolbar',
     expand: {
         name: 'i',
@@ -354,11 +354,12 @@ var brand2 = {
 }
 var searchBar = {
     name: 'span',
-    class: 'container',
+    class: 'container ',
     id: 'actionSearch',
     
     input: {
         'name': 'input',
+        class:'autoComplete',
         'desc': 'This is a horizontical bar, more functionality of this bar to be added',
         'id': 'searchInput',
         'placeholder': "search here...",
@@ -561,3 +562,13 @@ var activeViewModelV1 = {
 
 }
 
+var listItem = {
+    name: 'div',
+    class: 'listItem',
+    id: 'listemID',
+    innerHTML:'',
+}
+
+var itemCollection = {
+    
+}

@@ -130,8 +130,29 @@ input{
 .toolbar{
   display: inline-flex;
   background-color: red;
+    height: max-content;
+    
 }
 
+.contextMenu{
+  
+    padding-top: 21px;
+    padding-bottom: 13px;
+    width:max-content;
+    height: max-content;
+    background-color: wheat;
+   z-index: 999;
+    
+}
+.card{
+    margin: 8px;
+    padding:5px;
+    width: 21%;
+    height: 221px;
+   background-color: yellow;
+   z-index: -5;
+   
+}
 
 .sidenav {
             height: 100%;
@@ -178,6 +199,11 @@ input{
    cursor: text;
    justify-content: space-between;
   }
+  .autoComplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
 #actionSpaceBody{
 
 
