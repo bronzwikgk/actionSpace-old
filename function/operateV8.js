@@ -8,6 +8,9 @@ class operate {
     static isInside(entity2SearchIn, string2Search, options) {
         console.log(Object.values(entity2SearchIn), string2Search)
     }
+    static trueTypeOf(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+}
 
     // operate to check if the input is not null or undefined to be added
     static isEmpty(argA) { return Object.keys(argA).length === 0 ? true : false }
