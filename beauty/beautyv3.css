@@ -51,7 +51,8 @@ a,button {
 .material-icons{
     display: inline;
     vertical-align: top;
-    padding:1% 1%;
+    font-size: 1em;
+    
 }
 .container{
   display: -webkit-box;
@@ -125,6 +126,12 @@ input{
    height: 100%;
   transition: margin-left .2s;
 }
+
+.toolbar{
+  display: inline-flex;
+  background-color: red;
+}
+
 
 .sidenav {
             height: 100%;

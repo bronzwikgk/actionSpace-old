@@ -1,4 +1,24 @@
+var viewToolBar = {
+    name: 'div',
+    class: 'toolbar right',
+    id:'viewToolbar',
+    expand: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'open_in_full',
+    },
+    minimise: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'minimize',
+    },
+    close: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'close',
+    },
 
+}
 var leftSideNavBar = {
     name: 'section',
     id: 'mySidenav',
@@ -481,15 +501,17 @@ var activeStoryTree = {
     class:'sticky verticle ',
     id: 'activeStoryTree',
     textContent: 'activeStoryTree',
-    innerHTML:'createTreeElement'
+    innerHTML:'create Tree Element'
 }
 var actionSpaceBody = {
     name: 'div',
    // class: 'container row full-width',
     id: 'actionSpaceBody',
-   
+  //  ViewtoolBar: viewToolBar,
     editor: {
         name: 'div',
+        mode: 'edit',
+        toolBar:'viewToolbar',   
         id: 'actionSpaceEditor',
         mimeType: 'richText',
         "activeStoryTree": activeStoryTree,
@@ -500,6 +522,7 @@ var actionSpaceBody = {
             id: 'userInputSpace',
             activeActionStory: {
                 name: 'div',
+               // toolbar: viewToolBar,
                 id:'activeActionStory',
                 title: {
                     name: 'h1',
@@ -512,11 +535,11 @@ var actionSpaceBody = {
 
             },
         },
-        editorMenu:'editorMenu',
-        richTextMenu:'richTextMenu',
-        contextMenu: 'contextMenu',
-        insertMenu: 'insertMenu',
-        footer: 'actionEditorFooter',
+        // editorMenu:'editorMenu',
+        // richTextMenu:'richTextMenu',
+        // contextMenu: 'contextMenu',
+        // insertMenu: 'insertMenu',
+        // footer: 'actionEditorFooter',
 
     },
    
@@ -532,6 +555,7 @@ var activeViewModelV1 = {
     topNav: topNav,
     actionSpaceBody:actionSpaceBody,
     selectBox: selectBox,
+  
     
 
 }

@@ -22,18 +22,30 @@ window.onclick = (event => {
     var editTarget;
  
     if (event.target.hasAttribute('mode')) {
-      //  console.log("clicked on", event.target.hasAttribute('mode'), event.target.parentElement)
+        console.log("clicked on", event.target.hasAttribute('mode'), event.target.parentElement)
         editTarget = event.target;
       
     } else if (event.target.parentElement.hasAttribute('mode')) {
         editTarget = event.target.parentElement;
-       // console.log("editable Parent element", event.target)
+       console.log("editable Parent element", event.target)
     }
-   
+
     if (editTarget) {
         editTarget.contentEditable = 'true';
         console.log("editable element", editTarget)
     }
+
+    if (event.target.hasAttribute('toolBar')) {
+        console.log("clicked on toolBar", event.target.hasAttribute('mode'), event.target.parentElement)
+        toolBarTarget = event.target;
+
+    } else if (event.target.parentElement.hasAttribute('toolbar')) {
+        toolBarTarget = event.target.parentElement;
+        console.log("toolBar Parent element", event.target)
+    }
+    toolbar = document.getElementById('viewToolBar')
+    
+
 })
 window.onmouseover = (event => {
     var editTarget;

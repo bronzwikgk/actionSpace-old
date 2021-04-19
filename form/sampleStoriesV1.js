@@ -16,7 +16,7 @@ Free spirit responsible human being.
 var activeActionStory = {
     name: 'div',
     id: 'activeActionStory',
-    mode: 'edit',
+  
     title: 'activeActionStory',
     // resource: '/form/sampleActionStoriesV1.js',
     textContent: sampleIntroStory,
