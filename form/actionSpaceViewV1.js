@@ -5,11 +5,11 @@ var leftSideNavBar = {
     class: 'sidenav',
     section1: {
         name: 'span',
-        class: '',
+        class: 'container column',
         itemCollection1: {
             name: 'a',
             id: 'recentFilesShortCut',
-            class: '',
+            class: 'container row',
             'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
             //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
             item1: {
@@ -19,7 +19,7 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'span',
-                'class': "",
+                'class': 'content',
                 'textContent': 'recent stories',
             }
         },

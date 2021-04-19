@@ -1,6 +1,6 @@
 * {
     box-sizing: none;
-    transition-property: all;
+    transition-property: box-shadow, opacity;
     transition-duration: 0.2s;
     transition-timing-function: ease;
     outline: none;
@@ -34,23 +34,24 @@ body > *{
     font-style: normal;
     border-radius: 5px;
 }
-
+span{
+  height:1em;
+}
 
 a,button {
     color: var(--gray-dark);
     cursor: pointer;
     font-size: 16px;
     font-weight: 400;
-    
-    max-width: 160px;
+    max-width: 144px;
     position: relative;
     text-decoration: none;
    float: left;
    display: block;
    width: 100%;
    opacity:0.89;
-   padding-left: 1.5vw; 
-   padding-right: 1.5vw; 
+   padding-left: 1vw; 
+   padding-right: 1vw; 
 
 }
 
@@ -167,12 +168,6 @@ input{
     margin-bottom: 1vh;
  }
  
-#topNav:hover{
-  /*
-    https://shadows.brumm.af/
-    */
- box-shadow:  0 6.7px 5px rgba(0, 0, 0, 0.048);
-}
 #actionSearch {
     width: 34vw;
    padding-left: 1vw; 
