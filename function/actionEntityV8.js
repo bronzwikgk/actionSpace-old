@@ -296,10 +296,50 @@ class Entity {
         }
         return req;
     }
-
+/**
+ * This method is supposed to bind 2 Elements. Work in progress
+ * @param {*} arg1 
+ * @param {*} arg2 
+ */
     static bindObject(arg1,arg2){
 
     }
+
+    //this method is supposed to execute the callback in the reqModel for the keys on the keys of the input Object.
+    //can be used with 
+    // the code logic has to go like this.
+    // each key of model sent to each
+    //
+    /**
+     * This method is used for converting DOM element to JSON object
+     * @param {HTMLElement} object - HTML DOM Element to convert to JSON
+     * @param {object} model - Model Schema for JSON object
+     */
+    static toJSON(object, model) {
+        const output = {}; // Initialize output object
+        // iterate over the properties of the model
+        for (var key in model) {
+            var value = model[key];
+            if (model.hasOwnProperty(key) && Validators.validate(object[key], value)) {
+                if (value.type === 'object') {  // check if values is a nested object
+                    var nestedItem = value.value;
+                    output[key] = this.toJSON(object[key], nestedItem) // Create corresponding nested object in output object
+                }
+                else if (value.type === 'array') {  // Check if value is an array
+                    output[key] = [];
+                    for (var i = 0; i < object[key].length; i++) {
+                        output[key].push(this.toJSON(object[key][i], model));
+                    }
+                }
+                else {
+                    output[key] = object[key] || '' // if the value is neither an array or an object, assign the corresponding output[key] to the Elements' object property's value
+                }
+            }
+        }
+        return output;
+
+    }
+
     /*!
  * Create an immutable clone of data (an array, object, map, set, etc.)
  * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com

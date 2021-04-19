@@ -101,10 +101,213 @@ var leftSideNavBar = {
             }
         },
         hr: {
-            name: 'div',
+            name: 'hr',
             class: 'hr',
         },
-    }
+    },
+    sideBar_Collection_withDropDown: {
+        name: 'div',
+        //  class: 'collection_list',
+        collectionTitle: {
+            name: 'div',
+            //     class: "medium",
+            textContent: "actionStories & Collections",
+        },
+        collectionItem: {
+            name: 'div',
+            //    class: "container column",
+            innerHTML: `
+                      <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
+                      <ul class="nested container column">
+                      <li class='item row'>story 1</li>
+                    <li class='item row'>story 2</li>
+                    <li class='item row' >story 3</li>
+                    <li class='item row'>story 4</li>
+                    <li class='item row' >
+                        <li class='item row'><span class="parent">my Nested Stories</span>
+                            <ul class="nested">
+                                <li class='item row'>story 1</li>
+                                <li class='item row'>story 2</li>
+                                <li class='item row'>story 3</li>
+                                <li class='item row'>story 4</li>
+                            </ul>
+                        </li>
+                        errands
+                    </li>
+
+                    <li><span class="parent">recent Stories</span>
+                        <ul class="nested">
+                            <li>leaf</li>
+                            <li>leaf</li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <span class="hozintalLine"></span>
+            <li><span class="parent">Recent Files</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <span class="hozintalLine"></span>
+            <li><span class="parent">Starred</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <li><span class="parent">Tags</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>
+            <li><span class="parent">Trash</span>
+                <ul class="nested">
+                    <li>story 1</li>
+                    <li>story 2</li>
+                    <li>story 3</li>
+                    <li>story 4</li>
+                    <li>
+                    <li><span class="parent">my Nested Stories</span>
+                        <ul class="nested">
+                            <li>story 1</li>
+                            <li>story 2</li>
+                            <li>story 3</li>
+                            <li>story 4</li>
+                        </ul>
+                    </li>
+                    errands
+            </li>
+
+            <li><span class="parent">recent Stories</span>
+                <ul class="nested">
+                    <li>leaf</li>
+                    <li>leaf</li>
+
+                </ul>
+            </li>
+            </ul>
+            </li>`
+        },
+        collectionItem2: {
+            name: 'div',
+            //  class: "container column",
+            id: 'sideLinks',
+            li1: {
+                name: 'ul',
+                class: 'row item',
+                parent: {
+                    name: 'span',
+                    class: 'parent',
+                    textContent: 'myCollection'
+                },
+                ul: {
+                    name: 'ul',
+                    class: 'nested container column children item-collection',
+                    items1: {
+                        name: 'li',
+                        class: 'item row',
+                        textContent: 'story/file 1',
+                    },
+                    items2: {
+                        name: 'a',
+                        class: 'item row',
+                        href: '/load/file2',
+                        textContent: 'story/file 2',
+                    },
+                    parent: {
+                        name: 'span',
+                        class: 'parent',
+                        textContent: 'Folder 1'
+                    },
+                    ul: {
+                        name: 'ul',
+                        class: 'nested container column children item-collection',
+                        items1: {
+                            name: 'li',
+                            class: 'item row',
+                            textContent: 'files in folder',
+                        },
+                        items2: {
+                            name: 'a',
+                            class: 'item row',
+                            href: '/load/file2',
+                            textContent: 'story/file 2',
+                        },
+
+                    },
+
+                },
+            },
+
+        },
+    },
     
 
 }

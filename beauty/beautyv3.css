@@ -99,12 +99,16 @@ input{
   width: 100%;
  }
 
-
- hr{
-   display: block;
-   width: 100%;
+ .hr{
    height: 10px;
    color: red;
+   
+ }
+
+ hr{
+   height: 10px;
+   color: red;
+
  }
 #appLogo{
   height: 21px;  
@@ -225,6 +229,44 @@ background-color: var(--white);
   padding-top: 2%;
   background-color: var(--white);
 }
+.parent:hover .nested{display: block;}
+
+.parent {
+  
+    cursor: pointer;
+    -webkit-user-select: none;
+    /* Safari 3.1+ */
+    -moz-user-select: none;
+    /* Firefox 2+ */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+}
+.nested{
+ 
+    padding-left: 1em;
+}
+.parent::before {
+        content: "\25B6";
+        color:var(--gray-dark);
+        display: inline-block;
+        margin-right: 6px;
+        }
+
+.parent-down::before {
+    -ms-transform: rotate(90deg);
+    /* IE 9 */
+    -webkit-transform: rotate(90deg);
+    /* Safari */
+    transform: rotate(90deg);
+}
+.nested {
+    display: none;
+}
+.active {
+            display: block;
+       }
+
 @media screen and (max-height: 450px) {
             .sidenav {
                 padding-top: 15px;
