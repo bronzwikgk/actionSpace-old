@@ -3,8 +3,10 @@ var userDashboardInstace = activeViewModelV1;
 console.log("I Am Loaded", activeViewModelV1)
 var newEntity = new Entity(activeViewModelV1, window['actionSpace']);
 console.log(">>>>",document.getElementsByTagName('body')[0])
-var newSideBAr = new Entity(leftSideNavBar, document.getElementsByTagName('body')[0]);
-console.log("here", newEntity.entity, newSideBAr.entity);
+var newSideBAr = new Entity(leftSideNavBar, document.createElement('div'));
+var currentSideBar = document.getElementById('mySidenav');
+currentSideBar.replaceWith(newSideBAr.entity);
+//console.log("here", newEntity.entity, newSideBAr.entity);
 
 window.addEventListener('load', (event) => {
     console.log('page is fully loaded');
