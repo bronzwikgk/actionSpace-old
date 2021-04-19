@@ -3,6 +3,11 @@ var leftSideNavBar = {
     name: 'section',
     id: 'mySidenav',
     class: 'sidenav',
+    close: {
+        name: 'i',
+        'class': "material-icons icon",
+        'textContent': 'schedule',
+    },
     section1: {
         name: 'span',
         class: 'container column',
