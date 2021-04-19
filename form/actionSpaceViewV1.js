@@ -510,8 +510,8 @@ var actionSpaceBody = {
   //  ViewtoolBar: viewToolBar,
     editor: {
         name: 'div',
-        mode: 'edit',
-        toolBar:'viewToolbar',   
+       
+        toolBar: viewToolBar,
         id: 'actionSpaceEditor',
         mimeType: 'richText',
         "activeStoryTree": activeStoryTree,
@@ -522,7 +522,8 @@ var actionSpaceBody = {
             id: 'userInputSpace',
             activeActionStory: {
                 name: 'div',
-               // toolbar: viewToolBar,
+                mode: 'edit',
+                toolbar: 'viewToolBar',
                 id:'activeActionStory',
                 title: {
                     name: 'h1',
