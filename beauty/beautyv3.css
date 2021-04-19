@@ -34,20 +34,13 @@ body > *{
     font-style: normal;
     border-radius: 5px;
 }
-span{
-  height:1em;
-}
-
 a,button {
     color: var(--gray-dark);
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 400;
-    max-width: 144px;
     position: relative;
     text-decoration: none;
-   float: left;
-   display: block;
+    float: left;
+    display: block;
    width: 100%;
    opacity:0.89;
    padding-left: 1vw; 
@@ -56,7 +49,7 @@ a,button {
 }
 
 .material-icons{
-    display: inline-flex;
+    display: inline;
     vertical-align: top;
     padding:1% 1%;
 }
@@ -76,6 +69,10 @@ input{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+ }
+ .entity{
+      padding-left: 1vw; 
+   padding-right: 1vw; 
  }
  
 .column {
@@ -121,12 +118,10 @@ input{
 }
 
 #actionSpace {  
-  
-  height: 100%;
-  padding-left: 21px;
-  padding-right: 21px;
+   height: 100%;
   transition: margin-left .2s;
 }
+
 .sidenav {
             height: 100%;
             width: 0;
@@ -137,37 +132,32 @@ input{
             overflow-x: hidden;
             transition: 0.2s;
             padding-top: 60px;
+            background-color: var(--gray-dark);
+            color: var(--light);
         }
+        .sidenav> * {
+          
+            background-color: var(--gray-dark);
+            color: var(--light);
+        }
+ .closebtn{
 
+   cursor: pointer;
       
-
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-        @media screen and (max-height: 450px) {
-            .sidenav {
-                padding-top: 15px;
-            }
-
-            .sidenav a {
-                font-size: 18px;
-            }
-        }
-    
+ }   
+ .right{
+   float:right; clear:right;
+ }
 #topNav{
-    padding-right: 21px;
-    padding-left: 21px;
+   
     justify-content: space-between;
     height: 8vh;
     align-items: center;
     overflow: hidden;
     margin-bottom: 1vh;
+    background-color: khaki;
  }
- 
+
 #actionSearch {
     width: 34vw;
    padding-left: 1vw; 
@@ -183,9 +173,9 @@ input{
   }
 #actionSpaceBody{
 
-    padding-top: 1vw;
+
     height: inherit;
-    padding-left: 8vw;
+
    background-color: var(--light);
 
 }
@@ -194,9 +184,7 @@ input{
   padding-top: 2vw;
   margin: auto auto;
   height: inherit;
-  width: 54vw;
-  padding-left:8vw;
-  padding-right:8vw;
+ 
   background-color: var(--white);
 }
 
@@ -214,7 +202,23 @@ input{
 }
 #activeStoryTree{
   display: inline-block;
-  padding:1%;
+  margin-left: 5%;
+  width:13%;
   height:34%;
+  padding: 1%;
+  margin-top: 2%;
+  padding-top: 2%;
   background-color: rgba(0, 0, 0, 0.048);
 }
+
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+        
