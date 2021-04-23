@@ -22,109 +22,25 @@ var viewToolBar = {
 var leftSideNavBar = {
     name: 'div',
     id: 'mySidenav',
-    class: 'container sidenav column',
-    item: {
-        name: 'div',
-        class:'container right row clickable',
-        onclick: "closeNav()",
-        close: {
-            name: 'i',
-            'class': "material-icons",
-            'textContent': 'close',
+    class: 'container sidenav column ',
+    itemCollection: {
+        name: 'span',
+        class: 'container coloum items-right',
+
+        item:{
+            name: 'div',
+            class: 'item  row clickable items-right',
+            onclick: "closeNav()",
+            close: {
+                name: 'i',
+                'class': "material-icons right",
+                'textContent': 'close',
+            },
         },
     },
-    // section1: {
-    //     name: 'span',
-    //     class: 'row',
-    //     itemCollection1: {
-    //         name: 'div',
-    //         id: 'recentFilesShortCut',
-    //         class: 'container row clickable',
-    //         'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('recentStoriesCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
-    //         //'href': `#action:loadObject2Dom[storage,'recentStories','workspacebody']`,
-    //         item1: {
-    //             name: 'i',
-    //             'class': "material-icons",
-    //             'textContent': 'schedule',
-    //         },
-    //         item2: {
-    //             name: 'span',
-    //             'class': "content",
-    //             'textContent': 'recent stories',
-    //         }
-    //     },
-    //     itemCollection2: {
-    //         name: 'a',
-    //         'data-command': `[{"objModel":"engine","method":"engine.action","req": "loadObject2Dom","arguments":["{StorageHelper.get('draftsCollection')}","document.getElementbyId('workSpaceBody')"]}]`,
-    //         //  'href': `#action:loadObject2Dom[storage,draft,workspacebody]`,
-    //         class: 'clickable',
-    //         item1: {
-    //             name: 'i',
-    //             'class': "material-icons",
-    //             'textContent': 'insert_drive_file',
-    //         },
-    //         item2: {
-    //             name: 'span',
-             
-    //             'textContent': 'drafts',
-    //         }
-    //     },
-    //     itemCollection3: {
-    //         name: 'a',
-    //         'href': '#create:?workspaceBody/newStory',
-    //         class: 'clickable',
-    //         item1: {
-    //             name: 'i',
-    //             'class': "material-icons",
-    //             'textContent': 'add',
-    //         },
-    //         item2: {
-    //             name: 'span',
-                
-    //             'textContent': 'new actionStory',
-    //             //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
-    //         }
-    //     },
-    //     itemCollection4: {
-    //         name: 'a',
-    //         'href': '#open:?workspaceBody/openFile',
-    //         class: 'item row justify_SpaceBetween',
-    //         item1: {
-    //             name: 'i',
-    //             'class': "material-icons icon mr - 10",
-    //             'textContent': 'upload_file',
-    //         },
-    //         item2: {
-    //             name: 'div',
-    //             'class': "collection_name",
-    //             'textContent': 'open file',
-    //         }
-    //     },
-    //     itemCollection5: {
-    //         name: 'a',
-    //         'href': '#open:?workspaceBody/openFolder',
-    //         class: 'item row justify_SpaceBetween',
-    //         item1: {
-    //             name: 'i',
-    //             'class': "material-icons icon mr - 10",
-    //             'textContent': 'folder_open',
-    //         },
-    //         item2: {
-    //             name: 'div',
-    //             'class': "collection_name",
-    //             'textContent': 'add to collection',
 
-
-
-
-    //             //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
-    //         }
-    //     },
-    //     hr: {
-    //         name: 'hr',
-    //         class: 'hr',
-    //     },
-    // },
+   
+    
     // sideBar_Collection_withDropDown: {
     //     name: 'div',
     //     //  class: 'collection_list',
@@ -133,148 +49,148 @@ var leftSideNavBar = {
     //         //     class: "medium",
     //         textContent: "actionStories & Collections",
     //     },
-    //     collectionItem: {
-    //         name: 'div',
-    //         //    class: "container column",
-    //         innerHTML: `
-    //                   <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
-    //                   <ul class="nested container column">
-    //                   <li class='item row'>story 1</li>
-    //                 <li class='item row'>story 2</li>
-    //                 <li class='item row' >story 3</li>
-    //                 <li class='item row'>story 4</li>
-    //                 <li class='item row' >
-    //                     <li class='item row'><span class="parent">my Nested Stories</span>
-    //                         <ul class="nested">
-    //                             <li class='item row'>story 1</li>
-    //                             <li class='item row'>story 2</li>
-    //                             <li class='item row'>story 3</li>
-    //                             <li class='item row'>story 4</li>
-    //                         </ul>
-    //                     </li>
-    //                     errands
-    //                 </li>
+    //     // collectionItem: {
+    //     //     name: 'div',
+    //     //     //    class: "container column",
+    //     //     innerHTML: `
+    //     //               <li class='row item justify_SpaceBetween'><span class="parent ">my collection</span>
+    //     //               <ul class="nested container column">
+    //     //               <li class='item row'>story 1</li>
+    //     //             <li class='item row'>story 2</li>
+    //     //             <li class='item row' >story 3</li>
+    //     //             <li class='item row'>story 4</li>
+    //     //             <li class='item row' >
+    //     //                 <li class='item row'><span class="parent">my Nested Stories</span>
+    //     //                     <ul class="nested">
+    //     //                         <li class='item row'>story 1</li>
+    //     //                         <li class='item row'>story 2</li>
+    //     //                         <li class='item row'>story 3</li>
+    //     //                         <li class='item row'>story 4</li>
+    //     //                     </ul>
+    //     //                 </li>
+    //     //                 errands
+    //     //             </li>
 
-    //                 <li><span class="parent">recent Stories</span>
-    //                     <ul class="nested">
-    //                         <li>leaf</li>
-    //                         <li>leaf</li>
+    //     //             <li><span class="parent">recent Stories</span>
+    //     //                 <ul class="nested">
+    //     //                     <li>leaf</li>
+    //     //                     <li>leaf</li>
 
-    //                     </ul>
-    //                 </li>
-    //             </ul>
-    //         </li>
-    //         <span class="hozintalLine"></span>
-    //         <li><span class="parent">Recent Files</span>
-    //             <ul class="nested">
-    //                 <li>story 1</li>
-    //                 <li>story 2</li>
-    //                 <li>story 3</li>
-    //                 <li>story 4</li>
-    //                 <li>
-    //                 <li><span class="parent">my Nested Stories</span>
-    //                     <ul class="nested">
-    //                         <li>story 1</li>
-    //                         <li>story 2</li>
-    //                         <li>story 3</li>
-    //                         <li>story 4</li>
-    //                     </ul>
-    //                 </li>
-    //                 errands
-    //         </li>
+    //     //                 </ul>
+    //     //             </li>
+    //     //         </ul>
+    //     //     </li>
+    //     //     <span class="hozintalLine"></span>
+    //     //     <li><span class="parent">Recent Files</span>
+    //     //         <ul class="nested">
+    //     //             <li>story 1</li>
+    //     //             <li>story 2</li>
+    //     //             <li>story 3</li>
+    //     //             <li>story 4</li>
+    //     //             <li>
+    //     //             <li><span class="parent">my Nested Stories</span>
+    //     //                 <ul class="nested">
+    //     //                     <li>story 1</li>
+    //     //                     <li>story 2</li>
+    //     //                     <li>story 3</li>
+    //     //                     <li>story 4</li>
+    //     //                 </ul>
+    //     //             </li>
+    //     //             errands
+    //     //     </li>
 
-    //         <li><span class="parent">recent Stories</span>
-    //             <ul class="nested">
-    //                 <li>leaf</li>
-    //                 <li>leaf</li>
+    //     //     <li><span class="parent">recent Stories</span>
+    //     //         <ul class="nested">
+    //     //             <li>leaf</li>
+    //     //             <li>leaf</li>
 
-    //             </ul>
-    //         </li>
-    //         </ul>
-    //         </li>
-    //         <span class="hozintalLine"></span>
-    //         <li><span class="parent">Starred</span>
-    //             <ul class="nested">
-    //                 <li>story 1</li>
-    //                 <li>story 2</li>
-    //                 <li>story 3</li>
-    //                 <li>story 4</li>
-    //                 <li>
-    //                 <li><span class="parent">my Nested Stories</span>
-    //                     <ul class="nested">
-    //                         <li>story 1</li>
-    //                         <li>story 2</li>
-    //                         <li>story 3</li>
-    //                         <li>story 4</li>
-    //                     </ul>
-    //                 </li>
-    //                 errands
-    //         </li>
+    //     //         </ul>
+    //     //     </li>
+    //     //     </ul>
+    //     //     </li>
+    //     //     <span class="hozintalLine"></span>
+    //     //     <li><span class="parent">Starred</span>
+    //     //         <ul class="nested">
+    //     //             <li>story 1</li>
+    //     //             <li>story 2</li>
+    //     //             <li>story 3</li>
+    //     //             <li>story 4</li>
+    //     //             <li>
+    //     //             <li><span class="parent">my Nested Stories</span>
+    //     //                 <ul class="nested">
+    //     //                     <li>story 1</li>
+    //     //                     <li>story 2</li>
+    //     //                     <li>story 3</li>
+    //     //                     <li>story 4</li>
+    //     //                 </ul>
+    //     //             </li>
+    //     //             errands
+    //     //     </li>
 
-    //         <li><span class="parent">recent Stories</span>
-    //             <ul class="nested">
-    //                 <li>leaf</li>
-    //                 <li>leaf</li>
+    //     //     <li><span class="parent">recent Stories</span>
+    //     //         <ul class="nested">
+    //     //             <li>leaf</li>
+    //     //             <li>leaf</li>
 
-    //             </ul>
-    //         </li>
-    //         </ul>
-    //         </li>
-    //         <li><span class="parent">Tags</span>
-    //             <ul class="nested">
-    //                 <li>story 1</li>
-    //                 <li>story 2</li>
-    //                 <li>story 3</li>
-    //                 <li>story 4</li>
-    //                 <li>
-    //                 <li><span class="parent">my Nested Stories</span>
-    //                     <ul class="nested">
-    //                         <li>story 1</li>
-    //                         <li>story 2</li>
-    //                         <li>story 3</li>
-    //                         <li>story 4</li>
-    //                     </ul>
-    //                 </li>
-    //                 errands
-    //         </li>
+    //     //         </ul>
+    //     //     </li>
+    //     //     </ul>
+    //     //     </li>
+    //     //     <li><span class="parent">Tags</span>
+    //     //         <ul class="nested">
+    //     //             <li>story 1</li>
+    //     //             <li>story 2</li>
+    //     //             <li>story 3</li>
+    //     //             <li>story 4</li>
+    //     //             <li>
+    //     //             <li><span class="parent">my Nested Stories</span>
+    //     //                 <ul class="nested">
+    //     //                     <li>story 1</li>
+    //     //                     <li>story 2</li>
+    //     //                     <li>story 3</li>
+    //     //                     <li>story 4</li>
+    //     //                 </ul>
+    //     //             </li>
+    //     //             errands
+    //     //     </li>
 
-    //         <li><span class="parent">recent Stories</span>
-    //             <ul class="nested">
-    //                 <li>leaf</li>
-    //                 <li>leaf</li>
+    //     //     <li><span class="parent">recent Stories</span>
+    //     //         <ul class="nested">
+    //     //             <li>leaf</li>
+    //     //             <li>leaf</li>
 
-    //             </ul>
-    //         </li>
-    //         </ul>
-    //         </li>
-    //         <li><span class="parent">Trash</span>
-    //             <ul class="nested">
-    //                 <li>story 1</li>
-    //                 <li>story 2</li>
-    //                 <li>story 3</li>
-    //                 <li>story 4</li>
-    //                 <li>
-    //                 <li><span class="parent">my Nested Stories</span>
-    //                     <ul class="nested">
-    //                         <li>story 1</li>
-    //                         <li>story 2</li>
-    //                         <li>story 3</li>
-    //                         <li>story 4</li>
-    //                     </ul>
-    //                 </li>
-    //                 errands
-    //         </li>
+    //     //         </ul>
+    //     //     </li>
+    //     //     </ul>
+    //     //     </li>
+    //     //     <li><span class="parent">Trash</span>
+    //     //         <ul class="nested">
+    //     //             <li>story 1</li>
+    //     //             <li>story 2</li>
+    //     //             <li>story 3</li>
+    //     //             <li>story 4</li>
+    //     //             <li>
+    //     //             <li><span class="parent">my Nested Stories</span>
+    //     //                 <ul class="nested">
+    //     //                     <li>story 1</li>
+    //     //                     <li>story 2</li>
+    //     //                     <li>story 3</li>
+    //     //                     <li>story 4</li>
+    //     //                 </ul>
+    //     //             </li>
+    //     //             errands
+    //     //     </li>
 
-    //         <li><span class="parent">recent Stories</span>
-    //             <ul class="nested">
-    //                 <li>leaf</li>
-    //                 <li>leaf</li>
+    //     //     <li><span class="parent">recent Stories</span>
+    //     //         <ul class="nested">
+    //     //             <li>leaf</li>
+    //     //             <li>leaf</li>
 
-    //             </ul>
-    //         </li>
-    //         </ul>
-    //         </li>`
-    //     },
+    //     //         </ul>
+    //     //     </li>
+    //     //     </ul>
+    //     //     </li>`
+    //     // },
     //     collectionItem2: {
     //         name: 'div',
     //         //  class: "container column",
