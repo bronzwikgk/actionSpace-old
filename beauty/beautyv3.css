@@ -93,10 +93,11 @@ input{
    display: flex;
    align-items: flex-end;
    width: 100%;
-   background-color: var(--gray-dark);
+ 
  }
  .items-right{
-       color: var(--light);
+   align-items: end;
+   
  }
 .column {
   vertical-align: top;
@@ -187,7 +188,7 @@ input{
             overflow-x: hidden;
             transition: 0.2s;
          
-            background-color: var(--gray-dark);
+           
            
         }
        

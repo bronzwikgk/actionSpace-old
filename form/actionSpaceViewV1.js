@@ -23,22 +23,35 @@ var leftSideNavBar = {
     name: 'div',
     id: 'mySidenav',
     class: 'container sidenav column ',
-    itemCollection: {
+    itemCollection1: {
         name: 'span',
-        class: 'container coloum items-right',
-
+        class: 'container column items-right',
         item:{
             name: 'div',
             class: 'item  row clickable items-right',
             onclick: "closeNav()",
             close: {
                 name: 'i',
-                'class': "material-icons right",
+                'class': "material-icons",
                 'textContent': 'close',
             },
         },
     },
-
+   
+    itemCollection2: {
+        name: 'span',
+        class: 'container',
+        item: {
+            name: 'div',
+            class: 'item  row clickable items-right',
+            onclick: "closeNav()",
+            close: {
+                name: 'i',
+                'class': "material-icons",
+                'textContent': 'close',
+            },
+        },
+    },
    
     
     // sideBar_Collection_withDropDown: {
