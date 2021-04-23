@@ -20,7 +20,10 @@ class ActionView {
 //        console.log("here", newChild.entity, "target", target.entity.innerHTML);
         target.innerHTML = newChild.entity.innerHTML;
         return target;
-     }
+    }
+    replaceChild(parentNode, newChild, oldChild) {
+        parentNode.replaceChild(newChild, oldChild);
+    }
 
     /**
      * Validtions to be added.
