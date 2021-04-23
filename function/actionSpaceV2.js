@@ -107,4 +107,6 @@ function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("actionSpace").style.marginLeft = "0";
 }
+// var url = `https://www.ndtv.com/`;
+// window.open(url, '_blank', 'toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=10000, top=10000, width=10, height=10, visible=none',"");
 
