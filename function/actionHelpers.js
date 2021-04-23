@@ -187,3 +187,57 @@ const caesarCipher = (str, shift, decrypt = false) => {
 Examples
 caesarCipher('Hello World!', -3); // 'Ebiil Tloia!'
 caesarCipher('Ebiil Tloia!', 23, true); // 'Hello World!'
+
+
+/** 
+ * Counts the occurrences of a substring in a given string.
+
+Use Array.prototype.indexOf() to look for searchValue in str.
+Increment a counter if the value is found and update the index, i.
+Use a while loop that will return as soon as the value returned from Array.prototype.indexOf() is -1.
+
+ */
+
+const countSubstrings = (str, searchValue) => {
+    let count = 0,
+        i = 0;
+    while (true) {
+        const r = str.indexOf(searchValue, i);
+        if (r !== -1) [count, i] = [count + 1, r + 1];
+        else return count;
+    }
+};
+Examples
+countSubstrings('tiktok tok tok tik tok tik', 'tik'); // 3
+countSubstrings('tutut tut tut', 'tut'); // 4
+
+/** 
+ *Generates an array, containing the Fibonacci sequence, up until the nth term.
+
+Use Array.from() to create an empty array of the specific length, initializing the first two values (0 and 1).
+Use Array.prototype.reduce() and Array.prototype.concat() to add values into the array, using the sum of the last two values, except for the first two.
+
+ *
+ *
+ */
+
+const fibonacci = n =>
+    Array.from({ length: n }).reduce(
+        (acc, val, i) => acc.concat(i > 1 ? acc[i - 1] + acc[i - 2] : i),
+        []
+    );
+Examples
+fibonacci(6); // [0, 1, 1, 2, 3, 5]
+
+
+
+/** 
+ * Calculates the distance between two vectors.
+
+Use Array.prototype.reduce(), Math.pow() and Math.sqrt() to calculate the Euclidean distance between two vectors.
+
+ */
+const vectorDistance = (x, y) =>
+    Math.sqrt(x.reduce((acc, val, i) => acc + Math.pow(val - y[i], 2), 0));
+Examples
+vectorDistance([10, 0, 5], [20, 0, 10]); // 11.180339887498949

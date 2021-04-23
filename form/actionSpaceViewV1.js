@@ -371,8 +371,14 @@ var searchBar = {
         'class': "material-icons right",
         'textContent': 'search',
     },
+    autocomplete: {
+        name: 'div',
+        id: 'searchAutoComplete',
+        class: 'items-list',
+    },
 
 }
+
 var actionSpaceHeaderUserMenu = {
     "name": "span",
     class: 'container',
