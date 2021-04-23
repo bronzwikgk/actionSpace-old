@@ -37,21 +37,23 @@ var leftSideNavBar = {
             },
         },
     },
-   
-    itemCollection2: {
-        name: 'span',
-        class: 'container',
-        item: {
-            name: 'div',
-            class: 'item  row clickable items-right',
-            onclick: "closeNav()",
-            close: {
-                name: 'i',
-                'class': "material-icons",
-                'textContent': 'close',
-            },
+    itemCollection3: {
+        name: 'a',
+       // 'href': '#create:?workspaceBody/newStory',
+        class: '',
+        item1: {
+            name: 'i',
+            'class': "material-icons icon mr - 10",
+            'textContent': 'add',
         },
+        item2: {
+            name: 'div',
+            'class': "collection_name",
+            'textContent': 'new actionStory',
+            //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+        }
     },
+   
    
     
     // sideBar_Collection_withDropDown: {
