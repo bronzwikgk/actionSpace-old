@@ -375,6 +375,12 @@ var searchBar = {
         name: 'div',
         id: 'searchAutoComplete',
         class: 'items-list',
+        items: {
+            name: 'span',
+            class: 'autocomplete-items',
+            id: 'item-1',
+            
+        }
     },
 
 }
