@@ -523,7 +523,7 @@ var actionSpaceBody = {
   //  ViewtoolBar: viewToolBar,
     editor: {
         name: 'div',
-       
+       class:'column right',
         toolBar: viewToolBar,
         id: 'actionSpaceEditor',
         mimeType: 'richText',
