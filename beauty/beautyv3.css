@@ -48,6 +48,20 @@ a,button {
 
 }
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0 3px 5px rgba(71, 71, 71, 0.121) ;
+  z-index: 25;
+   flex-direction: column;
+ 
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+
 .material-icons{
     display: inline;
     vertical-align: top;
@@ -84,6 +98,7 @@ input{
   flex: 1;
 }
 .clickable{
+  
     cursor: pointer;
     text-align: center;
     align-items: center;
@@ -163,7 +178,7 @@ input{
             left: 0;
             overflow-x: hidden;
             transition: 0.2s;
-            padding-top: 60px;
+         
             background-color: var(--white);
            
         }

@@ -19,6 +19,7 @@ window.onhashchange = (event => {
     console.log("hashChange")
 })
 window.onclick = (event => {
+    console.log('clicked On ', event.target)
     var editTarget;
  
     if (event.target.hasAttribute('mode')) {
