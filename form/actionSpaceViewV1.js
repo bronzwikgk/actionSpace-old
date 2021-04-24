@@ -42,7 +42,7 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'a',
-                'href': '#create:?workspaceBody/newStory',
+                'href': '#action:replaceChild()',
                 class: 'row',
                 item1: {
                     name: 'i',
@@ -58,7 +58,7 @@ var leftSideNavBar = {
             },
             item3: {
                 name: 'a',
-                'href': '#create:?workspaceBody/newStory',
+                'href': '#fs:openFile',
                 class: 'row',
                 item1: {
                     name: 'i',
