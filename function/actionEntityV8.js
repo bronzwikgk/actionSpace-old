@@ -193,7 +193,7 @@ class Entity {
 
     return output;
 
-};
+}
     /*!
  * Create a new object composed of properties that meet specific criteria
  * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com

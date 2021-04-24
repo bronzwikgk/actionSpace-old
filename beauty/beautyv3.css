@@ -60,9 +60,6 @@ a,button {
  
 }
 
-#mySidenav{
-  
-}
 .dropdown:hover .dropdown-content {display: block;}
 
 .material-icons{
@@ -126,7 +123,7 @@ input{
  }
 
 .full-width{
-  width: 100%;
+  width: inherit;
  }
 
  .hr{

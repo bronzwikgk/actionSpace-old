@@ -42,7 +42,7 @@ var leftSideNavBar = {
             },
             item2: {
                 name: 'a',
-                // 'href': '#create:?workspaceBody/newStory',
+                'href': '#create:?workspaceBody/newStory',
                 class: 'row',
                 item1: {
                     name: 'i',
@@ -53,6 +53,54 @@ var leftSideNavBar = {
                     name: 'div',
                     'class': "collection_name",
                     'textContent': 'new actionStory',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            item3: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'upload_file',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'open file',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            item4: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'folder_open',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'add collection',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            item5: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'save',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'save',
                     //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
                 }
             },

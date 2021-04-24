@@ -13,12 +13,30 @@ Stop.go.think
 
 Free spirit responsible human being.
 `
+
+var playground = {
+    title: 'playground',
+    content: `Playground
+an actionSpace Powered by [ ehh ]
+
+⚡ Learn, explore, and test out the framework right within your browser.
+
+This editor supports a couple of features including:
+
+Live code previews.
+Resizable panes, view presets, and editor orientation.
+Previews with other files and formats to test for compatibility.
+    `
+}
+
+// Synonm of a file.
 var activeActionStory = {
     name: 'div',
     id: 'activeActionStory',
   
-    title: 'activeActionStory',
+    title: playground['title'],
     // resource: '/form/sampleActionStoriesV1.js',
-    textContent: sampleIntroStory,
+    textContent: playground['content'],
 }
+
 //console.log(sampleIntroStory);
