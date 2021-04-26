@@ -1,3 +1,12 @@
+
+let test = {
+  "c": "console",
+  "l": "log"
+};
+for (const key in test) { window[key] = test[key]; }
+
+window[c][l]('test'); // Prints out 'test'
+
 class ActionEngine {
   constructor() {
     this._flowResultState = {};
