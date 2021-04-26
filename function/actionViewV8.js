@@ -65,6 +65,7 @@ static closeModal(event){
  * @file get/set caret position and insert text
  * @author islishude
  * @license MIT
+ * https://gist.github.com/isLishude/6ccd1fbf42d1eaac667d6873e7b134f8
  */
  class Caret extends ActionView {
     /**

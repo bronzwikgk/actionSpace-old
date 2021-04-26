@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="card">
+        <!-- Cover -->
+        <div class="card__cover">
+            ...
+        </div>
+    
+        <!-- Content -->
+        <div class="card__content">
+            ...
+        </div>
+        ...
+    </div>
+    
+    <style>
+.card {
+    display: flex;
+    flex-direction: column;
+    }
+    
+    .card__cover {
+    height: 150px;
+    width: 100%;
+    }
+    
+    .card__content {
+    /* Take available height */
+    flex: 1;
+    }
+    </style>
+</body>
+</html>

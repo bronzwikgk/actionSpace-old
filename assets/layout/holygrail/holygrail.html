@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .container__main {
+            /* Take the remaining height */
+            flex-grow: 1;
+    
+            /* Layout the left sidebar, main content and right sidebar */
+            display: flex;
+            flex-direction: row;
+        }
+    
+        .container__left {
+            width: 25%;
+        }
+    
+        .container__middle {
+            /* Take the remaining width */
+            flex-grow: 1;
+        }
+    
+        .container__right {
+            width: 20%;
+        }
+    </style>
+    <div class="container">
+        <header>
+            ...
+        </header>
+        <main class="container__main">
+            <!-- Left sidebar -->
+            <aside class="container__left">...</aside>
+    
+            <!-- Main content -->
+            <article class="container__middle">...</article>
+    
+            <!-- Right sidebar -->
+            <nav class="container__right">...</nav>
+        </main>
+        <footer>
+            ...
+        </footer>
+        
+    </div>
+</body>
+</html>

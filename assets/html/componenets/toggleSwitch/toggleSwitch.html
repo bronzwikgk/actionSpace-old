@@ -1,0 +1,44 @@
+<label class="label">
+    <input type="checkbox" class="label__input" />
+
+    <!-- Circle -->
+    <div class="label__circle"></div>
+</label>
+.label {
+display: flex;
+
+/* Rounded border */
+border-radius: 9999px;
+
+/* Size */
+height: 32px;
+width: 64px;
+
+/* OFF status */
+background-color: rgba(0, 0, 0, .1);
+border: 1px solid rgba(0, 0, 0, .3);
+
+/* ON status */
+background-color: #357edd;
+border: 1px solid #357edd;
+/* Push the circle to the right */
+justify-content: flex-end;
+}
+
+.label__input {
+/* Hide the input */
+display: none;
+}
+
+.label__circle {
+/* Rounded border */
+border-radius: 9999px;
+
+/* Size */
+width: 32px;
+
+background-color: #FFF;
+
+/* OFF status */
+border: 1px solid rgba(0, 0, 0, .3);
+}
