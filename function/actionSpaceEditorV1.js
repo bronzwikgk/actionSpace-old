@@ -11,9 +11,11 @@ class ActionSpaceEditor{
         this._config = config
 
     }
+    //This method returns the Node/Element in which caret is placed.
     getCaretNode(){
 
     }
+    //this method get the current caret position
     getCaretIndexPosition(){
     }
     getCaretXyPosition(){
@@ -59,6 +61,7 @@ class ActionSpaceEditor{
             }
         }
     }
+    
 
   
 
