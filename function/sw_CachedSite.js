@@ -5,9 +5,7 @@ var cacheName = 'static';
 //     'Integration/HttpService.js',
 //     '/Integration/Authorization.js'
 // ]
-self.addEventListener("install",e=>{
-    console.log("Install !");
-});
+self.addEventListener("install",e=>{  console.log("Install !"); });
 self.addEventListener("fetch",e=>{
     console.log('Service Worker:Fetching');
     e.respondWith(
