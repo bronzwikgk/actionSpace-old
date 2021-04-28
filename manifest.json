@@ -22,7 +22,7 @@
                 "https://*/*"
             ],
             "js": [
-                "function/actionEventV1.js"
+                "function/actionSelectorV1.js"
                
             ],
             "css": [
