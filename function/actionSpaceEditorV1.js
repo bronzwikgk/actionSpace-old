@@ -60,8 +60,60 @@ class ActionSpaceEditor{
                 range.select();
             }
         }
-    }
 
+    }
+    onKeyPress(entity) {//used for typing
+        var match = {};
+        var currentSelection = window.getSelection();
+        var currentCaret = currentSelection.anchorOffset;
+        //console.log("key pressed",entity.target,)
+     //  console.log(entity.code + ":::: key pressed");
+     
+        
+        if (entity.key) {
+        
+           // console.log(this.bufferRange, entity.code);
+        
+           // this.bufferRange = this.bufferRange + entity.code;
+        
+            //console.log(this.bufferRange, entity.code);
+        
+            match['byCode'] = operate.find(replaceKeyPress, entity.code, 'keys');
+            match['byKey'] = operate.find(replaceKeyPress, entity.key, 'keys');
+          
+            
+            if (match['byCode'].length == 0 && match['byKey'].length == 0) {
+               //console.log("No match", match, match.length, entity.code)
+                entity.preventDefault(entity);
+                var appendingBuffer = entity.key;
+               // console.log("appending ", entity.key)
+               
+            } else {
+                if (match['byCode'].length > 0) {
+                    entity.preventDefault(entity);
+                    var replaceContent = replaceKeyPress[entity.code]['content'];
+
+                } else if (match['byKey'].length > 0) {
+                    entity.preventDefault(entity);
+                    var replaceContent = replaceKeyPress[entity.key]['content'];
+                }
+                
+                
+            console.log(replaceContent)
+
+                var appendingBuffer = replaceContent;
+              
+            }
+            console.log("appending ", appendingBuffer, appendingBuffer.length, currentSelection,entity.target)
+            var response = currentSelection.anchorNode.data.substr(0, currentSelection.anchorOffset) + appendingBuffer + currentSelection.anchorNode.data.substr(currentSelection.anchorOffset);
+            currentSelection.anchorNode.data = response;
+            //console.log(response);
+            Caret.moveCaret(window, currentCaret + 1);
+          
+            
+        }
+        
+    }
 
   
 
