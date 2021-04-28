@@ -1,3 +1,24 @@
+
+var actionSpaceEditorModel = {
+    editor:{
+        name:'div',
+        class:'full-width height-full',
+        //id:'actionSpaceEditor' + uid();
+        config:{
+            
+            contentEditable :  true,
+            previewElement : actionSpaceEditor['output_preview'], 
+            blocks:[
+
+            ]
+        }
+
+    },
+    output_preview:{
+
+    }
+    
+}
 /**
  * This  class converts a normal HTML element
  */
