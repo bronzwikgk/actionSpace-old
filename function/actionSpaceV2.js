@@ -77,17 +77,27 @@ window.onclick = (event => {
 })
 window.onmouseover = (event => {
     var editTarget;
- //   console.log(event.target.id, event.target.hasAttribute('edit'))
-  //  console.log("parent", event.target.parentElement.id, event.target.parentElement.hasAttribute('edit'))
-   
-    
+   console.log(event.target.id, event.target.hasAttribute('edit'))
+   var selectCheckBox = document.createElement("INPUT");
+   selectCheckBox.setAttribute("type", "checkbox");
+   selectCheckBox.setAttribute("id", "selector");
+   var allSectionBox =  document.querySelectorAll('#selector');
+   for (var key in allSectionBox){
+       allSectionBox[key].parentNode.removeChild(allSectionBox[key]);
+   }
+   //allSectionBox.parentNode.removeChild(elem);
+   console.log(allSectionBox, typeof allSectionBox);
+
+   var activeSelectionBox = event.target.parentNode.insertBefore(selectCheckBox, event.target);
+ //  console.log("active Selection Box",activeSelectionBox);
+    console.log("parent", event.target.parentElement.id, event.target.parentElement.hasAttribute('edit')) 
 })
 
 document.onmouseenter = (event => {
-   // console.log("mouseEnterdOn", event.target)
+    console.log("mouseEnterdOn", event.target)
 })
 document.onmouseleave = (event => {
-   // console.log("mouseLeftFrom", event.target)
+   console.log("mouseLeftFrom", event.target)
 })
 document.onkeypress = (event => {
     
