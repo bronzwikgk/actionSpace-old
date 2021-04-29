@@ -8,6 +8,13 @@ class operate {
     static isInside(entity2SearchIn, string2Search, options) {
         console.log(Object.values(entity2SearchIn), string2Search)
     }
+     static validate(value, rules) { 
+        var self = this;
+        return rules.every(function (rule) {
+            return self[rule](value);
+        });
+
+    }
     static trueTypeOf(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 }
