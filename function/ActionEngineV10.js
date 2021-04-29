@@ -90,6 +90,29 @@ class ActionEngine {
     //  console.log(response)
     return response;
   }
+  /**
+   *  This method executes an action Request or a callback given duration.
+   *  few optaional parameter are present.
+   * @param {*} time : Time in miliseconds
+   * @param {*} callback : default value is action, can be call back.
+   */
+  actionAfter(time, callback) {
+    let timerId = setTimeout(() => alert("never happens"), 1000);
+
+  }
+  /**
+   * This method exectues an action Reques or makes a callback in conitnues internal with the given time duration.
+   * An optional Property of time out and number of times can be used to stop the execution.
+   * 
+   * @param {*} time 
+   * @param {*} callback 
+   */
+  actionAfterEvery(time, callback) {
+    let timerId = setTimeout(() => alert("never happens"), 1000);
+    //   let timerId = setInterval(() => alert('tick'), 2000);
+    console.log(arguments)
+    //    setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
+  }
   
   /**
    * This method is used for parallel requests

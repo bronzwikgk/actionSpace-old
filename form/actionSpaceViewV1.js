@@ -1,24 +1,4 @@
-var viewToolBar = {
-    name: 'div',
-    class: 'toolbar right clickable',
-    id:'viewToolbar',
-    expand: {
-        name: 'i',
-        'class': "material-icons",
-        'textContent': 'open_in_full',
-    },
-    minimise: {
-        name: 'i',
-        'class': "material-icons",
-        'textContent': 'minimize',
-    },
-    close: {
-        name: 'i',
-        'class': "material-icons",
-        'textContent': 'close',
-    },
 
-}
 var leftSideNavBar = {
     name: 'div',
     id: 'mySidenav',
@@ -479,68 +459,12 @@ var topNav = {
     item2: searchBar,
     item3:actionSpaceHeaderUserMenu,    
 }
-var selectBox = {
-    name: 'span',
-    style: 'visibility:hidden',
-    
-    items1: {
-        name: 'input',
-        type: 'checkbox',
-        id:'selectBox',
-    },
-    items2: {
-        name: 'label',
-        'for': 'selectBox',
-        textContent:"Select",
-    }
-}
-var activeStoryTree = {
-    name: 'span',
-    class:'sticky verticle ',
-    id: 'activeStoryTree',
-    textContent: 'activeStoryTree',
-    innerHTML:'create Tree Element'
-}
 var actionSpaceBody = {
     name: 'div',
    // class: 'container row full-width',
     id: 'actionSpaceBody',
   //  ViewtoolBar: viewToolBar,
-    editor: {
-        name: 'div',
-       class:'column right',
-        toolBar: viewToolBar,
-        id: 'actionSpaceEditor',
-        mimeType: 'richText',
-        "activeStoryTree": activeStoryTree,
-        //  class: 'row',
-        userInputSpace: {
-            name: 'div',
-            class:'full-width',
-            id: 'userInputSpace',
-            activeActionStory: {
-                name: 'div',
-                mode: 'edit',
-                toolbar: 'viewToolBar',
-                id:'activeActionStory',
-                title: {
-                    name: 'h1',
-                    textContent: activeActionStory.title,
-                },
-                hr: {
-                    name:"hr",
-                },
-                actionStory: activeActionStory,
-
-            },
-        },
-        // editorMenu:'editorMenu',
-        // richTextMenu:'richTextMenu',
-        // contextMenu: 'contextMenu',
-        // insertMenu: 'insertMenu',
-        // footer: 'actionEditorFooter',
-
-    },
+    editor: editorV1 // from 
    
    
    

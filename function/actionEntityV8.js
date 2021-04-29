@@ -16,7 +16,7 @@
  */
 class Entity {
     constructor(input, output) {
-       console.log("entity", input, output)
+   //    console.log("entity", input, output)
         this.input = input;
         this.output = output;
         this.entity = process.processReq(input, output);
