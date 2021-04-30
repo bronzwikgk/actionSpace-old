@@ -4,27 +4,6 @@ var leftSideNavBar= {
     class: "column",
     inside_navigationSection: {
         name: 'div', id: "inside_navigationSection",
-        // sideBar_header: {
-        //     name: 'div',
-        //     id:'side_bar_header',
-        //     class: "justify_SpaceBetween container",
-        //     brand: {
-        //         name: 'div',
-        //         class: "brand_logo",
-        //         textContent: 'Sunil Kumar',
-        //             },
-        //     sideBarControlMenu: {
-        //         name: 'div',
-        //         class: "HeaderControl align_center justify_center",
-        //         button1: {
-        //             name: 'button',class: "mode_toggle_btn mr-15", id: "MainHeaderHamburger1",
-        //                 },
-        //         button2: {
-        //             name: 'i','class': "material-icons",'textContent': 'add_box',
-        //                 },
-        //     },
-
-        // },
         sideBar_CollectionList: {
             name: 'div',
              //   class: 'collection_list',

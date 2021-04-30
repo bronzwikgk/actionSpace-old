@@ -1,3 +1,11 @@
+const modelSchema = {
+    reqName: { type: String, required: true },
+    objectModel: { type: Object, required: true },
+    method: { type: Object, required: true },
+    arguments: { type: Array, required: false },
+    andThen: { type: Array, required: false },
+}
+
 /**
  * @type {HTMLJSONEntityModel4Html}
  */
