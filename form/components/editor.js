@@ -9,6 +9,13 @@ var actionSpaceEditorModel = {
     name: 'div',
     config:'actionSpaceConfig',
 }
+var deviceToolBar = {
+    name: 'span',
+    class: 'btn',
+    btnCollection: {
+        
+    }
+}
 var viewToolBar = {
     name: 'div',
     class: 'toolbar right clickable',

@@ -43,7 +43,7 @@ var leftSideNavBar = {
                 item1: {
                     name: 'i',
                     'class': "material-icons icon mr - 10",
-                    'textContent': 'upload_file',
+                    'textContent': 'open_in_new',
                 },
                 item2: {
                     name: 'div',
@@ -84,6 +84,58 @@ var leftSideNavBar = {
                     //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
                 }
             },
+            item6: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'save_alt',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'export',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            item7: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'upload_file',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'import',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            item7: {
+                name: 'a',
+                'href': '#create:?workspaceBody/newStory',
+                class: 'row',
+                item1: {
+                    name: 'i',
+                    'class': "material-icons icon mr - 10",
+                    'textContent': 'backup',
+                },
+                item2: {
+                    name: 'div',
+                    'class': "collection_name",
+                    'textContent': 'backup',
+                    //  'data-command': '[{"command":"new ","entity": "actionContent","value":"innerHTML"}]',
+                }
+            },
+            hr: {
+                name: 'hr',
+                class:'hr',
+            }
         },
     },
     section2:{},
@@ -300,7 +352,7 @@ var brand2 = {
         name: 'span',
         class: 'container clickable',
         id: 'brand',
-       
+       'href':'#sidebar?',
         onclick:"openNav()",
         // class: 'align_center itemsContainer ',
         logo: {
@@ -349,7 +401,6 @@ var searchBar = {
     },
 
 }
-
 var actionSpaceHeaderUserMenu = {
     "name": "span",
     class: 'container',
@@ -465,9 +516,6 @@ var actionSpaceBody = {
     id: 'actionSpaceBody',
   //  ViewtoolBar: viewToolBar,
     editor: editorV1 // from 
-   
-   
-   
     
 }
 var activeViewModelV1 = {
