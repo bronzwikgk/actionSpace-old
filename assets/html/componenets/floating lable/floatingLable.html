@@ -1,0 +1,33 @@
+<div class="container">
+    <!-- The input -->
+    <input placeholder="Placeholder" class="container__input" />
+
+    <!-- The label -->
+    <label class="container__label">Placeholder</label>
+</div>
+<style>
+    .container {
+    position: relative;
+}
+
+/*
+Show the label at desired position when the 
+placeholder of input isn't shown
+*/
+.container__input:not(:placeholder-shown) + .container__label {
+    background: #FFF;
+    transform: translate(0, -50%);
+    opacity: 1;
+}
+
+.container__label {
+    /* Position the label */
+    left: 8px;
+    position: absolute;
+    top: 0;
+
+    /* Hide it by default */
+    opacity: 0;
+    transition: all 200ms;
+}
+</style>

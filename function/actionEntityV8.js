@@ -16,7 +16,7 @@
  */
 class Entity {
     constructor(input, output) {
-       console.log("entity", input, output)
+   //    console.log("entity", input, output)
         this.input = input;
         this.output = output;
         this.entity = process.processReq(input, output);
@@ -193,7 +193,7 @@ class Entity {
 
     return output;
 
-};
+}
     /*!
  * Create a new object composed of properties that meet specific criteria
  * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com
