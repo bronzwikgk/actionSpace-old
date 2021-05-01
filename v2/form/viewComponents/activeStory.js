@@ -24,5 +24,8 @@ var artcileSchema = {
   },
   "headline": "",
   "image": "",
-  "datePublished": ""
+  "datePublished": "",
+  "dateCreated": '',
+  "lastModifiedby": '',
+  "lastModifiedat":"",
 }
