@@ -1,5 +1,5 @@
-var activeActionSpace = {
-    header: {
+var activeActionSpaceViewModel = {
+    activeActionSpace : { header: {
         name: 'div',
         class: 'row container',
         id:'header',
@@ -17,6 +17,7 @@ var activeActionSpace = {
         name: 'div',
         class: 'container row',
         id:'footer',
-    }
+    },
+}
 
 }
