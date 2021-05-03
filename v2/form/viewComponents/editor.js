@@ -10,11 +10,25 @@ var actionSpaceEditorModel = {
     config:'actionSpaceConfig',
 }
 var deviceToolBar = {
-    name: 'span',
-    class: 'btn',
-    btnCollection: {
-        
-    }
+    name: 'div',
+    class: 'toolbar right clickable',
+    id: 'viewToolbar',
+    phone: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'smartphone',
+    },
+    tablet: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'minimize',
+    },
+    computer: {
+        name: 'i',
+        'class': "material-icons",
+        'textContent': 'computer',
+    },
+
 }
 var viewToolBar = {
     name: 'div',

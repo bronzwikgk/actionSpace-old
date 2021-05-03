@@ -1,16 +1,32 @@
 var activeActionSpaceViewModel = {
-    activeActionSpace : { header: {
+    header: {
         name: 'div',
-        class: 'row container',
+        class: 'container row',
         id:'header',
         
     },
     body: {
+        name: 'div',
+        class: 'container row',
+        id: 'actionSpaceBody',
+        
         sidebar: {
-            
+            name: 'div',
+            class: 'container column',
+            id: 'sidebar',
         },
-        actionSpaceBody: {},
-        rightBar:{},
+        actionSpaceEditor: {
+            name: 'div',
+            class: 'container column',
+            id: 'actionSpaceEditor',
+            
+
+        },
+        rightBar: {
+            name: 'div',
+            class: 'container column',
+            id: 'rightbar',
+        },
 
     },
     footer: {
@@ -18,6 +34,6 @@ var activeActionSpaceViewModel = {
         class: 'container row',
         id:'footer',
     },
-}
+
 
 }
