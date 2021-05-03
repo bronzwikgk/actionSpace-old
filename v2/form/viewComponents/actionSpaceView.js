@@ -34,6 +34,4 @@ var activeActionSpaceViewModel = {
         class: 'container row',
         id:'footer',
     },
-
-
 }

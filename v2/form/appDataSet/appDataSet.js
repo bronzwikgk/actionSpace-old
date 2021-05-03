@@ -23,3 +23,16 @@ var serNodeResponse = {
 }
 
 
+var appRoutes= {
+    visitor: {
+        
+    },
+    user: {
+        
+    },
+    organisation: {
+        
+    },
+}
+
+
