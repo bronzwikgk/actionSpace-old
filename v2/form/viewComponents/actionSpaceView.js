@@ -2,7 +2,8 @@ var activeActionSpaceViewModel = {
     header: {
         name: 'div',
         class: 'container row',
-        id:'header',
+        id: 'header',
+        topNav,
         
     },
     body: {

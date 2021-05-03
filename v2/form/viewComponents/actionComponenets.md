@@ -6,4 +6,4 @@ Most of the componenet in actinComponent library extends the default HTML compon
 The classes are divided on simple basic terms.
 
 List of Component.
-1. Block : 
+1. container : 
