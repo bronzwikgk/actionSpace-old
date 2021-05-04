@@ -155,7 +155,7 @@ var actionSpaceHeaderUserMenu = {
 var topNav = {
     name: 'div',
     id: 'topNav',
-    class: 'container row full-width',
+    class: 'container row full-width justify_SpaceBetween',
     //  class: 'topnav row container full-width ',
     item1: brand2,
     item2: searchBar,
