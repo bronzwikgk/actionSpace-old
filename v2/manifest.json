@@ -33,6 +33,7 @@
     ],
     "permissions": [
         "history",
+        "bookmarks",
         "nativeMessaging",
         "webRequest",
         "webRequestBlocking",
