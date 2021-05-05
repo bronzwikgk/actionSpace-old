@@ -10,7 +10,7 @@
  *               d. get :
  *               e. update:
  *               f.get4rmPath:
- *               g.string2Path
+ *               g.string2Path : 
  * 
  * * 
  */
