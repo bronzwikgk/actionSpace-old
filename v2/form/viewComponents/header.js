@@ -156,7 +156,7 @@ var topNav = {
     name: 'div',
     id: 'topNav',
    // class: 'container row full-width align_center',
-    //  class: 'topnav row container full-width ',
+      class: 'topnav row container full-width ',
     item1: brand2,
     item2: searchBar,
     item3: actionSpaceHeaderUserMenu,
