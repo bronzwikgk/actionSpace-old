@@ -1,20 +1,20 @@
 
 var brand2 = {
     name: 'span',
-    class: 'container clickable',
+   // class: 'container clickable',
     id: 'brand',
     'href': '#sidebar?',
     onclick: "openNav()",
     // class: 'align_center itemsContainer ',
     logo: {
         'name': 'img',
-        class: 'appLogo entity',
+        class: 'appLogo',
         'id': 'appLogo',
         'src': '/assets/images/icons_221x.png',
     },
     text: {
         name: 'span',
-        class: 'appTitle entity',
+      //  class: 'appTitle entity align_center',
         textContent: `[ everything happens here ]`
     }
 
@@ -22,12 +22,12 @@ var brand2 = {
 }
 var searchBar = {
     name: 'span',
-    class: 'container ',
+   // class: 'container ',
     id: 'actionSearch',
 
     input: {
         'name': 'input',
-        class: 'autoComplete',
+      //  class: 'autoComplete',
         'desc': 'This is a horizontical bar, more functionality of this bar to be added',
         'id': 'searchInput',
         'placeholder': "search here...",
@@ -54,7 +54,7 @@ var searchBar = {
 }
 var actionSpaceHeaderUserMenu = {
     "name": "span",
-    class: 'container',
+   // class: 'container',
     id: 'actionSpaceHeaderUserMenu',
     menuItem1: {
         'name': 'a',
@@ -155,7 +155,7 @@ var actionSpaceHeaderUserMenu = {
 var topNav = {
     name: 'div',
     id: 'topNav',
-    class: 'container row full-width justify_SpaceBetween',
+   // class: 'container row full-width align_center',
     //  class: 'topnav row container full-width ',
     item1: brand2,
     item2: searchBar,

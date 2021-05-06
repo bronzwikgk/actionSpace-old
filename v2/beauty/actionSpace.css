@@ -58,6 +58,13 @@ body > *{
   flex-basis: 100%;
   flex: 1;
 }
+
+.align_center {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .justify_SpaceBetween{
    -webkit-box-align: center;
   -ms-flex-align: center;
@@ -69,4 +76,17 @@ body > *{
 .material-icons{
     display: inline-flex;
     vertical-align: top;
+}
+a,button {
+    color: var(--gray-dark);
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    float: left;
+    display: block;
+   width: 100%;
+   opacity:0.89;
+   padding-left: 1vw; 
+   padding-right: 1vw; 
+
 }
