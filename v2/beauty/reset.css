@@ -55,3 +55,15 @@ hr {
   height: 0; /* 1 */
   overflow: visible; /* 2 */
 }
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * Remove the gray background on active links in IE 10.
+ */
+
+a {
+  background-color: transparent;
+}
+
