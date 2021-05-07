@@ -17,7 +17,7 @@ var richTextToolbar = {
 var textFormatting = ['text', 'h1', 'h2', 'h3']
 var textAlignment = [ 'left align','center align', 'right align', 'verticleLine', 'decrease indent',' increase indent']
 var blockFormatting = ['bullet List', 'Numberd List', 'check list', 'collapsible list']
-var blocks=['Quote Block', "Code Block"]
+var blocks=['container','Quote Block', "Code Block",'para block','image']
 var editor = { richTextToolbar }
 var menu= {
     "menus": [
