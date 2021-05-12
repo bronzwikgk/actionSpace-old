@@ -1,7 +1,7 @@
 {
     "name": "ehh_In_TestingV_1_O",
     "version": "1.0",
-    "manifest_version": 2,
+"manifest_version": 3,
     "description": "everythingHappenHere.InTestVO_1",
     "icons": {
         "128": "assets/images/icons_221x.png"
@@ -10,11 +10,9 @@
         "default_popup": "popup.html"
       },
     "background": {
-        "scripts": [
-            "function/bgServiceV2.js"
-        ],
-        "persistent": true
+        "service_worker": "function/bgServiceV2.js"
     },
+  
     "content_scripts": [
         {
             "matches": [
@@ -22,8 +20,7 @@
                 "https://*/*"
             ],
             "js": [
-                "function/actionSelectorV1.js"
-               
+                "function/actionSelectorV1.js" 
             ],
             "css": [
                 "beauty/style.css"
@@ -36,8 +33,8 @@
         "bookmarks",
         "nativeMessaging",
         "webRequest",
-        "webRequestBlocking",
-        "<all_urls>"
+        "webRequestBlocking"
+      
     ],
     "offline_enabled": true
 }

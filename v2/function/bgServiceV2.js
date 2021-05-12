@@ -11,7 +11,12 @@ const SCRIPT_TYPE = (() => {
     }
 })();
 
-
+function temp() {
+   
+    var bookmarks = chrome.bookmarks.getTree();
+    console.log("temp", bookmarks);
+}
+temp();
 chrome.runtime.onInstalled.addListener(() => {
     console.log('onInstalled...');
     // create alarm after extension is installed / upgraded
