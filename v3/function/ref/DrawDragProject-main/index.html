@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw Drop and Drag</title>
+    <style>
+         #canvas {
+        width:1000px;
+        height:420px;
+        border: 10px solid transparent;
+        background-color: #295939;
+    }
+    .square {
+        border: 1px solid #e9b0df ;
+        position: absolute;
+    }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <script src="script.js"></script>
+    <script>
+        clickDraw(document.getElementById('canvas'));
+    </script>
+    
+</body>
+</html>
