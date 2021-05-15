@@ -1,0 +1,436 @@
+var sample = {
+    "quiz": {
+        "sport": {
+            "q1": {
+                "question": "Which one is correct team name in NBA?",
+                "options": [
+                    "New York Bulls",
+                    "Los Angeles Kings",
+                    "Golden State Warriros",
+                    "Huston Rocket"
+                ],
+                "answer": "Huston Rocket"
+            }
+        },
+        "maths": {
+            "q1": {
+                "question": "5 + 7 = ?",
+                "options": [
+                    "10",
+                    "11",
+                    "12",
+                    "13"
+                ],
+                "answer": "12"
+            },
+            "q2": {
+                "question": "12 - 8 = ?",
+                "options": [ "1", "2", "3", "4"],
+                "answer": "4"
+            }
+        }
+    }
+}
+
+var toolBara = {
+    "buttons": [
+        {
+            "text": "Clean",
+            "command": "cleanDoc",
+            "image": "icons\/clean.gif"
+        },
+        {
+            "text": "Print",
+            "command": "printDoc",
+            "image": "icons\/print.png"
+        },
+        {
+            "text": "Undo",
+            "command": "undo",
+            "image": "icons\/undo.gif"
+        },
+        {
+            "text": "Redo",
+            "command": "redo",
+            "image": "icons\/redo.gif"
+        },
+        {
+            "text": "Remove formatting",
+            "command": "removeFormat",
+            "image": "icons\/format.png"
+        },
+        {
+            "text": "Bold",
+            "command": "bold",
+            "image": "icons\/bold.gif"
+        },
+        {
+            "text": "Italic",
+            "command": "italic",
+            "image": "icons\/italic.gif"
+        },
+        {
+            "text": "Underline",
+            "command": "underline",
+            "image": "icons\/underline.gif"
+        },
+        {
+            "text": "Left align",
+            "command": "justifyleft",
+            "image": "icons\/justifyleft.gif"
+        },
+        {
+            "text": "Center align",
+            "command": "justifycenter",
+            "image": "icons\/justifycenter.gif"
+        },
+        {
+            "text": "Right align",
+            "command": "justifyright",
+            "image": "icons\/justifyright.gif"
+        },
+        {
+            "text": "Numbered list",
+            "command": "insertorderedlist",
+            "image": "icons\/numberedlist.gif"
+        },
+        {
+            "text": "Dotted list",
+            "command": "insertunorderedlist",
+            "image": "icons\/dottedlist.gif"
+        },
+        {
+            "text": "Quote",
+            "command": "formatblock",
+            "value": "blockquote",
+            "image": "icons\/quote.gif"
+        },
+        {
+            "text": "Delete indentation",
+            "command": "outdent",
+            "image": "icons\/outdent.gif"
+        },
+        {
+            "text": "Add indentation",
+            "command": "indent",
+            "image": "icons\/indent.gif"
+        },
+        {
+            "text": "Hyperlink",
+            "command": "createLink",
+            "image": "icons\/hyperlink.gif"
+        },
+        {
+            "text": "Cut",
+            "command": "cut",
+            "image": "icons\/cut.gif"
+        },
+        {
+            "text": "Copy",
+            "command": "copy",
+            "image": "icons\/copy.gif"
+        },
+        {
+            "text": "Paste",
+            "command": "paste",
+            "image": "icons\/paste.gif"
+        }
+    ]
+}
+
+const UserSchema = {
+    name: {
+        type: String, required: true
+    }, email: {
+        type: String, required: true
+    }, password: {
+        type: String, required: true
+    }, date: {
+        type: Date, default: Date.now
+    }
+};
+
+var schema = {
+    "name": {
+        "title": "Name",
+        "description": "Nickname allowed",
+        "type": "string"
+    },
+    "gender": {
+        "title": "Gender",
+        "description": "Your gender",
+        "type": "string",
+        "enum": [
+            "male",
+            "female",
+            "alien"
+        ]
+    }
+}
+
+var sample4 = {
+    "id": "https://example.com/person.schema.json",
+    "schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Person",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "type": "string",
+            "description": "The person's first name."
+        },
+        "lastName": {
+            "type": "string",
+            "description": "The person's last name."
+        },
+        "age": {
+            "description": "Age in years which must be equal to or greater than zero.",
+            "type": "integer",
+            "minimum": 0
+        }
+    }
+}
+
+var samplen = {
+    "type": "Categorization",
+    "elements": [
+        {
+            "type": "Category",
+            "label": "Basic Information",
+            "elements": [
+                {
+                    "type": "HorizontalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/firstName"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/secondName"
+                        }
+                    ]
+                },
+                {
+                    "type": "HorizontalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/birthDate"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/nationality"
+                        }
+                    ]
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/provideAddress"
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/vegetarian"
+                }
+            ]
+        },
+        {
+            "type": "Category",
+            "label": "Address",
+            "elements": [
+                {
+                    "type": "HorizontalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/address/properties/street"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/address/properties/streetNumber"
+                        }
+                    ]
+                },
+                {
+                    "type": "HorizontalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/address/properties/city"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/address/properties/postalCode"
+                        }
+                    ]
+                }
+            ],
+            "rule": {
+                "effect": "SHOW",
+                "condition": {
+                    "scope": "#/properties/provideAddress",
+                    "schema": {
+                        "const": true
+                    }
+                }
+            }
+        },
+        {
+            "type": "Category",
+            "label": "Additional",
+            "elements": [
+                {
+                    "type": "Control",
+                    "scope": "#/properties/vegetarianOptions/properties/vegan"
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/vegetarianOptions/properties/favoriteVegetable"
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/vegetarianOptions/properties/otherFavoriteVegetable",
+                    "rule": {
+                        "effect": "SHOW",
+                        "condition": {
+                            "scope": "#/properties/vegetarianOptions/properties/favoriteVegetable",
+                            "schema": {
+                                "const": "Other"
+                            }
+                        }
+                    }
+                }
+            ],
+            "rule": {
+                "effect": "SHOW",
+                "condition": {
+                    "scope": "#/properties/vegetarian",
+                    "schema": {
+                        "const": true
+                    }
+                }
+            }
+        }
+    ]
+}
+var veryBasic = {
+    "schema": {
+        "field": {
+            "input": "string",
+            "lable": "A field"
+        }
+    },
+    "form": [
+        {
+            "key": "field"
+        },
+        {
+            "button": "submit",
+            "lable": "Submit"
+        }
+    ]
+}
+
+
+var basica = {
+    "schema": {
+      "name": {
+        "label": "Name",
+        "input": "string",
+        "span": "Nickname allowed"
+      },
+      "gender": {
+        "label": "Gender",
+        "select": "string",
+        "option": [
+          "male",
+          "female",
+          "alien"
+        ],
+        "span": "Your gender"
+      }
+    }
+  }
+var schema2 = {
+    "type": "object",
+    "title": "The User Registration Schema",
+    "description": "Sample Schema 1 for testing",
+    "default": {},
+    "properties": {
+        "UserName": {
+            "type": "string",
+            "maxLength": 20
+        },
+        "Email": {
+            "type": "string",
+            "format": "idn-email"
+        },
+        "Gender": {
+            "type": "string",
+            "enum": [
+                "Male",
+                "Female",
+                "Others"
+            ]
+        },
+        "DateOfBirth": {
+            "type": "string",
+            "format": "date"
+        },
+        "Country": {
+            "const": "India"
+        },
+        "MagicNos": {
+            "type": "array",
+            "contains": {
+                "type": "number",
+                "minimum": 0,
+                "exclusiveMaximum": 10000
+            }
+        },
+        "Document": {
+            "type": "string",
+            "contentMediaType": "text/html"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "UserName",
+        "Email",
+        "Gender",
+        "DateOfBirth",
+        "Country",
+        "MagicNos",
+        "Document"
+    ]
+}
+var htmlSelect = {
+    "type": "object",
+    "title": "htmlClass demonstration",
+    "properties": {
+        "input": {
+            "type": "string"
+        },
+        "input": {
+            "type": "number"
+        }
+    }
+}
+
+var rule ={
+        "validate": {
+            "all": [
+            {
+                "from": "displayMessage",
+                "operator": "isOneOf",
+                "value": true
+            }
+        ]
+    },
+ 
+        "event": {
+            "type": 'message',
+            "params": {
+                "data": 'hello-world!'
+        }
+    }
+}
