@@ -16,7 +16,7 @@ class ActionEvent {
        // console.log(this._activeListners);
         this._elements;
         //  this.on('click', e => this.handleEvent(e));
-          this.createListeners(activeListners);
+        this.createListeners(activeListners);
        
 
     }
@@ -54,7 +54,6 @@ class ActionEvent {
     }
 
 }
-console.log(chrome.history);
 
 window.onload= function () {
     var engine = new ActionEngine();
