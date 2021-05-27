@@ -1,3 +1,11 @@
+const reqest = {
+    reqName : 'format',
+    objectModel: 'document',
+    method: 'execCommand',
+    args:[args]
+}
+
+
 const Format = function (args) {
     this.reqName = "Format";
     this.scope = 'document';
