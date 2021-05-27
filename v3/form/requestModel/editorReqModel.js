@@ -4,7 +4,7 @@ const reqest = {
     method: 'execCommand',
     args:[args]
 }
-
+console.log(window[requestAnimationFrame.args]);
 
 const Format = function (args) {
     this.reqName = "Format";
