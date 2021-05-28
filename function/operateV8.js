@@ -156,9 +156,13 @@ class operate {
      * options.Lookin : keys [keys, values, all]
      * 
      */
-    static isFlowRequest(obj) {
-        return "flowRequest" in obj;
+
+    static isActionRequest(obj){
+        return ("objectModel" in obj) && ("method" in obj);
     }
+    // static isFlowRequest(obj) {
+    //     return "flowRequest" in obj;
+    // }
     static isArray(value) {
         return (
             value&&

@@ -1,0 +1,38 @@
+[09:22, 27/05/2021] shuya ek whatsapp: it shouldn't have been
+[09:26, 27/05/2021] shuya ek whatsapp: the idea is to have an action method
+[09:27, 27/05/2021] shuya ek whatsapp: which taken in a requestModel
+[09:27, 27/05/2021] shuya ek whatsapp: with arguments
+[09:29, 27/05/2021] shuya ek whatsapp: 
+
+1. objectModel : scope /class of method,
+2.Method : method to be executed,
+3. Arguments: self explanatory
+4. Response : a key if present, outout is stored init
+4. callback : a key if present, executes a reqModel  on current response,
+5.andThen: if present for chaining of parameters in current execution
+
+[09:30, 27/05/2021] shuya ek whatsapp: this is one request Step
+[09:30, 27/05/2021] shuya ek whatsapp: then have a method, which can execute an array of actionStep in sequence, in parralel and nested
+[09:31, 27/05/2021] shuya ek whatsapp: then a wrapper function to make earlier methods async for asynchronous execution
+[09:31, 27/05/2021] shuya ek whatsapp: edegs cases to handled
+[09:32, 27/05/2021] shuya ek whatsapp: and validation of the requestModel To be added
+[09:32, 27/05/2021] shuya ek whatsapp: once we have 5 methods I dont think we need anything else
+[09:32, 27/05/2021] shuya ek whatsapp: lemme know if it makes things clearer to you
+[09:33, 27/05/2021] shuya ek whatsapp: and if I am missing anything
+
+https://docs.google.com/spreadsheets/d/1M1e2cVIkLecz3yvpof9RRfuVtJllWylLL8ny0GEYUhg/edit#gid=0&range=A2
+
+
+A nested array of method ?
+like 
+nestedArr =
+[
+ [
+  [method0, method1],
+  [method2, method3]
+ ],
+ [
+  [method4, method5],
+  [method6, method7]
+ ]
+]
