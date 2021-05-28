@@ -1,10 +1,10 @@
-var reqest1 = {
+const reqest = {
     reqName : 'format',
     objectModel: 'document',
     method: 'execCommand',
-    args:['args']
+    args:[args]
 }
-console.log(window['reqest1']);
+console.log(window[requestAnimationFrame.args]);
 
 const Format = function (args) {
     this.reqName = "Format";
