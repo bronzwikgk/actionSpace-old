@@ -15,6 +15,7 @@
   */
 class Operate {
         static validate = (value, rules, every = true) => {
+            if (!Array.isArray(value)) value = [value];
             if (typeof rules === 'string') rules = [rules];
             else if (typeof rules === 'object' && !Array.isArray(rules)) {
                 if (!rules['yes']) rules['yes'] = ["true"];
@@ -32,13 +33,13 @@ class Operate {
         static operators = {
             "true": () => true,
             "false": () => false,
-            "is": (argA) => Object.getPrototypeOf(argA).constructor.name,
-            "isEmpty": (argA) => argA == '' || argA == null || typeof argA == 'undefined' ? true : false,
-            "isInt": (argA) => Number.isInteger(argA),
-            "isNumber": (argA) => Number.parseFloat(argA).toString() !== 'NaN',
-            "isString": (argA) => typeof argA === 'string',
-            "isObject": (argA) => typeof argA === 'object',
-            "isFunction": (argA) => argA.constructor.name == "Function",
+            "is": ([argA]) => Object.getPrototypeOf(argA).constructor.name,
+            "isEmpty": ([argA]) => argA == '' || argA == null || typeof argA == 'undefined' ? true : false,
+            "isInt": ([argA]) => Number.isInteger(argA),
+            "isNumber": ([argA]) => Number.parseFloat(argA).toString() !== 'NaN',
+            "isString": ([argA]) => typeof argA === 'string' ? true : false,
+            "isObject": ([argA]) => typeof argA === 'object',
+            "isFunction": ([argA]) => argA.constructor.name == "Function",
             "isInside": ([argA, argB, inKeys]) => {
                 let keys, values, result = false;
                 if (typeof argB === 'object' && ! Array.isArray(argB)) {
@@ -77,7 +78,7 @@ class Operate {
                 return true;
             },
             // checks for null and undefined
-            "isIterable": (obj) => {
+            "isIterable": ([obj]) => {
                 if (obj == null) {
                     return false;
                 }
@@ -85,34 +86,34 @@ class Operate {
             },
     
             // Returns if a value is an array
-            "isArray": (value) => Array.isArray(value) && typeof value === 'object' && value.constructor === Array,
+            "isArray": ([value]) => value && Array.isArray(value) && typeof value === 'object' && value.constructor === Array,
             // Returns if a value is a static
-            "isstatic": (value) => typeof value === 'static',
+            "isstatic": ([value]) => typeof value === 'static',
             // Returns if a value is an object
-            // "isObject": ([value]) => value && typeof value === 'object' && value.constructor === Object,
-            "isHTML": (argA) => Object.getPrototypeOf(argA).constructor.name.includes("HTML"),
+            "isObject": ([value]) => value && typeof value === 'object' && value.constructor === Object,
+            "isHTML": ([argA]) => Object.getPrototypeOf(argA).constructor.name.includes("HTML"),
             //Retuns if a values is either of null or undefined
-            "isUseless": (value) => (value === null || typeof value === 'undefined') ? true : false,
+            "isUseless": ([value]) => value === null || typeof value === 'undefined',
             // Returns if a value is null
-            "isNull": (value) => value === null,
+            "isNull": ([value]) => value === null,
             // Returns if a value is undefined 
-            "isUndefined": (value) => typeof value === 'undefined',
+            "isUndefined": ([value]) => typeof value === 'undefined',
             // Returns if a value is a boolean 
-            "isBoolean": (value) => typeof value === 'boolean',
+            "isBoolean": ([value]) => typeof value === 'boolean',
             //Returns if a value is a regexp
-            "isRegExp": (value) => value && typeof value === 'object' && value.constructor === RegExp,
+            "isRegExp": ([value]) => value && typeof value === 'object' && value.constructor === RegExp,
             // Returns if value is an error object
-            "isError": (value) => value instanceof Error && typeof value.message !== 'undefined',
+            "isError": ([value]) => value instanceof Error && typeof value.message !== 'undefined',
             // Returns if value is a date object
-            "isDate": (value) => value instanceof Date,
+            "isDate": ([value]) => value instanceof Date,
             //Returns if the value is a Prototyp
-            "isPrototype": (value) => {
+            "isPrototype": ([value]) => {
                 console.log(Object.getPrototypeOf(value) === prototype1);
             },
             // Returns if a Symbol
-            "isSymbol": (value) => typeof value === 'symbol',
+            "isSymbol": ([value]) => typeof value === 'symbol',
             //This function validates a valid Url, Returns True or false
-            "isValidUrl": (string) => {
+            "isValidUrl": ([string]) => {
                 try {
                     new URL(string);
                 } catch (_) {
@@ -120,7 +121,7 @@ class Operate {
                 }
                 return true;
             },
-            "isValidJSONString": (str) => {
+            "isValidJSONString": ([str]) => {
                 try {
                     JSON.parse(str);
                 } catch (e) {
@@ -131,7 +132,7 @@ class Operate {
             /**
              *  * Returns true if the given test value is an array containing at least one object; false otherwise.
              * */
-            "isObjectArray_": (argA) => {
+            "isObjectArray_": ([argA]) => {
                 for (var i = 0; i < argA.length; i++) {
                     if (Operate.isObject(argA[i])) {
                         return true;
@@ -144,12 +145,12 @@ class Operate {
             "isPositive": x => x > 0,
             "isChild": ([argA, argB]) => {},
             "isParent": ([argA, argB]) => {},
-            "isEven": (argA) => {
+            "isEven": ([argA]) => {
                 return numbers.every(function (e) {
                     return e % 2 == 0;
                 });
             },
-            "isOdd": (argA) => {
+            "isOdd": ([argA]) => {
                 return numbers.every(function (e) {
                     return Math.abs(e % 2) == 1;
                 });

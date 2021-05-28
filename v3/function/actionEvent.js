@@ -55,26 +55,7 @@ class ActionEvent {
 
 }
 
-var engine;
-
 window.onload= function () {
-    engine = new ActionEngine();
-}
-window.onclick = async function (e) {
-    let thiisCommand = e.target.getAttribute('data-command') || e.target.parentElement.getAttribute('data-command'),
-        thiisClass = e.target.className || e.target.parentElement.className,
-        action = e.target.getAttribute('data-action') || e.target.parentElement.getAttribute('data-action'),
-        valueArg = e.target.getAttribute('data-value') || e.target.parentElement.getAttribute('data-value'),
-        value = '';
-        if (json_value[valueArg]) value = await json_value[valueArg];
-        else value = valueArg;
-        anyObj['dropbtn'](e);
-        if (thiisCommand === "Format") {
-            engine.action(new Format([action, false, value]),false);
-        }
-        if (thiisCommand == "newDoc") {
-            console.log('say hi');
-            anyObj['newDoc']();
-        }
-        if (thiisClass == "collectionLabel") anyObj['collectionLabel'](e)
+    var engine = new ActionEngine();
+    //console.log("actionEvent")
 }

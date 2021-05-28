@@ -11,13 +11,7 @@ class ActionView{
         return scope[method](value);
     }
     static renderDOM(parent, element, method){
-        if (Array.isArray(element) ) {
-            for (let i = 0; i < element.length; i++) {
-                parent[method](element[i]);
-            }
-        }
-        else parent[method](element);
-        
+        parent[method](element);
     }
     static removeDOM(element){
         element.remove();

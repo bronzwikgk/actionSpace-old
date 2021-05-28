@@ -1,5 +1,5 @@
 /**
- * Entity often referred as Action Entity, provides a wrapper for generic CRUD operation on an typeof object === ' object;
+ * Entity often referred as Action Entity, provides a wrapper for generic CRUD operation on an typeof object === ' object; 
  * Accept command only from actionEngine.
  * Basic premise being, this becomes our template/componenet generator. Works similar to Web Componeents and provides similar api.
  * It has following methods :-
@@ -30,55 +30,27 @@ class Entity {
      *
      */
     static create(input, output) {
-        //console.log(input, output)
-        if (Operate.validate(input, 'isObject')) {
+        if (Operate.validate(input, {
+                'yes': 'isObject',
+                'no': 'isEmpty'
+            })) {
             if (output.toUpperCase() == 'HTML') {
                 return this.createHTMLEntity(input);
             } else if (output.toUpperCase() == 'JSON') {
                 return this.createJSONEntity(input);
             }
         }
+
     }
     static createHTMLEntity(obj) {
-        if (Operate.validate(obj, 'isUseless')) return console.log('useless');
-        if (Operate.validate(obj, 'isString')) return document.createTextNode(obj)
         if (Operate.validate(obj, 'isHTML')) return obj;
         let result,
             tagName = obj["name"] || obj["tagName"];
-        if (Operate.validate(obj, "isArray")) {
-            result = [];
-            for (let i = 0; i < obj.length; i++) {
-                if(!Operate.validate(obj[i], 'isUseless') ){
-                    let value = this.createHTMLEntity(obj[i]);
-                    if (value) result[i] = value;
-                }
-            }
-        }
-        else{
-            if (htmlElementList.includes(tagName) && ! bannedElements.includes(tagName)) 
-                result = document.createElement(tagName);
-            else return;
+        if (htmlElementList.includes(tagName)) result = document.createElement(tagName);
         for (const key in obj) {
-            let attr = obj[key];
-            if (key==="tagName") continue;
-            else if (Operate.validate(attr, 'isObject')) {
-                let val = this.createHTMLEntity(attr);
-                if(!Operate.validate(val, 'isUseless')){
-                    if (Operate.validate(val, "isArray")) {
-                        for (let i = 0; i < val.length; i++) {
-                            result.appendChild(val[i])
-                        }
-                    } else {
-                        result.appendChild(val)
-                    }
-                }
-                
-            }
-            else if (htmlInheritedAttributes.includes(key) || htmlManualAttributes.includes(key))
-            result.setAttribute(key, attr);
+            if (typeof obj[key] == "object") result.appendChild(this.makeHtmlEntity(obj[key]));
+            else if (htmlAttributesList.includes(key)) result[key] = obj[key];
         }
-        }
-        
         return result;
     }
     static createJSONEntity(obj, schema) {

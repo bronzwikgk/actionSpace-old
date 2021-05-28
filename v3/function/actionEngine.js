@@ -9,26 +9,75 @@ class ActionEngine {
       this._flowResultState = {};
       this._currentReq=[]; // need to be set in database A quick generator Pattenr .
       this._response ;
-      //console.log(Entity.create(main, 'html'))
-      ActionView.renderDOM(ActionView.getDOM(document, 'getElementById', 'root'), Entity.create(main, 'html'), 'append')
+      //console.log("actionEngine")
+      ActionView.renderDOM(ActionView.getDOM(document, 'getElementById', 'root'), Entity.create(basicTemp, 'html'), 'append')
     }
 
-    action(req, result) {
-      //testing if the req is an object
-      if (!Operate.validate(req, 'isObject')) {
-        return console.error("Need a JSON, Please refer to the documentation", "Does this >", req, "look like JSON to you. It's damn", Operate.is(req));
-      }
-      var scope = Entity.get(req.scope, window);
-      var argument = result ? result : req.args;
-      
-      console.log(scope, req.method, argument)
-      scope[req.method](...argument);
-      if (req['callBack']) {
-        var callBack = window[req['callBack']];
-        var response = this.action(callBack, req[response]);
-      }
-      return response;
-    }
+  //   action(req, result) {
+  //     //testing if the req is an object
+  //     if (Operate.validate(req, 'isObject')) {
+  //       return console.error("Need a JSON, Please refer to the documentation", "Does this >", req, "look like JSON to you. It's damn", Operate.is(req));
+  //     }
+  //     //  console.log("objectModel", req.objectModel, window['ActionView']);
+  //     var objectModel = Entity.get(req.objectModel, window);//Getting the object Model from window Object
+  //     // console.log("objectModel", objectModel);
+  //     var argument = result ? result : req.argument;
+  //     // if (result) {//Used for either callback cases, where 
+  //     //   var argument = result;
+  //     // } else {
+  //     //   var argument = req.argument;
+  //     // }
+  //     //Build Arguments
+  //     for (var i = 0; i < argument.length; i++) {
+  //       //  console.log(argument[i]);
+  //       argument[i] = Entity.get(argument[i], window);
+  //       //  console.log(argument[i]);
+  
+  //     }
+  
+  //     if (req['andThen']) {
+  //       var andThenLength = req['andThen'].length;
+  //       if (andThenLength > 0) {
+  //         console.log(andThenLength);
+  //         switch (andThenLength) {
+  //           case 1:
+  //             var response = objectModel[req.method](argument)[req['andThen']?.[0]];
+  //             console.log("response ", response);
+  //             //  console.log("click", event.type, event.target)
+  //             break;
+  //           case 2:
+  //             var response = objectModel[req.method](argument)[req['andThen']?.[0], req['andThen']?.[1]];
+  //             console.log("response ", response);
+  //             //  console.log("click", event.type, event.target)
+  //             break;
+  //           case 3:
+  //             var response = objectModel[req.method](argument)[req['andThen']?.[0], req['andThen']?.[1], req['andThen']?.[2]];
+  //             console.log("response ", response);
+  //             //  console.log("click", event.type, event.target)
+  //             break;
+  //           case 4:
+  //             var response = objectModel[req.method](argument)[req['andThen']?.[0], req['andThen']?.[1], req['andThen']?.[2], req['andThen']?.[3]];
+  //             console.log("response ", response);
+  //             //  console.log("click", event.type, event.target)
+  //             break;
+  //           default:
+  //           // console.log("I don't know such values",event.type);
+  //         }
+  //       }
+  //     } else {
+  //       console.log(objectModel, req.method, argument)
+  //       var response = objectModel[req.method](argument);
+  //       //     console.log("response ", response);
+  //     }
+  //     req[response] = response;
+  //     if (req['callBack']) {
+  //       //     console.log("callback found")
+  //       var callBack = window[req['callBack']];
+  //       var response = this.action(callBack, req[response]);
+  //     }
+  //     //  console.log(response)
+  //     return response;
+  //   }
   //   /**
   //    *  This method executes an action Request or a callback given duration.
   //    *  few optaional parameter are present.
