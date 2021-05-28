@@ -112,6 +112,8 @@ class Entity {
         return await file[method]();
     }
 
+    
+
     static get(key, parent, output) {
         //console.log("for Initaition", key, parent);
         if (Operate.validate(key, ["isString", "isNumber"], false)) {
