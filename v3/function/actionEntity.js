@@ -43,158 +43,97 @@ class Entity {
 
     }
     static createHTMLEntity(obj) {
-        if (Operate.validate(obj, 'isHTML')) return obj;
         let result,
+            doc = document,
             tagName = obj["name"] || obj["tagName"];
-        if (htmlElementList.includes(tagName)) result = document.createElement(tagName);
+        if (htmlElementList.includes(tagName)) result = doc.createElement(tagName);
         for (const key in obj) {
             if (typeof obj[key] == "object") result.appendChild(this.makeHtmlEntity(obj[key]));
             else if (htmlAttributesList.includes(key)) result[key] = obj[key];
         }
         return result;
     }
-    static createJSONEntity(obj, schema) {
+    static createJSONEntity(obj) {
         let output = {};
-        for (const key in schema) {
-            let element = obj[key],
-            schemaVal = schema[key];
-            if (Operate.validate(element, 'isObject')) { output[key] = this.createJSONEntity(element, schemaVal); }
-            else if (Operate.validate(element, 'isFunction')) {
-                output[key] = element.bind(obj);
-                for (let keyProp in element.prototype) {
-                    if (Object.prototype.hasOwnProperty.call(element.prototype, keyProp)) {
-                        output[key].prototype = { [keyProp]: element.prototype[keyProp] }
+        for (const key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+                const element = obj[key];
+                if (Operate.validate(element, 'isObject')) {
+                    output[key] = this.createJSONEntity(element);
+                } else if (Operate.validate(element, 'isFunction')) {
+                    try {
+                        output[key] = eval(element.toString());
+                    } catch (error) {
+                        continue;
                     }
+                } else {
+                    output[key] = element;
                 }
-            } else { output[key] = Operate.convert(element, schemaVal); }
+            }
         }
         return output;
     }
-
-    static async createFileEntity(content, params, fileHandle) {
-        if (!fileHandle) fileHandle = await getHandle('OpenFile', params);
-        const writable = await fileHandle.createWritable();
-        await writable.write(content);
-        await writable.close();
-        return fileHandle;
+    static createFileEntity(params, content) {
+        // console.log('Just working to create a file with ',params,content);
+        // console.log('Hoping to be completed soon :)')
     }
-
-    static async getFileEntity(fileHandle, method){
-        const file = await fileHandle.getFile();
-        return await file[method]();
-    }
-
-    
-
-    static get(key, parent, output) {
+    static read(key, parent) {
         //console.log("for Initaition", key, parent);
         if (Operate.validate(key, ["isString", "isNumber"], false)) {
-            let getFromPath = Operate.validate([key, '.'],'isInside') ||  Operate.validate([key, '['],'isInside');
-            return getFromPath ? get4rmPath(key, parent) : parent[key] ? parent[key] : undefined;
-        } else if (Operate.validate(key, ["isArray", "isObject"], false)) return get4rmPath(key, parent);
+            if (key.indexOf(".") >= 0) return this.get4rmPath(key, parent)
+            return parent[key] ? parent[key] : false;
+        } else if (Operate.validate(key, ["isArray", "isObject"], false)) return this.get4rmPath(key, parent);
         else return console.log("objectNotfound");
     }
 
-    
-
-static update(parent, [key, value], actionVal) {
-    let current = parent;
-    if (Operate.validate(parent, 'isHTML')) { //Only HTML creation
-        if (value) parent[actionVal](key, value);
-        else parent[actionVal](key)
-    }
-    else if (Operate.validate(parent, 'isObject')) {
-        let path = stringToPath(actionVal);
+    static get4rmPath(path, obj, def) {
+        /**
+         * If the path is a string, convert it to an array
+         * @param  {String|Array} path The path
+         * @return {Array}             The path array
+         */
+        // Get the path as an array
+        path = this.stringToPath(path);
+        //console.log(path)
+        // Cache the current object
+        var current = obj;
+        // For each item in the path, dig into the object
         for (var i = 0; i < path.length; i++) {
-            if (!current[path[i]]) return ;
+            // If the item isn't found, return the default (or null)
+            if (!current[path[i]]) return def;
+            // Otherwise, update the current  value
             current = current[path[i]];
         }
-        current[key] = value;
+        return current;
     }
-    return parent;
-}
-
-
-
-    static async del(entity){
-        if (Operate.validate(entity, 'isHTML')) {
-            entity.remove()
-        } else if (Operate.validate(entity, 'isFile')){
-            let directoryHandle = await this.getHandle('Directory', entity);
-            directoryHandle.removeEntry(entity.name, {recursive:true});
-        }
+    static stringToPath(path) {
+        // If the path isn't a string, return it
+        if (!Operate.validate(path, "isString")) return path;
+        // Create new array
+        let output = [];
+        // Split to an array with dot notation
+        path.split('.').forEach(function (item, index) {
+            // Split to an array with bracket notation
+            item.split(/\[([^}]+)\]/g).forEach(function (key) {
+                // Push to the new array
+                if (Operate.validate(parseInt(key), ['isNumber', 'isNotNegative'])) output.push(key);
+            });
+        });
+        return output;
     }
 
-    static async getHandle (action, params){
-        let defaultParams = {
-            suggestedName: 'Untitled.txt',
-            types:[{
-                description: 'Text Documents',
-                accept:{
-                    'text/plain':['.txt']
+    static update(parent, key, value) {
+        if (Operate.validate(parent, 'isHTML')) { //Only HTML creation
+            if (Operate.isInsideArray(key, htmlAttributesListV2)) {
+                parent.setAttribute(key, value)
+                if (key == "innerText") {
+                    console.log("setting", key, value, "in", output)
                 }
-            }]
-        }
-        if (!params) params = defaultParams;
-        let [fileHandle] = await window[`show${action}Picker`](params);
-        return fileHandle;
-    }
-
-static get4rmPath(path, obj, def) {
-    // Get the path as an array
-    path = this.stringToPath(path);
-    console.log(path)
-var current = obj;
-for (var i = 0; i < path.length; i++) {
-    if (!current[path[i]]) return def;
-    current = current[path[i]];
-}
-return current;
-}
-/**
-     * If the path is a string, convert it to an array
-     * @param  {String|Array} path The path
-     * @return {Array}             The path array
-     */
-static stringToPath(path) {
-    // If the path isn't a string, return it
-    if (!Operate.validate(path, "isString")) return path;
-// Create new array
-let output = [];
-console.log()
-// Split to an array with dot notation
-path.split('.').forEach(function (item, index) {
-    // Split to an array with bracket notation
-    item.split(/\[([^}]+)\]/g).forEach(function (key) {
-        // Push to the new array
-        if (key !== '') output.push(key);
-    
-    });
-});
-return output;
-}
-
-static merge(objects, filterFn){
-    let result = {};
-    for (let i = 0; i < objects.length; i++) {
-        let obj = objects[i], 
-        filtered = filter(obj, filterFn);
-        result = {...result, ...filtered};
-    }
-    return result;
-}
-static filter(obj, filterFn){
-    let result = {};
-    for (const key in obj) {
-        let value = obj[key];
-        if (Object.hasOwnProperty.call(obj, key)) {
-            if (Operate.validate([value,'object'], 'isTypeof')) result[key] = filter(value, filterFn);
-            else if(value.constructor.name.includes('Function')) result[key] = value.bind(obj);
-            else if (filterFn(key, value, obj)) result[key] = value;
+            } else {
+                output[key] = input[key];
+            }
         }
     }
-    return result;
-}
 
     /*************************************************************************************************************
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +142,87 @@ static filter(obj, filterFn){
     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     ***************************************************************************************************************/
 
-   
+    // static append(input, output, key, value,) {
+    //     // console.log('appending', input,output)
+
+    //     if (operate.is(output).includes("HTML")) { //Only HTML creation
+    //         var response = output.appendChild(input);
+    //     }
+    //     if (operate.is(output).includes("Object")) { //Only HTML creation
+    //         // console.log("append request for ",input,output)     
+    //         output[key] = input;
+    //         var response = output;
+    //         //var response = document.createElement(key);
+
+    //     }
+    //     if (operate.is(output).includes("Array")) { //Only HTML creation
+    //         // console.log("append request for ",input,output)     
+    //         output.push(input);
+    //         var response = output;
+    //         //var response = document.createElement(key);
+
+    //     }
+
+
+
+    //     // console.log('appended',response)
+    //     return response;
+    // }
+    // static set(input, output, key, value) {
+    //   // console.log("setting",key, value,"in",output)
+    //     if (operate.is(output).includes("HTML")) { //Only HTML creation
+
+    //         if (operate.isInsideArray(key, htmlAttributesListV2)) {
+
+
+    //             output.setAttribute(key, value)
+    //             if (key == "innerText") {
+    //                 console.log("setting", key, value, "in", output)
+    //             }
+    //         } else {
+    //             // console.log("set", key, value, "in", output)
+
+    //             //var buffer = output;
+    //             output[key] = input[key];
+    //             //buffer=output;
+    //         }
+
+    //     }
+    //     return output;
+    // }
+
+    //https://gomakethings.com/how-to-get-the-value-of-an-object-from-a-specific-path-with-vanilla-js/#:~:text=return%20our%20match.-,var%20get%20%3D%20function%20(obj%2C%20path%2C%20def)%20%7B,(or%20null)%20if%20(!
+
+    /*!
+     * Create a new object composed of properties that meet specific criteria
+     * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com
+     * @param  {Object}   obj      The original object
+     * @param  {Function} callback The callback test to run
+     * @return {Object}            The new, filtered object
+     * https://vanillajstoolkit.com/helpers/objectfilter/
+     */
+
+    //     static objectFilter (obj, callback) {
+
+    // 	// Setup a new object
+    // 	let filtered = {};
+
+    // 	// Loop through each item in the object and test it
+    // 	for (let key in obj) {
+    // 		if (Object.prototype.hasOwnProperty.call(obj, key)) {
+
+    // 			// If the callback validates true, push item to the new object
+    // 			if (callback(obj[key], key, obj)) {
+    // 				filtered[key] = obj[key];
+    // 			}
+
+    // 		}
+    // 	}
+
+    // 	// Return the new object
+    // 	return filtered;
+
+    // }
 
     //This method walks through all the keys of an obect. By default it retunrs all the keys wile getting them from Window scope.
     // It has optional patameter of Max Item, Max Depth and Recurse.
@@ -276,9 +295,24 @@ static filter(obj, filterFn){
     //     }
     //     return req;
     // }
+    // /**
+    //  * This method is supposed to bind 2 Elements. Work in progress
+    //  * @param {*} arg1 
+    //  * @param {*} arg2 
+    //  */
+    //     static bindObject(arg1,arg2){
+
+    //     }
 
 
 
 
-   
+    // Return a clone based on the object type
+    // if (type === 'object') return cloneObj();
+    // if (type === 'array') return cloneArr();
+    // if (type === 'map') return cloneMap();
+    // if (type === 'set') return cloneSet();
+    // if (type === 'function') return cloneFunction();
+    // return obj;
+
 }

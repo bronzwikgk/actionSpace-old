@@ -1,16 +1,16 @@
 /**
  * This class is used to validate any kind of entity,
  * It has following methods :-
- * 1. validate : to validate given rules on a given entity, it takes three parameters :-
- *          a. value : which is to be validated,
- *          b. rules : rules for which validation to be checked , <String, Array, Object>
- *                     sampleObject = {
- *                          'yes':(which should be true <string or array>),
- *                          'no':(which should be false <string or array>)
- *                     }
- *          c.every: 
- *                  true:every rule provided resulting true will return true (default).
- *                  false:any rule provided resulting true will return true .
+ * 1. validate : to validate given rules on a given entity.
+ *      it takes three parameters
+ *      a. value : which is to be validated,
+ *      b. rules : rules for which validation to be checked , <String, Array, Object>
+ *      sampleObject = {
+ *      'yes':(which should be true <string or array>),
+ *      'no':(which should be false <string or array>)
+ *      }
+ *      c.every: true:every rule provided resulting true will give true (default)
+ *               false:any rule provided resulting true will give true.
  * 2. operators : object containing methods corresponding to a given rule.
   */
 class Operate {
@@ -24,12 +24,7 @@ class Operate {
             }
             return rules[every ? "every" : "some"](rule => this["operators"][rule](value));
         }
-        static convert = (value, type)=> this["converters"][type](value);
-        static converters = {
-            "toInt" : argA => Number.isInteger(parseInt(argA)) ? parseInt(argA) : null ,
-            "toFloat" : argA => ! Number.isNaN(parseFloat(argA)) ? parseFloat(argA) : null ,
-            "toString": argA => argA.toString(),
-        }
+    
         static operators = {
             "true": () => true,
             "false": () => false,
@@ -40,23 +35,13 @@ class Operate {
             "isString": ([argA]) => typeof argA === 'string' ? true : false,
             "isObject": ([argA]) => typeof argA === 'object',
             "isFunction": ([argA]) => argA.constructor.name == "Function",
-            "isInside": ([argA, argB, inKeys]) => {
-                let keys, values, result = false;
-                if (typeof argB === 'object' && ! Array.isArray(argB)) {
-                    keys = inKeys ? Object.keys(argB) : [];
-                    values = Object.values(argB);
-                    result = values.indexOf(argA) > -1 || keys.indexOf(argA) > -1 ;
-                }
-                else result = argB.indexOf(argA) > -1 ? true : false
-                return result;
-            },
+            "isInsideArray": ([argA, argB]) => argB.indexOf(argA) > -1 ? true : false,
             "isEqualStrict": ([argA, argB]) => argA === argB ? true : false,
             "isGreaterThan": ([argA, argB]) => argA > argB ? true : false,
             "isGreaterthanOrEqual": ([argA, argB]) => argA >= argB ? true : false,
             "isSmallerthan": ([argA, argB]) => argA < argB ? true : false,
             "isSmallerthanOrEqual": ([argA, argB]) => (argA <= argB) ? true : false,
-            "isTypeof":([argA, argB])=> typeof argA === argB ? true : false,
-            "isInstanceOf": ([argA, argB]) => argA instanceof argB ? true : false,
+            "instanceof": ([argA, argB]) => console.log("work in process"),
             "isSameObject": ([argA, argB]) => console.log("work in process"),
             "hasAllof": ([argA, argB]) => argA.every(function (value) {
                 console.log(value, argB);
