@@ -50,6 +50,10 @@ class ActionEngine{
 	complexRequestExpander(flowRequest, response = []){
 		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
+		} else if(! operate.isArray(flowRequest)){
+
+			console.error("Request should be an array or object. What's this? ", flowRequest);
+			throw Error("Terminate Called");
 		}
 		for (var i = 0; i < flowRequest.length; i++) {
 			if(operate.isArray(flowRequest[i])){

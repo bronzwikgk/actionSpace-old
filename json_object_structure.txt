@@ -53,20 +53,18 @@ var setValue = {
 	}
 
 }
-var PasswordCheck = {
-	[
-		{
-			reqName:'getValue',
-			arguments:'password',
-			resultObj: 'globalPass',
-			afterThis: {
-				executeIf : (globalPass.length > 8),
-				reqName:'loginWithAjax' // I am not going to write an Ajax request now
-			}
+var PasswordCheck = [
+	{
+		reqName:'getValue',
+		arguments:'password',
+		resultObj: 'globalPass',
+		afterThis: {
+			executeIf : (globalPass.length > 8),
+			reqName:'loginWithAjax' // I am not going to write an Ajax request now
 		}
+	}
+]
 
-	]
-}
 
 		{
 			objectModel:document,
@@ -84,3 +82,7 @@ var PasswordCheck = {
 		response = response[req.andThen[0]]
 
 		globalPass = getElementById('password').value
+
+
+
+https://github.com/bronzwikgk/everything-Happens-Here-Ver-O.1/blob/fileHandle/function/actionEngineV9_2.js
