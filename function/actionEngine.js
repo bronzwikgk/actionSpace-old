@@ -169,9 +169,48 @@ var PasswordCheck = [
 	{
 		extends:getValue,
 		arguments:'password',
-		resultObj: 'globalPass',
+		resultObj: 'globalInputField',
 		callback: {
-			executeIf : '(globalPass.length < 8)',
+			condition : '(globalInputField.value.length < 8)',
+			extends:setValue,
+			setValueOnExecution:{
+				value:''
+			},
+			arguments: 'password'
+		}
+	},
+	{
+		extends:getValue,
+		arguments:'password',
+		resultObj: 'globalInputField',
+		callback: {
+			condition : '(globalInputField.value.length < 8)',
+			extends:setValue,
+			setValueOnExecution:{
+				value:''
+			},
+			arguments: 'password'
+		}
+	},
+	{
+		extends:getValue,
+		arguments:'password',
+		resultObj: 'globalInputField',
+		callback: {
+			condition : '(globalInputField.value.length < 8)',
+			extends:setValue,
+			setValueOnExecution:{
+				value:''
+			},
+			arguments: 'password'
+		}
+	},
+	{
+		extends:getValue,
+		arguments:'password',
+		resultObj: 'globalInputField',
+		callback: {
+			condition : '(globalInputField.value.length < 8)',
 			extends:setValue,
 			setValueOnExecution:{
 				value:''
