@@ -14,18 +14,16 @@ class ActionEngine{
 		return JSON.parse(JSON.stringify(obj));
 	}
 	get(key,parent) {
-         if (parent[key]) {
-            // console.log("for Initaition", key, objectModel, objectModel[key])
-             var response = parent[key];
-            // console.log("Initaites found",response)
-             return response;
-         }else{
-             return key;
-         }
+		if (parent[key]) {
+			var response = parent[key];
+			return response;
+		}else{
+			return key;
+		}
     }
 	requestExpander(request){
 		if(! operate.isObject(request)){
-			console.log(request, " is not a valid Object");
+			console.error(request, " is not a valid Object");
 			throw Error("Terminate Called");
 		} 
 
@@ -39,6 +37,7 @@ class ActionEngine{
 			var parent = this.requestExpander(request['extends']); // parent is a JSON request
 			
 			request = this.cloneJSON(parent);
+			delete request['extends'];
 			// console.log(request);
 		}
 		for (var key in rclone) {
@@ -59,10 +58,23 @@ class ActionEngine{
 				continue;
 			}
 			response.push(this.requestExpander(flowRequest[i]));
+			if(flowRequest[i].hasOwnProperty('callback')){
+				if(operate.isArray(flowRequest[i].callback)){
+					response[i].callback = [];
+					this.complexRequestExpander(flowRequest[i].callback, response[i].callback);
+					continue;
+				} else if(! operate.isObject(flowRequest[i].callback)){
+					console.error("Request.callback should be an array or object. What's this", flowRequest[i].callback);
+					throw Error("Terminate Called");
+				}
+				response[i].callback = this.requestExpander(flowRequest[i].callback);
+			}
 		}
+		
+		return response;
 	}
 	processRequest(flowRequest){
-		if(operate.isObject('request')){
+		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
 		}
 		for (var i = 0; i < flowRequest.length; i++) {
@@ -75,9 +87,9 @@ class ActionEngine{
 
 	}
 	async action(request){
-		console.log(request);
+		// console.log(request);
 		if(! operate.isActionRequest(request)){
-			console.log(request, " is not a valid ActionRequest");
+			console.error(request, " is not a valid ActionRequest");
 			throw Error("Terminate Called");
 		}
 		if(request.hasOwnProperty('condition')){
@@ -95,7 +107,7 @@ class ActionEngine{
 		
 		var objectModel = this.get(request.objectModel, window);//this.get(request.objectModel, window) || this.get(request.objectModel, document);
 		if(!objectModel){
-			console.log(objectModel, " is not a valid objectModel");
+			console.error(objectModel, " is not a valid objectModel");
 			throw Error("Terminate Called");
 		}
 
@@ -114,15 +126,17 @@ class ActionEngine{
 
 		if(request.hasOwnProperty('setValueOnExecution')){
 			if(! operate.isObject(request['setValueOnExecution'])){
-
 				console.error("Request.setValueOnExecution should be an Object. What's this? ", request['setValueOnExecution']);
 				throw Error("Terminate Called");
 			}
-			
-			var svoekeys = request['setValueOnExecution'].keys();
+
+			// console.log(request['setValueOnExecution']);
+
+			var svoekeys = Object.keys(request['setValueOnExecution']);
 
 			for (var i = 0; i < svoekeys.length; i++) {
-				objectModel[svoekeys[i]] = request['setValueOnExecution'][svoekeys[i]];
+				// console.log(svoekeys[i]);
+				response[svoekeys[i]] = request['setValueOnExecution'][svoekeys[i]];
 			}
 		}
 
@@ -141,8 +155,7 @@ var HTMLElement = { //singleFlowRequest
 }
 
 var getValue = {
-	extends: HTMLElement,
-	response:'value'
+	extends: HTMLElement
 }
 var setValue = {
 	extends: HTMLElement,
@@ -157,11 +170,16 @@ var PasswordCheck = [
 		extends:getValue,
 		arguments:'password',
 		resultObj: 'globalPass',
-		// callback: {
-		// 	executeIf : '(globalPass.length > 8)',
-		// 	extends:loginWithAjax // I am not going to write an Ajax request now
-		// }
+		callback: {
+			executeIf : '(globalPass.length < 8)',
+			extends:setValue,
+			setValueOnExecution:{
+				value:''
+			},
+			arguments: 'password'
+		}
 	}
 ]
 
 engine.processRequest(PasswordCheck);
+console.log(engine.complexRequestExpander(PasswordCheck));
