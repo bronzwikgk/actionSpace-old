@@ -31,10 +31,10 @@ class ActionEngine{
 
 		var rclone = this.cloneJSON(request);
 		var parent = null;
-		
+		console.log(request);
 		if(request.hasOwnProperty('extends')){
 			
-			var parent = this.requestExpander(request['extends']); // parent is a JSON request
+			var parent = this.requestExpander(window[request['extends']]); // parent is a JSON request
 			
 			request = this.cloneJSON(parent);
 			delete request['extends'];
@@ -47,35 +47,50 @@ class ActionEngine{
 		return request;
 		
 	}
-	complexRequestExpander(flowRequest, response = []){
-		if(operate.isObject(flowRequest)){
-			flowRequest = [flowRequest];
-		} else if(! operate.isArray(flowRequest)){
-
-			console.error("Request should be an array or object. What's this? ", flowRequest);
+	complexRequestExpander(requestArr, depth = 0){
+		if(depth > 10){
+			console.error('Cannot Expand Recursion Requests.');
 			throw Error("Terminate Called");
 		}
-		for (var i = 0; i < flowRequest.length; i++) {
-			if(operate.isArray(flowRequest[i])){
-				response.push([]);
-				this.complexRequestExpander(flowRequest[i], response[response.length-1]);
-				continue;
-			}
-			response.push(this.requestExpander(flowRequest[i]));
-			if(flowRequest[i].hasOwnProperty('callback')){
-				if(operate.isArray(flowRequest[i].callback)){
-					response[i].callback = [];
-					this.complexRequestExpander(flowRequest[i].callback, response[i].callback);
-					continue;
-				} else if(! operate.isObject(flowRequest[i].callback)){
-					console.error("Request.callback should be an array or object. What's this", flowRequest[i].callback);
-					throw Error("Terminate Called");
-				}
-				response[i].callback = this.requestExpander(flowRequest[i].callback);
-			}
+
+		if(operate.isObject(requestArr)){
+			requestArr = [requestArr];
+		} else if(! operate.isArray(requestArr)){
+			console.error(requestArr, " is not a valid Object or Array");
+			throw Error("Terminate Called");
+
 		}
-		
-		return response;
+		var resultArr = [];
+		for (var i = 0; i < requestArr.length; i++) {
+			var request = requestArr[i];
+			
+			//single request
+
+			var rclone = this.cloneJSON(request);
+			var parent = null;
+
+			if(request.hasOwnProperty('extends')){
+				
+				var parent = this.complexRequestExpander(window[request['extends']], depth + 1); // parent is a JSON request
+				
+				request = this.cloneJSON(parent);
+				delete request['extends'];
+				// console.log(request);
+			}
+
+			for (var key in rclone) {
+				if(key != 'extends') 
+					request[key] = rclone[key];	
+			}
+			if(request.hasOwnProperty('callback')){
+				request.callback = this.complexRequestExpander(request.callback, depth + 1);
+			}
+			resultArr.push(request);
+		}
+		if(resultArr.length == 1){
+			return resultArr[0];
+		} 
+		return resultArr;
 	}
 	processRequest(flowRequest, l = []){
 		if(operate.isObject(flowRequest)){
@@ -123,7 +138,7 @@ class ActionEngine{
 		return str;
 	}
 	async action(request, l = {}){
-
+		// console.log(l);
 		var lastl = this.cloneJSON(l); // store last states
 		
 		if(! request.hasOwnProperty('loop')) request.loop = 1;
@@ -136,7 +151,9 @@ class ActionEngine{
 		request.loop = this.getValue(request.loop, l);
 
 		for (var i = 0; i < request.loop; i++) {
-			if(! request.hasOwnProperty('condition')) request.condition = 'true';
+			if(request.hasOwnProperty('condition')) request.condition = this.getValue(request.condition, l);
+
+			if(! request.hasOwnProperty('condition')) request.condition = true;
 		
 			if(! eval(request['condition'])){ // we should not execute this
 				return; 
@@ -145,7 +162,8 @@ class ActionEngine{
 			if(! request.hasOwnProperty('declare')) request.declare = {};
 
 			for(var key in request.declare){
-				l.key = this.getValue(request.declare.key, l);
+
+				l[key] = this.getValue(request.declare[key], l);
 			}
 			if(request.hasOwnProperty('method')){
 				if(! request.hasOwnProperty('arguments'))request.arguments = [];
@@ -214,8 +232,13 @@ class ActionEngine{
 				this.processRequest(request['callback'], l);
 			}
 		}
+		if(request.hasOwnProperty('passState') && request.passState){
+			// console.log('here');
+			return; // just pass the states
+		}
+		// console.log('here');
 		for(var key in lastl){
-			lastl.key = l.key; // updated variables
+			lastl[key] = l[key]; // updated variables
 		}
 		l = lastl; // return to the state
 	}
@@ -231,20 +254,64 @@ var HTMLElement = { //singleFlowRequest
 	objectModel: 'document',
 	method: 'getElementById'
 }
-var PrintToConsole = {
-	extends: HTMLElement
-}
 var InputField = {
-	extends: HTMLElement, 
+	extends: 'HTMLElement', 
 	arguments: 'password',
 	response: 'myField',
-	callback: {
+	setValueOnExecution:{value:'PasswordChanged'},
+	callback: [{
+		objectModel:'console',
+		method: 'log',
+		arguments: '$l.myField.value'
+
+	}, {
 		objectModel:'console',
 		method: 'log',
 		arguments: '$l.myField'
+	}]
+}
+// function factorial(n){
+// 	if(n < 0) return 1;
+// 	return n*factorial(n-1);
+// }
+var factorialBaseCase = {
+	declare:{
+		ans:1
 	}
 }
-engine.processRequest(InputField);
-console.log(engine.complexRequestExpander(InputField));
+var factorialRecurse = {
+	condition: '$(l.n > 0) ',
+	declare:{
+		ans : '$ l.ans * l.n',
+		n : '$l.n - 1'
+	},
+	callback:{
+		extends:'factorialRecurse'
+	}
+}
+var factorialOutput = {
+	objectModel:'console',
+	method:'log',
+	arguments:'$l.ans'
+}
+var factorial5 = [
+
+	{
+		extends:'factorialBaseCase',
+		declare:{
+			n:5,
+			ans:1
+		},
+		callback: [{
+			extends: 'factorialRecurse',
+			passState:true
+		}, {
+			extends: 'factorialOutput'
+		}]
+	}
+];
+
+engine.processRequest(factorial5);
+console.log(engine.complexRequestExpander(factorial5));
 
 
