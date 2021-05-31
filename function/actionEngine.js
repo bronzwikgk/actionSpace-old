@@ -117,6 +117,11 @@ class ActionEngine{
 			}
 
 	*/
+	getValue(str, l){
+		if(operate.isString(str) && str.charAt(0) == '$')
+			return eval(str.substr(1));
+		return str;
+	}
 	async action(request, l = {}){
 
 		var lastl = this.cloneJSON(l); // store last states
@@ -128,6 +133,8 @@ class ActionEngine{
 			throw Error("Terminate Called");
 		}
 		
+		request.loop = this.getValue(request.loop, l);
+
 		for (var i = 0; i < request.loop; i++) {
 			if(! request.hasOwnProperty('condition')) request.condition = 'true';
 		
@@ -138,7 +145,7 @@ class ActionEngine{
 			if(! request.hasOwnProperty('declare')) request.declare = {};
 
 			for(var key in request.declare){
-				l.key = request.declare.key;
+				l.key = this.getValue(request.declare.key, l);
 			}
 			if(request.hasOwnProperty('method')){
 				if(! request.hasOwnProperty('arguments'))request.arguments = [];
@@ -157,12 +164,7 @@ class ActionEngine{
 						throw Error("Terminate Called");
 
 					}
-					if(request.arguments[i].charAt(0) == '$'){
-						console.log(request.arguments[i]);
-						console.log(request.arguments[i].substr(1));
-						request.arguments[i] = eval(request.arguments[i].substr(1));
-						console.log(request.arguments[i]);
-					}
+					request.arguments[i] = this.getValue(request.arguments[i], l);
 				}
 
 				if(! request.hasOwnProperty('objectModel')){
@@ -182,14 +184,14 @@ class ActionEngine{
 				// console.log(request.method);
 				var response = await method.apply(objectModel, request.arguments);
 
-				if(request.hasOwnProperty('resultObj')){
-					if(! operate.isString('resultObj')){
-						console.error("Request.resultObj should be a string. What's this? ", request['resultObj']);
+				if(request.hasOwnProperty('response')){
+					if(! operate.isString('response')){
+						console.error("Request.response should be a string. What's this? ", request['response']);
 						throw Error("Terminate Called");
 					}
 
-					l[request['resultObj']] = response;
-					// console.log('done', request['resultObj'], response, l[request['resultObj']]);
+					l[request['response']] = response;
+					// console.log('done', request['response'], response, l[request['response']]);
 					if(request.hasOwnProperty('setValueOnExecution')){
 						if(! operate.isObject(request['setValueOnExecution'])){
 							console.error("Request.setValueOnExecution should be an Object. What's this? ", request['setValueOnExecution']);
@@ -202,7 +204,7 @@ class ActionEngine{
 
 						for (var i = 0; i < svoekeys.length; i++) {
 							// console.log(svoekeys[i]);
-							response[svoekeys[i]] = request['setValueOnExecution'][svoekeys[i]];
+							response[svoekeys[i]] = this.getValue(request['setValueOnExecution'][svoekeys[i]], l);
 						}
 					}
 				}
@@ -235,7 +237,7 @@ var PrintToConsole = {
 var InputField = {
 	extends: HTMLElement, 
 	arguments: 'password',
-	resultObj: 'myField',
+	response: 'myField',
 	callback: {
 		objectModel:'console',
 		method: 'log',
