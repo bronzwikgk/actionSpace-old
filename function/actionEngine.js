@@ -1,6 +1,8 @@
 class ActionEngine{
 	
-	constructor() {}
+	constructor(maxDebugDepth=3) { 
+		this.maxDebugDepth = maxDebugDepth;
+	}
 
 	removeDuplicates(arr){
 		var x = [];
@@ -31,9 +33,12 @@ class ActionEngine{
 
 		var rclone = this.cloneJSON(request);
 		var parent = null;
-		console.log(request);
+		
 		if(request.hasOwnProperty('extends')){
-			
+			if(window[request['extends']].hasOwnProperty('extends') && window[request['extends']]['extends'] == request['extends']){
+				console.error("Request Cannot inherit itself.");
+				throw Error('Terminate Called');
+			}
 			var parent = this.requestExpander(window[request['extends']]); // parent is a JSON request
 			
 			request = this.cloneJSON(parent);
@@ -48,9 +53,9 @@ class ActionEngine{
 		
 	}
 	complexRequestExpander(requestArr, depth = 0){
-		if(depth > 10){
-			console.error('Cannot Expand Recursion Requests.');
-			throw Error("Terminate Called");
+		if(depth > this.maxDebugDepth){
+			console.warn('Will not expand when depth > ', this.maxDebugDepth);
+			return resultArr;
 		}
 
 		if(operate.isObject(requestArr)){
@@ -70,8 +75,12 @@ class ActionEngine{
 			var parent = null;
 
 			if(request.hasOwnProperty('extends')){
+				if(window[request['extends']].hasOwnProperty('extends') && window[request['extends']]['extends'] == request['extends']){
+					console.error("Request Cannot inherit itself.");
+					throw Error('Terminate Called');
+				}
 				
-				var parent = this.complexRequestExpander(window[request['extends']], depth + 1); // parent is a JSON request
+				var parent = this.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
 				
 				request = this.cloneJSON(parent);
 				delete request['extends'];
@@ -246,72 +255,11 @@ class ActionEngine{
 
 var engine = new ActionEngine();
 
-function logToConsole(arg){
-	console.log(arg);
+var inheritanceCheck = {
+	extends: 'inheritanceCheck'
 }
 
-var HTMLElement = { //singleFlowRequest
-	objectModel: 'document',
-	method: 'getElementById'
-}
-var InputField = {
-	extends: 'HTMLElement', 
-	arguments: 'password',
-	response: 'myField',
-	setValueOnExecution:{value:'PasswordChanged'},
-	callback: [{
-		objectModel:'console',
-		method: 'log',
-		arguments: '$l.myField.value'
-
-	}, {
-		objectModel:'console',
-		method: 'log',
-		arguments: '$l.myField'
-	}]
-}
-// function factorial(n){
-// 	if(n < 0) return 1;
-// 	return n*factorial(n-1);
-// }
-var factorialBaseCase = {
-	declare:{
-		ans:1
-	}
-}
-var factorialRecurse = {
-	condition: '$(l.n > 0) ',
-	declare:{
-		ans : '$ l.ans * l.n',
-		n : '$l.n - 1'
-	},
-	callback:{
-		extends:'factorialRecurse'
-	}
-}
-var factorialOutput = {
-	objectModel:'console',
-	method:'log',
-	arguments:'$l.ans'
-}
-var factorial5 = [
-
-	{
-		extends:'factorialBaseCase',
-		declare:{
-			n:5,
-			ans:1
-		},
-		callback: [{
-			extends: 'factorialRecurse',
-			passState:true
-		}, {
-			extends: 'factorialOutput'
-		}]
-	}
-];
-
-engine.processRequest(factorial5);
-console.log(engine.complexRequestExpander(factorial5));
+engine.processRequest(inheritanceCheck);
+console.log(engine.complexRequestExpander(inheritanceCheck));
 
 
