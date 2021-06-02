@@ -1,6 +1,6 @@
 class ActionEngine{
 	
-	constructor(maxDebugDepth=3) { 
+	constructor(maxDebugDepth=10) { 
 		this.maxDebugDepth = maxDebugDepth;
 	}
 
@@ -12,9 +12,6 @@ class ActionEngine{
 		return x;
 	}
 	
-	cloneJSON(obj){
-		return JSON.parse(JSON.stringify(obj));
-	}
 	get(key,parent) {
 		if (parent[key]) {
 			var response = parent[key];
@@ -24,6 +21,7 @@ class ActionEngine{
 		}
     }
 	requestExpander(request){
+		if(request == null) return;
 		if(! operate.isObject(request)){
 			console.error(request, " is not a valid Object");
 			throw Error("Terminate Called");
@@ -31,28 +29,32 @@ class ActionEngine{
 
 		//single request
 
-		var rclone = this.cloneJSON(request);
+		var rclone = Entity.copy(request);
 		var parent = null;
 		
 		if(request.hasOwnProperty('extends')){
-			if(window[request['extends']].hasOwnProperty('extends') && window[request['extends']]['extends'] == request['extends']){
-				console.error("Request Cannot inherit itself.");
-				throw Error('Terminate Called');
-			}
+
 			var parent = this.requestExpander(window[request['extends']]); // parent is a JSON request
 			
-			request = this.cloneJSON(parent);
+			request = Entity.copy(parent);
 			delete request['extends'];
+			
 			// console.log(request);
-		}
-		for (var key in rclone) {
-			if(key != 'extends') 
-				request[key] = rclone[key];	
+
+			var del = rclone.delete;
+			delete rclone.delete;
+
+			request = Entity.extends(rclone, request, del);
+
+			delete request['extends'];
 		}
 		return request;
 		
 	}
 	complexRequestExpander(requestArr, depth = 0){
+		
+		if(requestArr == null) return;
+
 		if(depth > this.maxDebugDepth){
 			console.warn('Will not expand when depth > ', this.maxDebugDepth);
 			return resultArr;
@@ -70,30 +72,29 @@ class ActionEngine{
 			var request = requestArr[i];
 			
 			//single request
-
-			var rclone = this.cloneJSON(request);
+			console.log(request);
+			var rclone = Entity.copy(request);
 			var parent = null;
 
 			if(request.hasOwnProperty('extends')){
-				if(window[request['extends']].hasOwnProperty('extends') && window[request['extends']]['extends'] == request['extends']){
-					console.error("Request Cannot inherit itself.");
-					throw Error('Terminate Called');
-				}
 				
 				var parent = this.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
 				
-				request = this.cloneJSON(parent);
-				delete request['extends'];
+				request = Entity.copy(parent);
 				// console.log(request);
-			}
+			
+				var del = rclone.delete;
+				delete rclone.delete;
 
-			for (var key in rclone) {
-				if(key != 'extends') 
-					request[key] = rclone[key];	
+				request = Entity.extends(rclone, request, del);
+
+				delete request['extends'];
 			}
+			
 			if(request.hasOwnProperty('callback')){
 				request.callback = this.complexRequestExpander(request.callback, depth + 1);
 			}
+
 			resultArr.push(request);
 		}
 		if(resultArr.length == 1){
@@ -121,7 +122,9 @@ class ActionEngine{
 	/* 
 		Request is evaluated Like->
 		
-		 	extends
+		 	extends{
+				delete
+		 	}
 
 
 		 	Loop { // default:1
@@ -148,7 +151,7 @@ class ActionEngine{
 	}
 	async action(request, l = {}){
 		// console.log(l);
-		var lastl = this.cloneJSON(l); // store last states
+		var lastl = Entity.copy(l); // store last states
 		
 		if(! request.hasOwnProperty('loop')) request.loop = 1;
 
@@ -254,12 +257,27 @@ class ActionEngine{
 }
 
 var engine = new ActionEngine();
-
-var inheritanceCheck = {
-	extends: 'inheritanceCheck'
+var parentRequest = {
+	objectModel:'console',
+	method: 'log',
+	arguments: 'helloworld',
+	callback: {
+		objectModel:'console',
+		method:'log',
+		arguments: 'helloworld2'
+	}
+}
+var deleteCheck = {
+	extends: 'parentRequest',
+	delete: {
+		callback:{
+			arguments:'helloworld2'
+		}
+	}
 }
 
-engine.processRequest(inheritanceCheck);
-console.log(engine.complexRequestExpander(inheritanceCheck));
+engine.processRequest(deleteCheck);
+engine.processRequest(parentRequest);
+console.log(engine.complexRequestExpander(deleteCheck));
 
 

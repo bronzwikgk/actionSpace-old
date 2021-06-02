@@ -224,6 +224,95 @@ class Entity {
 	return filtered;
 
 }
+    static evalDelete(req,  query, l = []){
+        delete eval('req.'+query);
+    }
+    static deleteProps(req, del){ 
+        if(operate.isArray(del)){ //delete elements or properties of objects present in array
+
+            var arr = [];
+            var counter = 0;
+            for (var i = 0; i < del.length; i++) {
+                if(del[i] == undefined){
+                    arr.push(req[i]);
+                    counter++;
+                    
+                    continue;
+                }
+                if(operate.isObject(del[i])){
+
+                    arr.push(req[i]);
+                    arr[counter] = Entity.deleteProps(req[i], del[i]);
+                    counter++;
+                
+                } else if(operate.isArray(del[i])){
+                    
+                    arr.push(req[i]);
+                    arr[counter] = Entity.deleteProps(req[i], del[i]);
+                    counter++;
+                
+                } else {
+                    // delete (ignore this)
+                }
+                
+            }
+            return arr;
+        } 
+        if(operate.isObject(del)){
+            for(var key in del){
+                if(operate.isObject(del[key])){
+                
+                    req[key] = Entity.deleteProps(req[key], del[key]);
+                
+                
+                } else if(operate.isArray(del[key])){
+
+                    req[key] = Entity.deleteProps(req[key], del[key]);
+                
+                } else {
+                    delete req[key];
+                }
+            }
+            return req;
+        }
+
+        return req;
+    }
+    static updateProps(req,model){
+        if(operate.isArray(req)){
+            for(var i=0;i<req.length;i++){
+                if(i >= model.length) model.push(null);
+                
+                if(req[i]) // if it's not undefined
+                    model[i] = Entity.updateProps(req[i], model[i]);
+            }
+        }
+        else if(operate.isObject(req)){
+            for(var key in req){
+                if(operate.isObject(req[key])){
+                
+                    if(! model[key]) model[key] = {};
+                
+                
+                } else if(operate.isArray(req[key])){
+
+                    if(! model[key]) model[key] = [];
+                }
+                model[key] = Entity.updateProps(req[key], model[key]);
+            }
+        } else {
+            model = req;
+        }
+        return model;
+    }
+    static extends(req, model, del){
+
+        model = Entity.copy(model);
+        if(del) model = Entity.deleteProps(model, del);
+        model = Entity.updateProps(req , model);
+
+        return model;
+    }
 
     //This method walks through all the keys of an obect. By default it retunrs all the keys wile getting them from Window scope.
     // It has optional patameter of Max Item, Max Depth and Recurse.
@@ -240,7 +329,6 @@ class Entity {
 //         maxItem: 10,
 //     }
 // }
-
     static walk(req) {
         console.log("walk request", req['argument'])
         //  if (!req['currentDepth']) { req['currentDepth'] = 0;console.log("it's a fresh start")}     
@@ -359,7 +447,7 @@ class Entity {
     function copyProps(clone) {
         for (let key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                clone[key] = copy(obj[key]);
+                clone[key] = Entity.copy(obj[key]);
             }
         }
     }
@@ -380,7 +468,7 @@ class Entity {
      */
     function cloneArr() {
         return obj.map(function (item) {
-            return copy(item);
+            return Entity.copy(item);
         });
     }
 
@@ -391,7 +479,7 @@ class Entity {
     function cloneMap() {
         let clone = new Map();
         for (let [key, val] of obj) {
-            clone.set(key, copy(val));
+            clone.set(key, Entity.copy(val));
         }
         return clone;
     }
