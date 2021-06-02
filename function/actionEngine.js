@@ -72,7 +72,7 @@ class ActionEngine{
 			var request = requestArr[i];
 			
 			//single request
-			console.log(request);
+			// console.log(request);
 			var rclone = Entity.copy(request);
 			var parent = null;
 
@@ -151,6 +151,8 @@ class ActionEngine{
 	}
 	async action(request, l = {}){
 		// console.log(l);
+		request = Entity.copy(request); // don't change itself
+
 		var lastl = Entity.copy(l); // store last states
 		
 		if(! request.hasOwnProperty('loop')) request.loop = 1;
