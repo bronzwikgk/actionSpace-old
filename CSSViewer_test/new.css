@@ -1,0 +1,256 @@
+/*!
+* CSSViewer, A Google Chrome Extension for fellow web developers, web designers, and hobbyists.
+* https://github.com/cssviewer/cssviewer
+* https://chrome.google.com/webstore/detail/cssviewer/ggfgijbpiheegefliciemofobhmofgce
+*
+* Copyright (c) 2006, 2008 Nicolas Huon 
+*
+* This source code is licensed under the GNU General Public License,
+* Version 2. See the file COPYING for more details.
+*/
+
+/*
+** Common styles. Almost everything is !important; here p
+*/
+
+/* #CSSViewer_block,
+#CSSViewer_center,
+#CSSViewer_footer,
+.CSSViewer_category,
+span.CSSViewer_property,
+#CSSViewer_block h1,
+#CSSViewer_block h2,
+#CSSViewer_block ul,
+#CSSViewer_block li,
+#CSSViewer_block span
+{
+	font-family:"Lucida sans", helvetica, sans-serif !important;
+	font-size:10px !important;
+	z-index:9999 !important;
+	padding:0 !important;
+	margin:0 !important;
+	text-indent:0px !important;
+	text-align:left !important;
+	background:transparent !important;
+	visibility: visible !important;
+	width:auto !important;
+	height:auto !important;
+	line-height: 20px; 
+}
+
+#CSSViewer_block
+{
+	display:none;
+	min-width:332px !important;
+	font-size:10px !important;
+	color:#555 !important;
+	position:absolute !important;
+}
+
+#CSSViewer_block h1
+{
+	color:#fff !important;
+	font-size:12px !important;
+	text-transform:none !important;
+	text-align:center !important;
+	width:322px !important;
+	display:block !important; 
+	background:url("chrome-extension://__MSG_@@extension_id__/img/header.png") !important;
+	padding:30px 10px 5px 10px !important;
+	margin:5% auto;
+	line-height: 10px;
+}
+
+#CSSViewer_center
+{
+	padding:10px 32px 0 32px !important;
+	overflow:hidden !important;
+	background:url("chrome-extension://__MSG_@@extension_id__/img/body.png") repeat-y !important;
+}
+
+#CSSViewer_footer
+{
+	padding-top:5px;
+	color:#555 !important;
+	text-align:center !important;
+	width:332px !important;
+	height:30px !important;
+	display:block !important;
+	background:url("chrome-extension://__MSG_@@extension_id__/img/footer.png") !important;
+}
+
+.CSSViewer_category
+{
+	background:url("chrome-extension://__MSG_@@extension_id__/img/list.png") no-repeat top left !important;
+	padding:0 5px !important;
+}
+
+#CSSViewer_block h2
+{
+	padding-top:6px !important;
+	color:#6a8e46 !important;
+	font-size:12px !important;
+	text-align:left !important;
+	letter-spacing:-0.5px !important;
+}
+
+#CSSViewer_block ul
+{
+	padding:5px 5px 10px 5px !important;
+	list-style:none !important;
+	width:282px !important;
+}
+
+#CSSViewer_block li
+{
+	background:url("chrome-extension://__MSG_@@extension_id__/img/bullet.png") no-repeat left center !important;
+	padding-left:10px !important; 
+}
+
+
+#CSSViewer_block span.CSSViewer_property
+{
+	color:#888 !important;
+	float:left !important;
+	width:100px !important; 
+	display:block !important; 
+	overflow:hidden !important;
+} */
+/* ############################################################################################### */
+
+.CSSViewer {
+	background-color: rgb(231, 231, 231);
+	position: absolute;
+	box-sizing: border-box;
+	top: 30px;
+	left: 30px;
+	width: 30%;
+	height: 50%;
+	border-radius: 5px;
+	box-shadow: 3px 3px 15px rgba(189, 189, 189, 0.8);
+	overflow: hidden;
+}
+
+.CSSViewer>.elemIdentifier {
+	display: block;
+	position: relative;
+	background-color: rgb(175, 175, 175);
+	margin: 20px 20px 10px;
+	padding: 10px;
+	border-radius: 5px;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.accordion {
+	position: relative;
+	max-height: 78%;
+	padding: 0 14px 0 19px;
+	overflow: auto;
+}
+
+.scroll--simple::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+.scroll--simple::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.scroll--simple::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: rgb(185, 185, 185);
+}
+
+.scroll--simple::-webkit-scrollbar-thumb:hover {
+	background: rgb(170, 170, 170);
+}
+
+.scroll--simple::-webkit-scrollbar-thumb:active {
+	background: rgb(165, 165, 165);
+}
+
+.accordion * {
+	-webkit-transition: all 0.15s ease-in-out;
+	-moz-transition: all 0.15s ease-in-out;
+	-ms-transition: all 0.15s ease-in-out;
+	transition: all 0.15s ease-in-out;
+}
+
+.accordion>.tab {
+	position: relative;
+	height: 30px;
+	border: 1px #333 solid;
+	border-radius: 5px;
+	background-color: rgb(255, 255, 255);
+	overflow: hidden;
+}
+
+.accordion>.tab:not(:last-child) {
+	border-bottom: none;
+}
+
+.accordion>.tab.active {
+	
+}
+
+.accordion>.tab>.tabTitle {
+	position: relative;
+	display: block;
+	padding: 3px;
+}
+
+.accordion>.tab.active>.tabTitle {
+	background-color: rgb(211, 211, 211);
+}
+
+.accordion>.tab>.tabTitle>.pointer {
+	display: inline-block;
+	padding: 2px 6px;
+	user-select: none;
+	cursor: pointer;
+}
+
+.accordion>.tab.active>.tabTitle>.pointer {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.accordion>.tab>.tabContent {
+	padding:5px 0;
+	margin-left: 30px;
+}
+
+.propName{
+	position: relative;
+	font-size: 16px;
+	padding: 4px;
+}
+.propVal{
+	position: relative;
+	padding:4px;
+	font-size: 14px;
+	background-color: rgb(223, 223, 223);
+	border: 1px rgb(209, 209, 209) solid;
+	border-radius: 3px;
+	outline: none;
+}
+.propVal:hover{
+	border: 1px rgb(170, 170, 170) solid;
+	background-color: rgb(239, 239, 239);
+}
+.propVal:focus{
+	background-color: rgb(255, 255, 255);
+}
+
+
+/* //////////////////////////////////////////////////////////////////////////////////////////////////// */
+.CSSViewerActiveElem{
+	border: 2px dashed rgba(159, 255, 49, 0.7);
+}
