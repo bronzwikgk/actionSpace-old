@@ -102,7 +102,7 @@ class ActionEngine{
 		} 
 		return resultArr;
 	}
-	processRequest(flowRequest, l = []){
+	processRequest(flowRequest, l = {}){
 		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
 		} else if(! operate.isArray(flowRequest)){

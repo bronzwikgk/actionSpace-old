@@ -1,51 +1,77 @@
-
-//console.log("app", app)
-class ActionEvent {
-    constructor(activeListners,entity) {
-        
-        this._activeListners =[activeListners];
-       // console.log(this._activeListners);
-        this._elements;
-        //  this.on('click', e => this.handleEvent(e));
-          this.createListeners(activeListners);
-       
-
+class actionEvent{
+    constructor(){ this.listeners = {}; }
+    addListener(domElement, events, func, ...args){
+        console.log(this.listeners);
+        var x = function(event, ...args){
+            func(event, ...args);
+        }
+        events = events.split(" ");
+        for (var i = 0; i < events.length; i++) {
+            if(events[i] != ''){
+                if(!this.listeners[events[i]]){
+                    document.addEventListener(events[i] , this.handleEvent.bind(null, this), false);
+                }
+                this.listeners[events[i]] = this.listeners[events[i]] || {} ;
+                this.listeners[events[i]][domElement] = this.listeners[events[i]][domElement] || [] ;
+                this.listeners[events[i]][domElement].push({func: x, args: [...args]});
+            }
+        }
     }
-
-    createListeners(entity) {
-        // console.log(entity)
-        let events = operate.find(entity, 'event', 'keys')
-        //  console.log(events)
-        events.forEach((evt) => {
-            //  console.log(evt.substring(2))
-            this.on(evt.substring(2), e => this.handleEvent(e));
-            //window[evt] = this.handleEvent
-        })
-        //  console.clear()
+    addRequestListener(domElement, events, engine, req, args = {}){
+        if(! operate.isObject(args)){
+            console.error("args should be an object of arguments to the request. What's this?", args);
+            return;
+        }
+        if(operate.isString(req)){
+            req = window[req];
+        }
+        if(! operate.isObject(req)){
+            console.error('Cannot find Request, ', req);
+            return;
+        }
+        addListener(domElement, events, engine.processRequest, req, args);
     }
-    // kind of a subscriber
-    addListener(eventName, fn) {
-        this._events[eventName] = this._events[eventName] || [];
-        this._events[eventName].push(fn);
-        return this;
+    handleEvent(obj, e){
+        console.log(e.target);
+        if(! obj.listeners[e.type][e.srcElement]) return;
+        for (var i = 0; i < obj.listeners[e.type][e.srcElement].length; i++) {
+            var f = obj.listeners[e.type][e.srcElement][i];
+            f.func(e, ...f.args);
+        }
     }
-    
-    on(eventName, fn) {
-        return this.addListener(eventName, fn);
+    removeListener(events){
+        for (var i = 0; i < events.length; i++) {
+            if(events[i] != ''){
+                this.listeners[events[i]] = {} ;
+            }
+        }
     }
-    //kind of a publish
-    emit(eventName, ...args) {
-        let fns = this._events[eventName];
-        //  console.log("Emitted",eventName)
-        if (!fns) return false;
-        fns.forEach((f) => {
-            f(...args);
+    removeListener(domElement, events){
+        for (var i = 0; i < events.length; i++) {
+            if(events[i] != ''){
+                this.listeners[events[i]][domElement] = [] ;
+            }
+        }
+    }
+    addClassListener(event, selector, doit){
+        addListener(document, event, function(e){
+            if(e.srcElement.classList.contains(selector)) {
+                doit(e);
+            }
         });
-        return true;
     }
-
+    addTagListener(event, selector, doit){
+        addListener(document, event, function(e){
+            // console.log(e.srcElement.tagName);
+            if(e.srcElement.tagName.toLowerCase() == selector.toLowerCase()) {
+                doit(e);
+            }
+        });
+    };
 }
-console.log(chrome.history);
-var actionEventInstance = new ActionEvent(activeListerners);
 
-console.log("Hello from action Event",actionEventInstance)
+var eventManager = new actionEvent();
+
+eventManager.addListener(document.getElementById('password'), 'click', function(e, args){
+    console.log('hello ' + args);
+} , 'saras');
