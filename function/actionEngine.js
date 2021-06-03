@@ -22,6 +22,11 @@ class ActionEngine{
     }
 	requestExpander(request){
 		if(request == null) return;
+		
+		if(operate.isString(request)){
+            request = window[request];
+        }
+
 		if(! operate.isObject(request)){
 			console.error(request, " is not a valid Object");
 			throw Error("Terminate Called");
@@ -54,6 +59,10 @@ class ActionEngine{
 	complexRequestExpander(requestArr, depth = 0){
 		
 		if(requestArr == null) return;
+		
+		if(operate.isString(requestArr)){
+            requestArr = window[requestArr];
+        }
 
 		if(depth > this.maxDebugDepth){
 			console.warn('Will not expand when depth > ', this.maxDebugDepth);
@@ -103,6 +112,9 @@ class ActionEngine{
 		return resultArr;
 	}
 	processRequest(flowRequest, l = {}){
+
+        
+
 		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
 		} else if(! operate.isArray(flowRequest)){
@@ -123,25 +135,24 @@ class ActionEngine{
 		Request is evaluated Like->
 		
 		 	extends{
-				delete
+				delete 							// default:{}
 		 	}
 
 
-		 	Loop { // default:1
-				condition { //default:true
+		 	Loop { 								// default:1
+				condition { 					//default:true
 					declare
 					if(request.method exists){
-						arguments //default:[]
+						arguments 				//default:[]
 						objectModel
 						method
-						resultObj{
-							setValueOnExecution
-						}
+						resultObj
 						
 					}
 					callback
 				}
 			}
+			passStates
 
 	*/
 	getValue(str, l){
@@ -224,21 +235,6 @@ class ActionEngine{
 
 					l[request['response']] = response;
 					// console.log('done', request['response'], response, l[request['response']]);
-					if(request.hasOwnProperty('setValueOnExecution')){
-						if(! operate.isObject(request['setValueOnExecution'])){
-							console.error("Request.setValueOnExecution should be an Object. What's this? ", request['setValueOnExecution']);
-							throw Error("Terminate Called");
-						}
-
-						// console.log(request['setValueOnExecution']);
-
-						var svoekeys = Object.keys(request['setValueOnExecution']);
-
-						for (var i = 0; i < svoekeys.length; i++) {
-							// console.log(svoekeys[i]);
-							response[svoekeys[i]] = this.getValue(request['setValueOnExecution'][svoekeys[i]], l);
-						}
-					}
 				}
 			}
 			// console.log(l);
@@ -246,15 +242,14 @@ class ActionEngine{
 				this.processRequest(request['callback'], l);
 			}
 		}
-		if(request.hasOwnProperty('passState') && request.passState){
-			// console.log('here');
+		if(request.hasOwnProperty('passState') && !request.passState){
+			for(var key in lastl){
+				lastl[key] = l[key]; // updated variables
+			}
+			l = lastl; // return to the state
+
 			return; // just pass the states
 		}
-		// console.log('here');
-		for(var key in lastl){
-			lastl[key] = l[key]; // updated variables
-		}
-		l = lastl; // return to the state
 	}
 }
 

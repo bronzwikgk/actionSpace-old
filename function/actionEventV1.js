@@ -1,4 +1,4 @@
-class actionEvent{
+class ActionEvent{
     constructor(){ this.listeners = {}; }
     addListener(domElement, events, func, ...args){
         console.log(this.listeners);
@@ -22,17 +22,10 @@ class actionEvent{
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
         }
-        if(operate.isString(req)){
-            req = window[req];
-        }
-        if(! operate.isObject(req)){
-            console.error('Cannot find Request, ', req);
-            return;
-        }
         addListener(domElement, events, engine.processRequest, req, args);
     }
     handleEvent(obj, e){
-        console.log(e.target);
+        // console.log(e.target);
         if(! obj.listeners[e.type][e.srcElement]) return;
         for (var i = 0; i < obj.listeners[e.type][e.srcElement].length; i++) {
             var f = obj.listeners[e.type][e.srcElement][i];
@@ -53,25 +46,7 @@ class actionEvent{
             }
         }
     }
-    addClassListener(event, selector, doit){
-        addListener(document, event, function(e){
-            if(e.srcElement.classList.contains(selector)) {
-                doit(e);
-            }
-        });
-    }
-    addTagListener(event, selector, doit){
-        addListener(document, event, function(e){
-            // console.log(e.srcElement.tagName);
-            if(e.srcElement.tagName.toLowerCase() == selector.toLowerCase()) {
-                doit(e);
-            }
-        });
-    };
 }
 
-var eventManager = new actionEvent();
+var eventManager = new ActionEvent();
 
-eventManager.addListener(document.getElementById('password'), 'click', function(e, args){
-    console.log('hello ' + args);
-} , 'saras');
