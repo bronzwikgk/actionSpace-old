@@ -6,7 +6,7 @@ class ActionEvent{
             func(event, ...args);
         }
         events = events.split(" ");
-        //iteratoration to be handled by the iterator method.
+        //iteration to be handled by the iterator method.
         for (var i = 0; i < events.length; i++) {
             if(events[i] != ''){
                 if(!this.listeners[events[i]]){
