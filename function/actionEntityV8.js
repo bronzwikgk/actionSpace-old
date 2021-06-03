@@ -3,14 +3,32 @@
  * Entity often referred as Action Entity, provides a wrapper for generic CRUD operation on an typeof object === ' object;
  * Basic premise being, this becomes our template/componenet generator. Works similar to Web Componeents and provides similar api.
  * 
- * It has method a. create: it takes 2 arguments( input , output); a times more arguments can be passed. Ie. For iteration.
- *               b. Append : it takes 2 arguemtns( input, parent); it appends the input to parent
- *               c. set :
- *               d. insert: 
- *               d. get :
- *               e. update:
- *               f.get4rmPath:
- *               g.string2Path
+ * It has method
+ *              a. create: it takes 2 arguments( input , output); a times more arguments can be passed. Ie. For iteration.
+ *              b. Append : it takes 2 arguemtns( input, parent); it appends the input to parent
+ *              c. set :
+ *              d. insert: 
+ *              d. get :
+ *              e. update:
+ *              f.get4rmPath:
+ *              g.string2Path : 
+ *              h. obj filter :
+ *              i.evalDelete : 
+ *              j. deleteProps :
+ *              k. updateProps :
+ *              l. extends
+ *              m.walk
+ *              n.bindObject
+ *              o.toJson
+ *              p.copy.
+ *              q.
+ *              r.
+ *              s.
+ *              t.
+ *              u.
+ *              v.
+ *              w.
+ *              x.
  * 
  * * 
  */
