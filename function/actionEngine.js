@@ -1,3 +1,8 @@
+//Generic observation.
+// All the methods' like get, expand, to be moved to actionEntity Class. 
+// ALl the test Request Models in form folder, testRequestModel.js file
+//All the sample request models in form folder, sampleRequestModel.js file
+//All the for loop to be removed from every methods, a generictor iterator as a callback back to be used.
 class ActionEngine{
 	
 	constructor(maxDebugDepth=10) { 
