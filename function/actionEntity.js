@@ -220,6 +220,56 @@ class Entity {
 
         return model;
     }
+    static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
+        
+        if(depth > maxdepth) return;
+
+        if(operate.isObject(req) && req.rngstart && req.rngend){
+            if(!req.delta){
+                req.delta = 1;
+            }
+            for(var i=req.rngstart; i != req.rngstart; i += req.delta){
+                callback.value(i);
+            }
+        } else if(opearte.isArray(req)){
+
+            for(var i=0;i<req.length;i++){
+            
+                if(operate.isObject(req[i])){
+            
+                    if(callback.object(req, i)) 
+                        walk(req[i], callback, maxdepth, depth+1);
+            
+                } else if(operate.isArray(req, i)){
+            
+                    if(callback.array(req, i))
+                        walk(req[i], callback, maxdepth, depth+1);
+            
+                } else {
+                    callback.value(req, i);
+                }
+            }
+        } else if(operate.isObject(req)){
+
+            for(var i in req){
+                if(operate.isObject(req[i])){
+            
+                    if(callback.object(req, i)) 
+                        walk(req[i], callback, maxdepth, depth+1);
+            
+                } else if(operate.isArray(req, i)){
+            
+                    if(callback.array(req, i))
+                        walk(req[i], callback, maxdepth, depth+1);
+            
+                } else {
+                    callback.value(req, i);
+                }
+            }
+        } else {
+            console.error("req should be an object/array.What's this? ", req);
+        }
+    }
     static copy(obj) {
 
         //
