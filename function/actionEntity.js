@@ -41,60 +41,58 @@ class Entity {
     }
     static createHTMLEntity(obj) {
         if (Operate.validate(obj, 'isUseless')) return console.log('useless');
-        if (Operate.validate(obj, 'isString')) return document.createTextNode(obj)
+        if (Operate.validate(obj, 'isString')) return document.createTextNode(obj);
         if (Operate.validate(obj, 'isHTML')) return obj;
-        let result,
+        let  buffer,
+        result = [],
             tagName = obj["name"] || obj["tagName"];
         if (Operate.validate(obj, "isArray")) {
-            result = [];
             for (let i = 0; i < obj.length; i++) {
-                if(!Operate.validate(obj[i], 'isUseless') ){
-                    let value = this.createHTMLEntity(obj[i]);
-                    if (value) result[i] = value;
-                }
+                let value = this.createHTMLEntity(obj[i]);
+                if (value) result[i] = value;
             }
-        }
-        else{
-            if (htmlElementList.includes(tagName) && ! bannedElements.includes(tagName)) 
-                result = document.createElement(tagName);
-            else return;
-        for (const key in obj) {
-            let attr = obj[key];
-            if (key==="tagName") continue;
-            else if (Operate.validate(attr, 'isObject')) {
-                let val = this.createHTMLEntity(attr);
-                if(!Operate.validate(val, 'isUseless')){
-                    if (Operate.validate(val, "isArray")) {
-                        for (let i = 0; i < val.length; i++) {
-                            result.appendChild(val[i])
+        } else {
+            if (!htmlElementList.includes(tagName) || bannedElements.includes(tagName)) return;
+            buffer = document.createElement(tagName);
+            for (const key in obj) {
+                let attr = obj[key];
+                if (key === "tagName") continue;
+                else if (Operate.validate(attr, 'isObject')) {
+                    let val = this.createHTMLEntity(attr);
+                    if (!Operate.validate(val, 'isUseless')) {
+                        if (Operate.validate(val, "isArray")) {
+                            for (let i = 0; i < val.length; i++) {
+                                result.appendChild(val[i])
+                            }
                         }
-                    } else {
-                        result.appendChild(val)
                     }
-                }
-                
+
+                } else if (htmlInheritedAttributes.includes(key) || htmlManualAttributes.includes(key))
+                    result.setAttribute(key, attr);
             }
-            else if (htmlInheritedAttributes.includes(key) || htmlManualAttributes.includes(key))
-            result.setAttribute(key, attr);
         }
-        }
-        
+
         return result;
     }
     static createJSONEntity(obj, schema) {
         let output = {};
         for (const key in schema) {
             let element = obj[key],
-            schemaVal = schema[key];
-            if (Operate.validate(element, 'isObject')) { output[key] = this.createJSONEntity(element, schemaVal); }
-            else if (Operate.validate(element, 'isFunction')) {
+                schemaVal = schema[key];
+            if (Operate.validate(element, 'isObject')) {
+                output[key] = this.createJSONEntity(element, schemaVal);
+            } else if (Operate.validate(element, 'isFunction')) {
                 output[key] = element.bind(obj);
                 for (let keyProp in element.prototype) {
                     if (Object.prototype.hasOwnProperty.call(element.prototype, keyProp)) {
-                        output[key].prototype = { [keyProp]: element.prototype[keyProp] }
+                        output[key].prototype = {
+                            [keyProp]: element.prototype[keyProp]
+                        }
                     }
                 }
-            } else { output[key] = Operate.convert(element, schemaVal); }
+            } else {
+                output[key] = Operate.convert(element, schemaVal);
+            }
         }
         return output;
     }
@@ -107,7 +105,7 @@ class Entity {
         return fileHandle;
     }
 
-    static async getFileEntity(fileHandle, method){
+    static async getFileEntity(fileHandle, method) {
         const file = await fileHandle.getFile();
         return await file[method]();
     }
@@ -115,49 +113,50 @@ class Entity {
     static get(key, parent, output) {
         //console.log("for Initaition", key, parent);
         if (Operate.validate(key, ["isString", "isNumber"], false)) {
-            let getFromPath = Operate.validate([key, '.'],'isInside') ||  Operate.validate([key, '['],'isInside');
+            let getFromPath = Operate.validate([key, '.'], 'isInside') || Operate.validate([key, '['], 'isInside');
             return getFromPath ? get4rmPath(key, parent) : parent[key] ? parent[key] : undefined;
         } else if (Operate.validate(key, ["isArray", "isObject"], false)) return get4rmPath(key, parent);
         else return console.log("objectNotfound");
     }
 
-    
 
-static update(parent, [key, value], actionVal) {
-    let current = parent;
-    if (Operate.validate(parent, 'isHTML')) { //Only HTML creation
-        if (value) parent[actionVal](key, value);
-        else parent[actionVal](key)
-    }
-    else if (Operate.validate(parent, 'isObject')) {
-        let path = stringToPath(actionVal);
-        for (var i = 0; i < path.length; i++) {
-            if (!current[path[i]]) return ;
-            current = current[path[i]];
+
+    static update(parent, [key, value], actionVal) {
+        let current = parent;
+        if (Operate.validate(parent, 'isHTML')) { //Only HTML creation
+            if (value) parent[actionVal](key, value);
+            else parent[actionVal](key)
+        } else if (Operate.validate(parent, 'isObject')) {
+            let path = stringToPath(actionVal);
+            for (var i = 0; i < path.length; i++) {
+                if (!current[path[i]]) return;
+                current = current[path[i]];
+            }
+            current[key] = value;
         }
-        current[key] = value;
+        return parent;
     }
-    return parent;
-}
 
 
 
-    static async del(entity){
+    static async del(entity) {
         if (Operate.validate(entity, 'isHTML')) {
             entity.remove()
-        } else if (Operate.validate(entity, 'isFile')){
+        } else if (Operate.validate(entity, 'isFile')) {
             let directoryHandle = await this.getHandle('Directory', entity);
-            directoryHandle.removeEntry(entity.name, {recursive:true});
+            directoryHandle.removeEntry(entity.name, {
+                recursive: true
+            });
         }
     }
 
-    static async getHandle (action, params){
+    static async getHandle(action, params) {
         let defaultParams = {
             suggestedName: 'Untitled.txt',
-            types:[{
+            types: [{
                 description: 'Text Documents',
-                accept:{
-                    'text/plain':['.txt']
+                accept: {
+                    'text/plain': ['.txt']
                 }
             }]
         }
@@ -166,61 +165,64 @@ static update(parent, [key, value], actionVal) {
         return fileHandle;
     }
 
-static get4rmPath(path, obj, def) {
-    // Get the path as an array
-    path = this.stringToPath(path);
-    console.log(path)
-var current = obj;
-for (var i = 0; i < path.length; i++) {
-    if (!current[path[i]]) return def;
-    current = current[path[i]];
-}
-return current;
-}
-/**
+    static get4rmPath(path, obj, def) {
+        // Get the path as an array
+        path = this.stringToPath(path);
+        console.log(path)
+        var current = obj;
+        for (var i = 0; i < path.length; i++) {
+            if (!current[path[i]]) return def;
+            current = current[path[i]];
+        }
+        return current;
+    }
+    /**
      * If the path is a string, convert it to an array
      * @param  {String|Array} path The path
      * @return {Array}             The path array
      */
-static stringToPath(path) {
-    // If the path isn't a string, return it
-    if (!Operate.validate(path, "isString")) return path;
-// Create new array
-let output = [];
-console.log()
-// Split to an array with dot notation
-path.split('.').forEach(function (item, index) {
-    // Split to an array with bracket notation
-    item.split(/\[([^}]+)\]/g).forEach(function (key) {
-        // Push to the new array
-        if (key !== '') output.push(key);
-    
-    });
-});
-return output;
-}
+    static stringToPath(path) {
+        // If the path isn't a string, return it
+        if (!Operate.validate(path, "isString")) return path;
+        // Create new array
+        let output = [];
+        console.log()
+        // Split to an array with dot notation
+        path.split('.').forEach(function (item, index) {
+            // Split to an array with bracket notation
+            item.split(/\[([^}]+)\]/g).forEach(function (key) {
+                // Push to the new array
+                if (key !== '') output.push(key);
 
-static merge(objects, filterFn){
-    let result = {};
-    for (let i = 0; i < objects.length; i++) {
-        let obj = objects[i], 
-        filtered = filter(obj, filterFn);
-        result = {...result, ...filtered};
+            });
+        });
+        return output;
     }
-    return result;
-}
-static filter(obj, filterFn){
-    let result = {};
-    for (const key in obj) {
-        let value = obj[key];
-        if (Object.hasOwnProperty.call(obj, key)) {
-            if (Operate.validate([value,'object'], 'isTypeof')) result[key] = filter(value, filterFn);
-            else if(value.constructor.name.includes('Function')) result[key] = value.bind(obj);
-            else if (filterFn(key, value, obj)) result[key] = value;
+
+    static merge(objects, filterFn) {
+        let result = {};
+        for (let i = 0; i < objects.length; i++) {
+            let obj = objects[i],
+                filtered = filter(obj, filterFn);
+            result = {
+                ...result,
+                ...filtered
+            };
         }
+        return result;
     }
-    return result;
-}
+    static filter(obj, filterFn) {
+        let result = {};
+        for (const key in obj) {
+            let value = obj[key];
+            if (Object.hasOwnProperty.call(obj, key)) {
+                if (Operate.validate([value, 'object'], 'isTypeof')) result[key] = filter(value, filterFn);
+                else if (value.constructor.name.includes('Function')) result[key] = value.bind(obj);
+                else if (filterFn(key, value, obj)) result[key] = value;
+            }
+        }
+        return result;
+    }
 
     /*************************************************************************************************************
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +231,7 @@ static filter(obj, filterFn){
     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     ***************************************************************************************************************/
 
-   
+
 
     //This method walks through all the keys of an obect. By default it retunrs all the keys wile getting them from Window scope.
     // It has optional patameter of Max Item, Max Depth and Recurse.
@@ -306,5 +308,5 @@ static filter(obj, filterFn){
 
 
 
-   
+
 }
