@@ -13,13 +13,20 @@ class ActionEngine{
 	}
 	
 	get(key,parent) {
-		if (parent[key]) {
-			var response = parent[key];
-			return response;
+		var keys = Entity.stringToPath(key);
+
+		var hold = parent;
+		for (var i = 0; i < keys.length; i++) {
+			var key = keys[i];
+			if(!hold) break;
+			hold = hold[key];
+		}
+		if (hold) {
+			return hold;
 		}else{
 			return key;
 		}
-    }
+   }
 	requestExpander(request){
 		if(request == null) return;
 		
@@ -142,17 +149,18 @@ class ActionEngine{
 		 	Loop { 								// default:1
 				condition { 					//default:true
 					declare
-					if(request.method exists){
+					if(method exists){
 						arguments 				//default:[]
 						objectModel
 						method
-						resultObj
+						response
 						
 					}
 					callback
 				}
 			}
 			passStates
+			return
 
 	*/
 	getValue(str, l){
@@ -161,7 +169,7 @@ class ActionEngine{
 		return str;
 	}
 	async action(request, l = {}){
-		// console.log(l);
+		// console.log("Request.objectModel: ", request.objectModel);
 		request = Entity.copy(request); // don't change itself
 
 		var lastl = Entity.copy(l); // store last states
@@ -181,15 +189,14 @@ class ActionEngine{
 			if(! request.hasOwnProperty('condition')) request.condition = true;
 		
 			if(! eval(request['condition'])){ // we should not execute this
-				return; 
+				break; 
 			}
 		
 			if(! request.hasOwnProperty('declare')) request.declare = {};
 
-			for(var key in request.declare){
-
-				l[key] = this.getValue(request.declare[key], l);
-			}
+			// console.log(request.declare);
+			l = Entity.updateProps(request.declare, l);
+			// console.log(l);
 			if(request.hasOwnProperty('method')){
 				if(! request.hasOwnProperty('arguments'))request.arguments = [];
 
@@ -216,12 +223,12 @@ class ActionEngine{
 					throw Error("Terminate Called");
 				}
 
-				var objectModel = this.get(request.objectModel, window);//this.get(request.objectModel, window) || this.get(request.objectModel, document);
+				var objectModel = this.get(request.objectModel, window);
 				if(!objectModel){
 					console.error(objectModel, " is not a valid objectModel");
 					throw Error("Terminate Called");
 				}
-
+				// console.log(objectModel);
 				var method = objectModel[request.method];
 				// console.log(method, objectModel);
 				// console.log(request.method);
@@ -247,34 +254,22 @@ class ActionEngine{
 				lastl[key] = l[key]; // updated variables
 			}
 			l = lastl; // return to the state
-
-			return; // just pass the states
+		}
+		if(request.hasOwnProperty('return')){
+			return getValue(request.return);
 		}
 	}
 }
 
 var engine = new ActionEngine();
-var parentRequest = {
-	objectModel:'console',
-	method: 'log',
-	arguments: 'helloworld',
-	callback: {
-		objectModel:'console',
-		method:'log',
-		arguments: 'helloworld2'
-	}
-}
-var deleteCheck = {
-	extends: 'parentRequest',
-	delete: {
-		callback:{
-			arguments:'helloworld2'
-		}
-	}
-}
 
-engine.processRequest(deleteCheck);
-engine.processRequest(parentRequest);
-console.log(engine.complexRequestExpander(deleteCheck));
+var getElem = {
+	objectModel : 'document',
+	method: 'getElementById',
+	arguments : 'password',
+	response: 'elem'
+};
+
+engine.processRequest(getElem);
 
 
