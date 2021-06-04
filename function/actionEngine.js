@@ -1,126 +1,14 @@
+//Generic observation.
+// All the methods' like get, expand, to be moved to actionEntity Class. 
+// ALl the test Request Models in form folder, testRequestModel.js file
+//All the sample request models in form folder, sampleRequestModel.js file
+//All the for loop to be removed from every methods, a generictor iterator as a callback back to be used.
 class ActionEngine{
 	
 	constructor(maxDebugDepth=10) { 
 		this.maxDebugDepth = maxDebugDepth;
-	}
-
-	removeDuplicates(arr){
-		var x = [];
-		for (var i = 0; i < arr.length; i++) {
-			x.push(arr[i]);
-		}
-		return x;
-	}
-	
-	get(key,parent) {
-		var keys = Entity.stringToPath(key);
-
-		var hold = parent;
-		for (var i = 0; i < keys.length; i++) {
-			var key = keys[i];
-			if(!hold) break;
-			hold = hold[key];
-		}
-		if (hold) {
-			return hold;
-		}else{
-			return key;
-		}
-   }
-	requestExpander(request){
-		if(request == null) return;
-		
-		if(operate.isString(request)){
-            request = window[request];
-        }
-
-		if(! operate.isObject(request)){
-			console.error(request, " is not a valid Object");
-			throw Error("Terminate Called");
-		} 
-
-		//single request
-
-		var rclone = Entity.copy(request);
-		var parent = null;
-		
-		if(request.hasOwnProperty('extends')){
-
-			var parent = this.requestExpander(window[request['extends']]); // parent is a JSON request
-			
-			request = Entity.copy(parent);
-			delete request['extends'];
-			
-			// console.log(request);
-
-			var del = rclone.delete;
-			delete rclone.delete;
-
-			request = Entity.extends(rclone, request, del);
-
-			delete request['extends'];
-		}
-		return request;
-		
-	}
-	complexRequestExpander(requestArr, depth = 0){
-		
-		if(requestArr == null) return;
-		
-		if(operate.isString(requestArr)){
-            requestArr = window[requestArr];
-        }
-
-		if(depth > this.maxDebugDepth){
-			console.warn('Will not expand when depth > ', this.maxDebugDepth);
-			return resultArr;
-		}
-
-		if(operate.isObject(requestArr)){
-			requestArr = [requestArr];
-		} else if(! operate.isArray(requestArr)){
-			console.error(requestArr, " is not a valid Object or Array");
-			throw Error("Terminate Called");
-
-		}
-		var resultArr = [];
-		for (var i = 0; i < requestArr.length; i++) {
-			var request = requestArr[i];
-			
-			//single request
-			// console.log(request);
-			var rclone = Entity.copy(request);
-			var parent = null;
-
-			if(request.hasOwnProperty('extends')){
-				
-				var parent = this.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
-				
-				request = Entity.copy(parent);
-				// console.log(request);
-			
-				var del = rclone.delete;
-				delete rclone.delete;
-
-				request = Entity.extends(rclone, request, del);
-
-				delete request['extends'];
-			}
-			
-			if(request.hasOwnProperty('callback')){
-				request.callback = this.complexRequestExpander(request.callback, depth + 1);
-			}
-
-			resultArr.push(request);
-		}
-		if(resultArr.length == 1){
-			return resultArr[0];
-		} 
-		return resultArr;
-	}
+	}	
 	processRequest(flowRequest, l = {}){
-
-        
 
 		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
@@ -134,7 +22,7 @@ class ActionEngine{
 				processRequest(flowRequest[i], l);
 				continue;
 			}
-			this.action(this.requestExpander(flowRequest[i]), l);
+			this.action(Entity.requestExpander(flowRequest[i]), l);
 		}
 
 	}
@@ -163,11 +51,6 @@ class ActionEngine{
 			return
 
 	*/
-	getValue(str, l){
-		if(operate.isString(str) && str.charAt(0) == '$')
-			return eval(str.substr(1));
-		return str;
-	}
 	async action(request, l = {}){
 		// console.log("Request.objectModel: ", request.objectModel);
 		request = Entity.copy(request); // don't change itself
@@ -181,10 +64,10 @@ class ActionEngine{
 			throw Error("Terminate Called");
 		}
 		
-		request.loop = this.getValue(request.loop, l);
+		request.loop = Entity.getValue(request.loop, l);
 
 		for (var i = 0; i < request.loop; i++) {
-			if(request.hasOwnProperty('condition')) request.condition = this.getValue(request.condition, l);
+			if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
 			if(! request.hasOwnProperty('condition')) request.condition = true;
 		
@@ -214,7 +97,7 @@ class ActionEngine{
 						throw Error("Terminate Called");
 
 					}
-					request.arguments[i] = this.getValue(request.arguments[i], l);
+					request.arguments[i] = Entity.getValue(request.arguments[i], l);
 				}
 
 				if(! request.hasOwnProperty('objectModel')){
@@ -263,13 +146,5 @@ class ActionEngine{
 
 var engine = new ActionEngine();
 
-var getElem = {
-	objectModel : 'document',
-	method: 'getElementById',
-	arguments : 'password',
-	response: 'elem'
-};
-
-engine.processRequest(getElem);
 
 

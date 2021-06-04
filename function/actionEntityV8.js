@@ -1,53 +1,116 @@
 
 class Entity {
-    static get(key, parent) {
-        console.log("for Initaition", key, parent)
-        if (operate.isString(key)) {
-            if (parent[key]) {
-              console.log("for Initaition", key, objectModel, objectModel[key])
-                var response = parent[key];
+    
+    static get(key,parent) {
+        var keys = Entity.stringToPath(key);
 
-                console.log("Initaites found", response)
-                return response;
-            }
-        } else if (typeof key == 'object' || key.indexOf(".") > 0) {
-           // console.log(key)
-            return this.get4rmPath(key,parent)
-        } else{
-            return console.log("objectNotfound");
+        var hold = parent;
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if(!hold) break;
+            hold = hold[key];
+        }
+        if (hold) {
+            return hold;
+        }else{
+            return key;
         }
     }
+    static requestExpander(request){
+        if(request == null) return;
+        
+        if(operate.isString(request)){
+            request = window[request];
+        }
 
-    //https://gomakethings.com/how-to-get-the-value-of-an-object-from-a-specific-path-with-vanilla-js/#:~:text=return%20our%20match.-,var%20get%20%3D%20function%20(obj%2C%20path%2C%20def)%20%7B,(or%20null)%20if%20(!
-    static get4rmPath(path,obj,def){
+        if(! operate.isObject(request)){
+            console.error(request, " is not a valid Object");
+            throw Error("Terminate Called");
+        } 
         
+        var rclone = Entity.copy(request);
+        var parent = null;
+        
+        if(request.hasOwnProperty('extends')){
 
-            /**
-             * If the path is a string, convert it to an array
-             * @param  {String|Array} path The path
-             * @return {Array}             The path array
-             */
-           
-            // Get the path as an array
-        path = Entity.stringToPath(path);
-        console.log(path)
-            // Cache the current object
-            var current = obj;
-            // For each item in the path, dig into the object
-            for (var i = 0; i < path.length; i++) {
-        
-                // If the item isn't found, return the default (or null)
-                if (!current[path[i]]) return def;
-        
-                // Otherwise, update the current  value
-                current = current[path[i]];
-        
-            }
-            return current;
-        
+            var parent = Entity.requestExpander(window[request['extends']]); // parent is a JSON request
+            
+            request = Entity.copy(parent);
+            delete request['extends'];
+            
+            // console.log(request);
+
+            var del = rclone.delete;
+            delete rclone.delete;
+
+            request = Entity.extends(rclone, request, del);
+
+            delete request['extends'];
+        }
+        return request;
         
     }
-     static stringToPath (path) {
+    static complexRequestExpander(requestArr, depth = 0){
+        
+        if(requestArr == null) return;
+        
+        if(operate.isString(requestArr)){
+            requestArr = window[requestArr];
+        }
+
+        if(depth > this.maxDebugDepth){
+            console.warn('Will not expand when depth > ', this.maxDebugDepth);
+            return resultArr;
+        }
+
+        if(operate.isObject(requestArr)){
+            requestArr = [requestArr];
+        } else if(! operate.isArray(requestArr)){
+            console.error(requestArr, " is not a valid Object or Array");
+            throw Error("Terminate Called");
+
+        }
+        var resultArr = [];
+        for (var i = 0; i < requestArr.length; i++) {
+            var request = requestArr[i];
+            
+            //single request
+            // console.log(request);
+            var rclone = Entity.copy(request);
+            var parent = null;
+
+            if(request.hasOwnProperty('extends')){
+                
+                var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
+                
+                request = Entity.copy(parent);
+                // console.log(request);
+            
+                var del = rclone.delete;
+                delete rclone.delete;
+
+                request = Entity.extends(rclone, request, del);
+
+                delete request['extends'];
+            }
+            
+            if(request.hasOwnProperty('callback')){
+                request.callback = Entity.complexRequestExpander(request.callback, depth + 1);
+            }
+
+            resultArr.push(request);
+        }
+        if(resultArr.length == 1){
+            return resultArr[0];
+        } 
+        return resultArr;
+    }
+    static getValue(str, l){
+        if(operate.isString(str) && str.charAt(0) == '$')
+            return eval(str.substr(1));
+        return str;
+    }
+    static stringToPath (path) {
 
         // If the path isn't a string, return it
         if (typeof path !== 'string') return path;
@@ -71,10 +134,6 @@ class Entity {
 
         return output;
 
-    }
- 
-    static evalDelete(req,  query, l = []){
-        delete eval('req.'+query);
     }
     static deleteProps(req, del){ 
         if(operate.isArray(del)){ //delete elements or properties of objects present in array

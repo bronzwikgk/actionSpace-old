@@ -6,6 +6,7 @@ class ActionEvent{
             func(event, ...args);
         }
         events = events.split(" ");
+        //iteration to be handled by the iterator method.
         for (var i = 0; i < events.length; i++) {
             if(events[i] != ''){
                 if(!this.listeners[events[i]]){
@@ -27,11 +28,13 @@ class ActionEvent{
     handleEvent(obj, e){
         // console.log(e.target);
         if(! obj.listeners[e.type][e.srcElement]) return;
+        //iteratoration to be handled by the itertor method.
         for (var i = 0; i < obj.listeners[e.type][e.srcElement].length; i++) {
             var f = obj.listeners[e.type][e.srcElement][i];
             f.func(e, ...f.args);
         }
     }
+    //Differance between two,
     removeListener(events){
         for (var i = 0; i < events.length; i++) {
             if(events[i] != ''){
