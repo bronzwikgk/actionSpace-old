@@ -50,16 +50,15 @@ class Entity {
         return request;
         
     }
-    static complexRequestExpander(requestArr, depth = 0){
-        
+    static complexRequestExpander(requestArr, maxDebugDepth = 10, depth = 0){
         if(requestArr == null) return;
         
         if(operate.isString(requestArr)){
             requestArr = window[requestArr];
         }
 
-        if(depth > this.maxDebugDepth){
-            console.warn('Will not expand when depth > ', this.maxDebugDepth);
+        if(depth > maxDebugDepth){
+            console.warn('Will not expand when depth > ', maxDebugDepth);
             return resultArr;
         }
 

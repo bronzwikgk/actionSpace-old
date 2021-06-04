@@ -106,7 +106,7 @@ class ActionEngine{
 					throw Error("Terminate Called");
 				}
 
-				var objectModel = this.get(request.objectModel, window);
+				var objectModel = Entity.get(request.objectModel, window);
 				if(!objectModel){
 					console.error(objectModel, " is not a valid objectModel");
 					throw Error("Terminate Called");
@@ -139,12 +139,9 @@ class ActionEngine{
 			l = lastl; // return to the state
 		}
 		if(request.hasOwnProperty('return')){
-			return getValue(request.return);
+			return Entity.getValue(request.return);
 		}
 	}
 }
 
 var engine = new ActionEngine();
-
-
-
