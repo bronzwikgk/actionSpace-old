@@ -27,10 +27,10 @@ class ActionEvent{
     }
     handleEvent(obj, e){
         // console.log(e.target);
-        if(! obj.listeners[e.type][e.srcElement]) return;
+        if(! obj.listeners[e.type][e.target]) return;
         //iteratoration to be handled by the itertor method.
-        for (var i = 0; i < obj.listeners[e.type][e.srcElement].length; i++) {
-            var f = obj.listeners[e.type][e.srcElement][i];
+        for (var i = 0; i < obj.listeners[e.type][e.target].length; i++) {
+            var f = obj.listeners[e.type][e.target][i];
             f.func(e, ...f.args);
         }
     }

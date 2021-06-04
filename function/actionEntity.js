@@ -223,6 +223,8 @@ class Entity {
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
         
         if(depth > maxdepth) return;
+        
+        if(! callback.l ) callback.l = {};
 
         if(operate.isObject(req) && req.rngstart && req.rngend){
             if(!req.delta){
@@ -231,43 +233,69 @@ class Entity {
             for(var i=req.rngstart; i != req.rngstart; i += req.delta){
                 callback.value(i);
             }
-        } else if(opearte.isArray(req)){
+        } else if(operate.isArray(req)){
 
             for(var i=0;i<req.length;i++){
             
+                callback.l.args = [req, i];
+
                 if(operate.isObject(req[i])){
-            
-                    if(callback.object(req, i)) 
+                    if(operate.isFunction(callback.object)){
+                        if(callback.object(req, i))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.object, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else if(operate.isArray(req, i)){
-            
-                    if(callback.array(req, i))
+                    
+                    if(operate.isFunction(callback.array)){
+                        if(callback.array(req, i))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.array, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
-                    callback.value(req, i);
+                    if(operate.isFunction(callback.value))
+                        callback.value(req, i);
+                    else if(engine.processRequest(callback.value))
+                        walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else if(operate.isObject(req)){
 
             for(var i in req){
+                
+                callback.l.args = [req, i];
+
                 if(operate.isObject(req[i])){
-            
-                    if(callback.object(req, i)) 
+                    if(operate.isFunction(callback.object)){
+                        if(callback.object(req, i))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.object, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else if(operate.isArray(req, i)){
-            
-                    if(callback.array(req, i))
+                    
+                    if(operate.isFunction(callback.array)){
+                        if(callback.array(req, i))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.array, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
-                    callback.value(req, i);
+                    if(operate.isFunction(callback.value))
+                        callback.value(req, i);
+                    else if(engine.processRequest(callback.value))
+                        walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else {
-            console.error("req should be an object/array.What's this? ", req);
+            console.warn("req should be an object/array.What's this? ", req);
+            return;
         }
     }
     static copy(obj) {
