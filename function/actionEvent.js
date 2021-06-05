@@ -54,7 +54,7 @@ class ActionEvent{
         addListener(domElement, events, engine.processRequest, req, args);
     }
     handleEvent(obj, e){
-        console.log(obj);
+        console.log(obj);   
         var uid = Entity.uniqueId(e.target);
         if(! obj.listeners[e.type][uid]) return;
         //iteratoration to be handled by the itertor method.
@@ -83,10 +83,13 @@ class ActionEvent{
         Entity.walk(
             {rngstart:0, rngend:events.length}, 
             {
-                value: function(i){
-                    if(events[i] != ''){
-                        this.listeners[events[i]] = {} ;
-                    }
+                value: {
+                    func: function(i, events){
+                        if(events[i] != ''){
+                            this.listeners[events[i]] = {} ;
+                        }
+                    },
+                    args: [events]
                 }
             }
         );
@@ -100,10 +103,13 @@ class ActionEvent{
         Entity.walk(
             {rngstart:0, rngend:events.length}, 
             {
-                value: function(i){
-                    if(events[i] != ''){
-                        this.listeners[events[i]][domElement] = [] ;
-                    }
+                value: {
+                    func:function(i, events){
+                        if(events[i] != ''){
+                            this.listeners[events[i]][domElement] = [] ;
+                        }
+                    },
+                    args: [events]
                 }
             }
         );
@@ -118,7 +124,7 @@ class ActionEvent{
 var eventManager = new ActionEvent();
 
 window.onload = function(){
-    eventManager.addListener(document.getElementById('password'), 'click', function(e){
-        console.log('hello');
-    });
+    eventManager.addListener(document.getElementById('password'), 'click', function(e, name){
+        console.log('hello', name);
+    }, "saras");
 }
