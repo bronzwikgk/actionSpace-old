@@ -229,9 +229,9 @@ class Entity {
         return model;
     }
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
-            
+        console.log('call');
         if(depth > maxdepth) return;
-        console.log(callback);
+        // console.log(callback);
         var emp = function() {};
 
         if(! callback.value) callback.value = {};
@@ -250,6 +250,10 @@ class Entity {
         if(! callback.object.args) callback.object.args = [];
         if(! callback.array.args) callback.array.args = [];
 
+        if(! operate.isArray(callback.value.args)) callback.value.args = [callback.value.args];
+        if(! operate.isArray(callback.object.args)) callback.object.args = [callback.object.args];
+        if(! operate.isArray(callback.array.args)) callback.array.args = [callback.array.args];
+
 
         if(operate.isObject(req) && req.hasOwnProperty('rngstart')){
             if(!req.delta){
@@ -260,7 +264,7 @@ class Entity {
 
                 if(operate.isFunction(callback.value.func)){
 
-                    callback.value.func(i, ...callback.value.args);
+                    callback.value.func(...callback.l.args);
                 } else{
                     engine.processRequest(callback.value, callback.l)
                 }
@@ -277,32 +281,31 @@ class Entity {
                     if(operate.isFunction(callback.object.func)){
 
                         if(callback.object.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.object.func, callback.l))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
             
-                } else if(operate.isArray(req, i)){
+                } else if(operate.isArray(req[i])){
                     callback.l.args = [req, i, ...callback.array.args];
                     
                     if(operate.isFunction(callback.array.func)){
-                        
                         if(callback.array.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.array.func, callback.l))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
                     callback.l.args = [req, i, ...callback.value.args];
 
-                    if(operate.isFunction(callback.value.dunc)){
+                    if(operate.isFunction(callback.value.func)){
 
                         if(callback.value.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.value.func))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else if(operate.isObject(req)){
@@ -316,32 +319,32 @@ class Entity {
                     if(operate.isFunction(callback.object.func)){
 
                         if(callback.object.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.object.func, callback.l))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
             
-                } else if(operate.isArray(req, i)){
+                } else if(operate.isArray(req[i])){
                     callback.l.args = [req, i, ...callback.array.args];
                     
                     if(operate.isFunction(callback.array.func)){
                         
                         if(callback.array.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.array.func, callback.l))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
                     callback.l.args = [req, i, ...callback.value.args];
 
-                    if(operate.isFunction(callback.value.dunc)){
+                    if(operate.isFunction(callback.value.func)){
 
                         if(callback.value.func(...callback.l.args))
-                            walk(req[i], callback, maxdepth, depth+1);
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
                     else if(engine.processRequest(callback.value.func))
-                        walk(req[i], callback, maxdepth, depth+1);
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else {
@@ -350,93 +353,164 @@ class Entity {
         }
     }
     static copy(obj) {
+        // creates an immultable copy of  object/array
+        var clone;
+        if(operate.isArray(obj)){
+            clone = [];
+        } else if(operate.isObject(obj)){
+            clone = {};
+        } else 
+            return obj;
 
-        //
-        // Methods
-        //
+        var dynamicArguments = [clone];
+        var callback = {
+            array: {
+                func: function(obj, key, clone, callback){
+                    //obj[key] is array, now what
+                    
+                    if(operate.isArray(obj))
+                        clone.push([]);
+                    else 
+                        clone[key] = [];
 
-        /**
-         * Copy properties from the original object to the clone
-         * @param {Object|Function} clone The cloned object
-         */
-        function copyProps(clone) {
-            for (let key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    clone[key] = Entity.copy(obj[key]);
-                }
+
+                    dynamicArguments[0] = clone[key];
+
+                    Entity.walk(obj[key], callback);
+
+                    dynamicArguments[0] = clone;
+
+                    return false;
+                },
+                args: dynamicArguments
+            },
+            object: {
+                func: function(obj, key, clone, callback){
+                    //obj[key] is array, now what
+                    
+                    if(operate.isArray(obj))
+                        clone.push({});
+                    else 
+                        clone[key] = {};
+
+
+                    dynamicArguments[0] = clone[key];
+
+                    Entity.walk(obj[key], callback);
+
+                    dynamicArguments[0] = clone;
+
+                    return false;
+                },
+                args: dynamicArguments
+            }, 
+            value:{
+                func: function(obj,  key, clone, callback){
+                    if(operate.isArray(obj))
+                        clone.push(obj[key]);
+                    else 
+                        clone[key] = obj[key];
+                    
+                    return false;
+                }, 
+                args: dynamicArguments
             }
-        }
+        };
 
-        /**
-         * Create an immutable copy of an object
-         * @return {Object}
-         */
-        function cloneObj() {
-            let clone = {};
-            copyProps(clone);
-            return clone;
-        }
+        dynamicArguments.push(callback);
 
-        /**
-         * Create an immutable copy of an array
-         * @return {Array}
-         */
-        function cloneArr() {
-            return obj.map(function (item) {
-                return Entity.copy(item);
-            });
-        }
+        Entity.walk(obj,callback);
 
-        /**
-         * Create an immutable copy of a Map
-         * @return {Map}
-         */
-        function cloneMap() {
-            let clone = new Map();
-            for (let [key, val] of obj) {
-                clone.set(key, Entity.copy(val));
-            }
-            return clone;
-        }
-
-        /**
-         * Create an immutable clone of a Set
-         * @return {Set}
-         */
-        function cloneSet() {
-            let clone = new Set();
-            for (let item of set) {
-                clone.add(copy(item));
-            }
-            return clone;
-        }
-
-        /**
-         * Create an immutable copy of a function
-         * @return {Function}
-         */
-        function cloneFunction() {
-            let clone = obj.bind(this);
-            copyProps(clone);
-            return clone;
-        }
-
-
-        //
-        // Inits
-        //
-
-        // Get object type
-        let type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-
-        // Return a clone based on the object type
-        if (type === 'object') return cloneObj();
-        if (type === 'array') return cloneArr();
-        if (type === 'map') return cloneMap();
-        if (type === 'set') return cloneSet();
-        if (type === 'function') return cloneFunction();
-        return obj;
-
+        return clone;
     }
+        // //
+        // // Methods
+        // //
+
+        // /**
+        //  * Copy properties from the original object to the clone
+        //  * @param {Object|Function} clone The cloned object
+        //  */
+        // function copyProps(clone) {
+        //     Entity.walk(obj, 
+        //         {
+
+        //         })
+        //     for (let key in obj) {
+        //         if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        //             clone[key] = Entity.copy(obj[key]);
+        //         }
+        //     }
+        // }
+
+        // /**
+        //  * Create an immutable copy of an object
+        //  * @return {Object}
+        //  */
+        // function cloneObj() {
+        //     let clone = {};
+        //     copyProps(clone);
+        //     return clone;
+        // }
+
+        // /**
+        //  * Create an immutable copy of an array
+        //  * @return {Array}
+        //  */
+        // function cloneArr() {
+        //     return obj.map(function (item) {
+        //         return Entity.copy(item);
+        //     });
+        // }
+
+        // *
+        //  * Create an immutable copy of a Map
+        //  * @return {Map}
+         
+        // // function cloneMap() {
+        // //     let clone = new Map();
+        // //     for (let [key, val] of obj) {
+        // //         clone.set(key, Entity.copy(val));
+        // //     }
+        // //     return clone;
+        // // }
+
+        // /**
+        //  * Create an immutable clone of a Set
+        //  * @return {Set}
+        //  */
+        // // function cloneSet() {
+        // //     let clone = new Set();
+        // //     for (let item of set) {
+        // //         clone.add(copy(item));
+        // //     }
+        // //     return clone;
+        // // }
+
+        // // Get object type
+        // let type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+
+        // // Return a clone based on the object type
+        // if (type === 'object') return cloneObj();
+        // if (type === 'array') return cloneArr();
+        // // if (type === 'map') return cloneMap();
+        // // if (type === 'set') return cloneSet();
+
+    //     return obj;
+
+    // }
         
 }
+/**
+*********
+
+Okay, fine, I was trying write a copy method with that iterator, 
+It becomes too complex, but thoda diwaal par sir phodne ke baad
+
+I realized that we can make we can do anything
+
+
+
+
+*********
+*/
