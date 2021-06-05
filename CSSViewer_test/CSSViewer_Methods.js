@@ -210,7 +210,7 @@ var updateCSSObj = function (elem, obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
             let value = obj[key];
             if (typeof value === 'object' && value.constructor.name.includes('Object')) updateCSSObj(elem, value)
-            else if (typeof key === 'string' && value == '') obj[key] = CSSObj.getPropertyValue(key);
+            else if (typeof key === 'string') obj[key] = CSSObj.getPropertyValue(key);
         }
     }
     return obj;

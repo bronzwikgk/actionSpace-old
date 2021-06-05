@@ -32,6 +32,13 @@ window.onmouseover = function (e) {
 
             };
         })
+        document.querySelectorAll("#CSSViewerBox>#tabContainer>.tab>.tabContent>.property>input").forEach(function(item){
+            item.onchange = function (e) {
+                let propName = this.previousElementSibling.innerText.trim(),
+                    value = this.value.trim();
+                document.querySelector(".CSSViewerActiveElem").style[propName] = value;
+            }
+        })
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
