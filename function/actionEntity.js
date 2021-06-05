@@ -1,3 +1,4 @@
+var counter = 0;
 
 class Entity {
     
@@ -15,6 +16,13 @@ class Entity {
         }else{
             return key;
         }
+    }
+    static uniqueId(obj){
+        if(! obj.__uniqueId && !obj.hasAttribute('data-__uniqueId')){
+            obj.__uniqueId = counter;
+            obj.setAttribute('data-__uniqueId', counter++);
+        }
+        return (obj.__uniqueId || obj.getAttribute('data-__uniqueId'));
     }
     static requestExpander(request){
         if(request == null) return;
@@ -221,45 +229,79 @@ class Entity {
         return model;
     }
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
-        
+            
         if(depth > maxdepth) return;
-        
+        console.log(callback);
+        var emp = function() {};
+
+        if(! callback.value) callback.value = {};
+        if(! callback.object) callback.object = {};
+        if(! callback.array) callback.array = {};
         if(! callback.l ) callback.l = {};
 
-        if(operate.isObject(req) && req.rngstart && req.rngend){
+
+        if(! callback.value.func) callback.value.func = emp;
+        if(! callback.object.func) callback.object.func = emp;
+        if(! callback.array.func) callback.array.func = emp;
+
+
+        
+        if(! callback.value.args) callback.value.args = [];
+        if(! callback.object.args) callback.object.args = [];
+        if(! callback.array.args) callback.array.args = [];
+
+
+        if(operate.isObject(req) && req.hasOwnProperty('rngstart')){
             if(!req.delta){
                 req.delta = 1;
             }
-            for(var i=req.rngstart; i != req.rngstart; i += req.delta){
-                callback.value(i);
+            for(var i=req.rngstart; i != req.rngend; i += req.delta){
+                callback.l.args = [i, ...callback.value.args];
+
+                if(operate.isFunction(callback.value.func)){
+
+                    callback.value.func(i, ...callback.value.args);
+                } else{
+                    engine.processRequest(callback.value, callback.l)
+                }
             }
         } else if(operate.isArray(req)){
 
             for(var i=0;i<req.length;i++){
             
-                callback.l.args = [req, i];
 
                 if(operate.isObject(req[i])){
-                    if(operate.isFunction(callback.object)){
-                        if(callback.object(req, i))
+
+                    callback.l.args = [req, i, ...callback.object.args];
+
+                    if(operate.isFunction(callback.object.func)){
+
+                        if(callback.object.func(...callback.l.args))
                             walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.object, callback.l))
+                    else if(engine.processRequest(callback.object.func, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else if(operate.isArray(req, i)){
+                    callback.l.args = [req, i, ...callback.array.args];
                     
-                    if(operate.isFunction(callback.array)){
-                        if(callback.array(req, i))
+                    if(operate.isFunction(callback.array.func)){
+                        
+                        if(callback.array.func(...callback.l.args))
                             walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.array, callback.l))
+                    else if(engine.processRequest(callback.array.func, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
-                    if(operate.isFunction(callback.value))
-                        callback.value(req, i);
-                    else if(engine.processRequest(callback.value))
+                    callback.l.args = [req, i, ...callback.value.args];
+
+                    if(operate.isFunction(callback.value.dunc)){
+
+                        if(callback.value.func(...callback.l.args))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.value.func))
                         walk(req[i], callback, maxdepth, depth+1);
                 }
             }
@@ -267,29 +309,38 @@ class Entity {
 
             for(var i in req){
                 
-                callback.l.args = [req, i];
-
                 if(operate.isObject(req[i])){
-                    if(operate.isFunction(callback.object)){
-                        if(callback.object(req, i))
+
+                    callback.l.args = [req, i, ...callback.object.args];
+
+                    if(operate.isFunction(callback.object.func)){
+
+                        if(callback.object.func(...callback.l.args))
                             walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.object, callback.l))
+                    else if(engine.processRequest(callback.object.func, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else if(operate.isArray(req, i)){
+                    callback.l.args = [req, i, ...callback.array.args];
                     
-                    if(operate.isFunction(callback.array)){
-                        if(callback.array(req, i))
+                    if(operate.isFunction(callback.array.func)){
+                        
+                        if(callback.array.func(...callback.l.args))
                             walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.array, callback.l))
+                    else if(engine.processRequest(callback.array.func, callback.l))
                         walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
-                    if(operate.isFunction(callback.value))
-                        callback.value(req, i);
-                    else if(engine.processRequest(callback.value))
+                    callback.l.args = [req, i, ...callback.value.args];
+
+                    if(operate.isFunction(callback.value.dunc)){
+
+                        if(callback.value.func(...callback.l.args))
+                            walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback.value.func))
                         walk(req[i], callback, maxdepth, depth+1);
                 }
             }
