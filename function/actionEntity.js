@@ -365,9 +365,8 @@ class Entity {
         var dynamicArguments = [clone];
         var callback = {
             array: {
-                func: function(obj, key, clone, callback){
+                func: function(obj, key, clone, callback, dynamicArguments){
                     //obj[key] is array, now what
-                    
                     if(operate.isArray(obj))
                         clone.push([]);
                     else 
@@ -375,9 +374,7 @@ class Entity {
 
 
                     dynamicArguments[0] = clone[key];
-
                     Entity.walk(obj[key], callback);
-
                     dynamicArguments[0] = clone;
 
                     return false;
@@ -385,7 +382,7 @@ class Entity {
                 args: dynamicArguments
             },
             object: {
-                func: function(obj, key, clone, callback){
+                func: function(obj, key, clone, callback, dynamicArguments){
                     //obj[key] is array, now what
                     
                     if(operate.isArray(obj))
@@ -393,11 +390,8 @@ class Entity {
                     else 
                         clone[key] = {};
 
-
                     dynamicArguments[0] = clone[key];
-
                     Entity.walk(obj[key], callback);
-
                     dynamicArguments[0] = clone;
 
                     return false;
@@ -405,12 +399,12 @@ class Entity {
                 args: dynamicArguments
             }, 
             value:{
-                func: function(obj,  key, clone, callback){
+                func: function(obj,  key, clone, callback, dynamicArguments){
                     if(operate.isArray(obj))
                         clone.push(obj[key]);
                     else 
                         clone[key] = obj[key];
-                    
+
                     return false;
                 }, 
                 args: dynamicArguments
@@ -418,99 +412,10 @@ class Entity {
         };
 
         dynamicArguments.push(callback);
+        dynamicArguments.push(dynamicArguments);
 
         Entity.walk(obj,callback);
 
         return clone;
     }
-        // //
-        // // Methods
-        // //
-
-        // /**
-        //  * Copy properties from the original object to the clone
-        //  * @param {Object|Function} clone The cloned object
-        //  */
-        // function copyProps(clone) {
-        //     Entity.walk(obj, 
-        //         {
-
-        //         })
-        //     for (let key in obj) {
-        //         if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        //             clone[key] = Entity.copy(obj[key]);
-        //         }
-        //     }
-        // }
-
-        // /**
-        //  * Create an immutable copy of an object
-        //  * @return {Object}
-        //  */
-        // function cloneObj() {
-        //     let clone = {};
-        //     copyProps(clone);
-        //     return clone;
-        // }
-
-        // /**
-        //  * Create an immutable copy of an array
-        //  * @return {Array}
-        //  */
-        // function cloneArr() {
-        //     return obj.map(function (item) {
-        //         return Entity.copy(item);
-        //     });
-        // }
-
-        // *
-        //  * Create an immutable copy of a Map
-        //  * @return {Map}
-         
-        // // function cloneMap() {
-        // //     let clone = new Map();
-        // //     for (let [key, val] of obj) {
-        // //         clone.set(key, Entity.copy(val));
-        // //     }
-        // //     return clone;
-        // // }
-
-        // /**
-        //  * Create an immutable clone of a Set
-        //  * @return {Set}
-        //  */
-        // // function cloneSet() {
-        // //     let clone = new Set();
-        // //     for (let item of set) {
-        // //         clone.add(copy(item));
-        // //     }
-        // //     return clone;
-        // // }
-
-        // // Get object type
-        // let type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-
-        // // Return a clone based on the object type
-        // if (type === 'object') return cloneObj();
-        // if (type === 'array') return cloneArr();
-        // // if (type === 'map') return cloneMap();
-        // // if (type === 'set') return cloneSet();
-
-    //     return obj;
-
-    // }
-        
 }
-/**
-*********
-
-Okay, fine, I was trying write a copy method with that iterator, 
-It becomes too complex, but thoda diwaal par sir phodne ke baad
-
-I realized that we can make we can do anything
-
-
-
-
-*********
-*/
