@@ -5,10 +5,9 @@
 //All the for loop to be removed from every methods, a generictor iterator as a callback back to be used.
 class ActionEngine{
 	
-	constructor(maxDebugDepth=10) { 
-		this.maxDebugDepth = maxDebugDepth;
-	}	
-	processRequest(flowRequest, l = {}){
+	static maxDebugDepth = 10;
+
+	static processRequest(flowRequest, l = {}){
 
 		if(operate.isObject(flowRequest)){
 			flowRequest = [flowRequest];
@@ -22,7 +21,7 @@ class ActionEngine{
 				processRequest(flowRequest[i], l);
 				continue;
 			}
-			this.action(Entity.requestExpander(flowRequest[i]), l);
+			ActionEngine.action(Entity.requestExpander(flowRequest[i]), l);
 		}
 
 	}
@@ -51,7 +50,7 @@ class ActionEngine{
 			return
 
 	*/
-	async action(request, l = {}){
+	static async action(request, l = {}){
 		// console.log("Request.objectModel: ", request.objectModel);
 		request = Entity.copy(request); // don't change itself
 
@@ -129,7 +128,7 @@ class ActionEngine{
 			}
 			// console.log(l);
 			if(request.hasOwnProperty('callback')){
-				this.processRequest(request['callback'], l);
+				ActionEngine.processRequest(request['callback'], l);
 			}
 		}
 		if(request.hasOwnProperty('passState') && !request.passState){
@@ -143,5 +142,3 @@ class ActionEngine{
 		}
 	}
 }
-
-var engine = new ActionEngine();

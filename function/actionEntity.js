@@ -6,13 +6,22 @@ class Entity {
         var keys = Entity.stringToPath(key);
 
         var hold = parent;
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            if(!hold) break;
-            hold = hold[key];
-        }
-        if (hold) {
-            return hold;
+
+        var l = {keys: keys, hold: hold};
+
+        walk({rngstart:0, rngend:keys.length}, {
+            value: {
+                func : function(i, l){
+                    var key = l.keys[i];
+                    if(!l.hold) break;
+                    l.hold = l.hold[key];
+                }, 
+                args: [l]
+            }
+        });
+
+        if (l.hold) {
+            return l.hold;
         }else{
             return key;
         }
@@ -78,35 +87,44 @@ class Entity {
 
         }
         var resultArr = [];
-        for (var i = 0; i < requestArr.length; i++) {
-            var request = requestArr[i];
+
+        walk(
+            {rngstart:0, rngend:requestArr.length}, 
+            {
+                value: {
+                    func : function(i, requestArr, resultArr) {
+                        var request = requestArr[i];
             
-            //single request
-            // console.log(request);
-            var rclone = Entity.copy(request);
-            var parent = null;
+                        //single request
+                        // console.log(request);
+                        var rclone = Entity.copy(request);
+                        var parent = null;
 
-            if(request.hasOwnProperty('extends')){
-                
-                var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
-                
-                request = Entity.copy(parent);
-                // console.log(request);
-            
-                var del = rclone.delete;
-                delete rclone.delete;
+                        if(request.hasOwnProperty('extends')){
+                            
+                            var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
+                            
+                            request = Entity.copy(parent);
+                            // console.log(request);
+                        
+                            var del = rclone.delete;
+                            delete rclone.delete;
 
-                request = Entity.extends(rclone, request, del);
+                            request = Entity.extends(rclone, request, del);
 
-                delete request['extends'];
+                            delete request['extends'];
+                        }
+                        
+                        if(request.hasOwnProperty('callback')){
+                            request.callback = Entity.complexRequestExpander(request.callback, depth + 1);
+                        }
+
+                        resultArr.push(request);
+                    },
+                    args: [requestArr, resultArr]
+                }
             }
-            
-            if(request.hasOwnProperty('callback')){
-                request.callback = Entity.complexRequestExpander(request.callback, depth + 1);
-            }
-
-            resultArr.push(request);
-        }
+        );
         if(resultArr.length == 1){
             return resultArr[0];
         } 
@@ -143,6 +161,7 @@ class Entity {
 
     }
     static deleteProps(req, del){ 
+        
         if(operate.isArray(del)){ //delete elements or properties of objects present in array
 
             var arr = [];
@@ -194,30 +213,56 @@ class Entity {
         return req;
     }
     static updateProps(req,model){
-        if(operate.isArray(req)){
-            for(var i=0;i<req.length;i++){
-                if(i >= model.length) model.push(null);
-                
-                if(req[i]) // if it's not undefined
-                    model[i] = Entity.updateProps(req[i], model[i]);
-            }
-        }
-        else if(operate.isObject(req)){
-            for(var key in req){
-                if(operate.isObject(req[key])){
-                
-                    if(! model[key]) model[key] = {};
-                
-                
-                } else if(operate.isArray(req[key])){
+        
+        // types should match in order to update
 
-                    if(! model[key]) model[key] = [];
-                }
-                model[key] = Entity.updateProps(req[key], model[key]);
-            }
-        } else {
+        if(operate.trueTypeOf(req) != operate.trueTypeOf(model)){
             model = req;
+            return req;
         }
+
+        var l = {model: model};
+
+        var callback = {
+            array: {
+                func: function(obj, key, l){
+
+                    l.model[key] = l.model[key] || [];
+                    var clone = l.model;
+
+                    l.model = l.model[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.model = clone;
+
+                    return false;
+                },
+                args: [l]
+            },
+            object: {
+                func: function(obj, key, l){
+                    
+                    l.model[key] = l.model[key] || {};
+                    var clone = l.model;
+
+                    l.model = l.model[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.model = clone;
+
+                    return false;
+                },
+                args: [l]
+            }, 
+            value:{
+                func: function(obj,  key, l){
+                    l.model[key] = obj[key];
+                    return false;
+                }, 
+                args: [l]
+            }
+        };
+        l.callback = callback;
+        Entity.walk(obj, callback);
+
         return model;
     }
     static extends(req, model, del){
@@ -355,64 +400,70 @@ class Entity {
     static copy(obj) {
         // creates an immultable copy of  object/array
         var clone;
-        if(operate.isArray(obj)){
+        if(operate.isArray(obj))
             clone = [];
-        } else if(operate.isObject(obj)){
+        else if(operate.isObject(obj))
             clone = {};
-        } else 
+        else if(operate.isHTML(obj))
+            return obj.cloneNode(true);
+        else 
             return obj;
 
-        var dynamicArguments = [clone];
+        var l = {clone:clone};
+
         var callback = {
             array: {
-                func: function(obj, key, clone, callback, dynamicArguments){
-                    //obj[key] is array, now what
+                func: function(obj, key, l){
+
+                    var clone = l.clone;
+
                     if(operate.isArray(obj))
-                        clone.push([]);
+                        l.clone.push([]);
                     else 
-                        clone[key] = [];
+                        l.clone[key] = [];
 
+                    l.clone = l.clone[key];
 
-                    dynamicArguments[0] = clone[key];
-                    Entity.walk(obj[key], callback);
-                    dynamicArguments[0] = clone;
+                    Entity.walk(obj[key], l.callback);
+                    
+                    l.clone = clone;
 
                     return false;
                 },
-                args: dynamicArguments
+                args: [l]
             },
             object: {
-                func: function(obj, key, clone, callback, dynamicArguments){
-                    //obj[key] is array, now what
-                    
-                    if(operate.isArray(obj))
-                        clone.push({});
-                    else 
-                        clone[key] = {};
+                func: function(obj, key, l){
 
-                    dynamicArguments[0] = clone[key];
-                    Entity.walk(obj[key], callback);
-                    dynamicArguments[0] = clone;
+                    var clone = l.clone;
+
+                    if(operate.isArray(obj))
+                        l.clone.push({});
+                    else 
+                        l.clone[key] = {};
+                    
+                    l.clone = l.clone[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.clone = clone;
 
                     return false;
                 },
-                args: dynamicArguments
+                args: [l]
             }, 
             value:{
-                func: function(obj,  key, clone, callback, dynamicArguments){
+                func: function(obj,  key, l){
                     if(operate.isArray(obj))
-                        clone.push(obj[key]);
+                        l.clone.push(obj[key]);
                     else 
-                        clone[key] = obj[key];
+                        l.clone[key] = obj[key];
 
                     return false;
                 }, 
-                args: dynamicArguments
+                args: [l]
             }
         };
 
-        dynamicArguments.push(callback);
-        dynamicArguments.push(dynamicArguments);
+        l.callback = callback;
 
         Entity.walk(obj,callback);
 

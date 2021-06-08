@@ -29,12 +29,12 @@ class ActionEvent{
             }
         );
     }
-    addRequestListener(domElement, events, engine, req, args = {}){
+    addRequestListener(domElement, events, req, args = {}){
         if(! operate.isObject(args)){
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
         }
-        addListener(domElement, events, engine.processRequest, req, args);
+        addListener(domElement, events, ActionEngine.processRequest, req, args);
     }
     handleEvent(obj, e){
         var uid = Entity.uniqueId(e.target);
