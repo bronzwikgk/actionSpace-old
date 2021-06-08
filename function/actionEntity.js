@@ -170,25 +170,41 @@ class Entity {
         var callback = { // iterating over del
             value:{
                 func: function(obj, key, l){
-                    if(operate.isArray(obj)){
-                        if(obj[key]){
+                    console.log(l.tmp);
+                    if(l.tmp){  // is not null
+                        if(obj[key]){ // ignore this
                             return ;
-                        } else {
-                            l.req.push(obj[key]);
+                        } else { // add this to the array
+                            l.tmp.push(l.req[key]);
                         }
-                    } else if(obj[key]) // not undefined
+                    } else if(obj[key]) // is not undefined
                         delete l.req[key];
+
+                    return false;
 
                 },
                 args: [l]
             }, 
             array: {
                 func: function(obj, key, l){
-                    var clone = l.req;
 
+                    var clone = l.req;
+                    var clonetmp = l.tmp || null;
+
+                    l.tmp = [];
                     l.req = l.req[key];
-                    walk(obj[key], l.callback);
+                    Entity.walk(obj[key], l.callback);
                     l.req = clone;
+
+                    var anstmp = l.tmp;
+
+
+                    if(clonetmp)
+                        clonetmp.push(anstmp);
+                    else 
+                        l.req[key] = anstmp;
+
+                    l.tmp = clonetmp;
 
                     return false;
                 },
@@ -196,11 +212,22 @@ class Entity {
             }, 
             object: {
                 func: function(obj, key, l){
+                    console.log('ooo', obj[key])
                     var clone = l.req;
+                    var clonetmp  = l.tmp || null;
+
+                    l.tmp = null;
 
                     l.req = l.req[key];
-                    walk(obj[key], l.callback);
+                    Entity.walk(obj[key], l.callback);
                     l.req = clone;
+
+                    if(clonetmp)
+                        clonetmp.push(l.req[key]);
+                    // else 
+                    //     l.req[key] = l.req[key]; //lol
+
+                    l.tmp = clonetmp;
 
                     return false;
                 },
@@ -212,7 +239,7 @@ class Entity {
 
         Entity.walk(del, callback);
         
-        return req;
+        return l.req;
     }
     static updateProps(req,model){
         
@@ -265,7 +292,7 @@ class Entity {
         l.callback = callback;
         Entity.walk(req, callback);
 
-        return model;
+        return l.model;
     }
     static extends(req, model, del){
 
@@ -469,6 +496,6 @@ class Entity {
 
         Entity.walk(obj,callback);
 
-        return clone;
+        return l.clone;
     }
 }
