@@ -9,12 +9,15 @@ class Entity {
 
         var l = {keys: keys, hold: hold};
 
-        walk({rngstart:0, rngend:keys.length}, {
+        Entity.walk({rngstart:0, rngend:keys.length}, {
             value: {
                 func : function(i, l){
                     var key = l.keys[i];
-                    if(!l.hold) break;
+                    
+                    if(!l.hold) return false;
                     l.hold = l.hold[key];
+
+                    return false;
                 }, 
                 args: [l]
             }
@@ -88,7 +91,7 @@ class Entity {
         }
         var resultArr = [];
 
-        walk(
+        Entity.walk(
             {rngstart:0, rngend:requestArr.length}, 
             {
                 value: {
@@ -161,55 +164,47 @@ class Entity {
 
     }
     static deleteProps(req, del){ 
-        
-        if(operate.isArray(del)){ //delete elements or properties of objects present in array
 
-            var arr = [];
-            var counter = 0;
-            for (var i = 0; i < del.length; i++) {
-                if(del[i] == undefined){
-                    arr.push(req[i]);
-                    counter++;
-                    
-                    continue;
-                }
-                if(operate.isObject(del[i])){
+        var l = {req: req};
 
-                    arr.push(req[i]);
-                    arr[counter] = Entity.deleteProps(req[i], del[i]);
-                    counter++;
-                
-                } else if(operate.isArray(del[i])){
-                    
-                    arr.push(req[i]);
-                    arr[counter] = Entity.deleteProps(req[i], del[i]);
-                    counter++;
-                
-                } else {
-                    // delete (ignore this)
-                }
-                
+        var callback = { // iterating over del
+            value:{
+                func: function(obj, key, l){
+                    if(l.del[key]) // not undefined
+                        delete l.req[key];
+                },
+                args: [l]
+            }, 
+            array: {
+                func: function(obj, key, l){
+                    var clone = l.req;
+
+                    l.req = l.req[key];
+                    walk(obj[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                },
+                args: [l]
+            }, 
+            object: {
+                func: function(obj, key, l){
+                    var clone = l.req;
+
+                    l.req = l.req[key];
+                    walk(obj[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                },
+                args: [l]
             }
-            return arr;
-        } 
-        if(operate.isObject(del)){
-            for(var key in del){
-                if(operate.isObject(del[key])){
-                
-                    req[key] = Entity.deleteProps(req[key], del[key]);
-                
-                
-                } else if(operate.isArray(del[key])){
 
-                    req[key] = Entity.deleteProps(req[key], del[key]);
-                
-                } else {
-                    delete req[key];
-                }
-            }
-            return req;
         }
+        l.callback = callback;
 
+        Entity.walk(del, callback);
+        
         return req;
     }
     static updateProps(req,model){
@@ -261,7 +256,7 @@ class Entity {
             }
         };
         l.callback = callback;
-        Entity.walk(obj, callback);
+        Entity.walk(req, callback);
 
         return model;
     }
@@ -274,7 +269,7 @@ class Entity {
         return model;
     }
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
-        console.log('call');
+        
         if(depth > maxdepth) return;
         // console.log(callback);
         var emp = function() {};
