@@ -170,8 +170,15 @@ class Entity {
         var callback = { // iterating over del
             value:{
                 func: function(obj, key, l){
-                    if(l.del[key]) // not undefined
+                    if(operate.isArray(obj)){
+                        if(obj[key]){
+                            return ;
+                        } else {
+                            l.req.push(obj[key]);
+                        }
+                    } else if(obj[key]) // not undefined
                         delete l.req[key];
+
                 },
                 args: [l]
             }, 
@@ -269,7 +276,7 @@ class Entity {
         return model;
     }
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
-        
+
         if(depth > maxdepth) return;
         // console.log(callback);
         var emp = function() {};
