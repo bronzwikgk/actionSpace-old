@@ -170,7 +170,7 @@ class Entity {
         var callback = { // iterating over del
             value:{
                 func: function(obj, key, l){
-                    console.log(l.tmp);
+                    // console.log(l.tmp);
                     if(l.tmp){  // is not null
                         if(obj[key]){ // ignore this
                             return ;
@@ -212,7 +212,7 @@ class Entity {
             }, 
             object: {
                 func: function(obj, key, l){
-                    console.log('ooo', obj[key])
+                    // console.log('ooo', obj[key])
                     var clone = l.req;
                     var clonetmp  = l.tmp || null;
 

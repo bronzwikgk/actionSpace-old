@@ -3,21 +3,54 @@
 	<head>
 	    <title>Documentation - ActionEngine</title>
 	    <style>
+	    	body{
+	    		font-family:"Open Sans"
+	    	}
 	    	table{
 	    		text-align:center;
 	    		border-collapse: collapse;
 	    	}
+	    	tr:nth-child(even){
+	    		background:#eef;
+	    	}
 	    	td, th{
 	    		border:1px solid #000;
 	    		padding:5px;
-	    		font-size:19px;
+	    		font-size:17px;
 
 	    	}
+	    	b, h3{ font-size:smaller; }
+	    	b, th, h3{
+	    		text-transform:uppercase;
+	    	}
+	    	.desc{
+	    		font-size:17px;
+	    	}
 	    	pre{
-	    		background:rgba(0,0,0,0.2);
+	    		border:1px solid #ccc;
 	    		padding:10px;
-	    		font-size:15px;
+	    		font-size:14px;
 	    		tab-size:3;
+	    		position:relative;
+	    		max-width:700px;
+	    		overflow:auto;
+	    		max-height: 90vh;
+	    	}
+	    	pre > .type{
+	    		position:sticky;
+	    		top:0;
+	    		left:0;
+	    		padding:5px;
+	    		min-width:50px;
+	    		font-size:12px;
+	    		color:#aa0;
+	    		border-bottom:1px solid #ccc;
+	    		text-align:center;
+	    	}
+	    	.pft{
+	    		background:#ff8;
+	    		padding-left:5px;
+	    		padding-right:5px;
 	    	}
 	    </style>
 	</head>
@@ -167,15 +200,50 @@ passStates
 return			</pre>
 			</li>
 			<li>
+				<h3>Things To Remember</h3>
+				<ol>
+					<li>For using local variables in the request, you should add a <span class="pft">l.</span> (el dot) prefix to each variable.</li>
+					<li>
+						For making an expression with global and local variables add a prefix <span class="pft">$</span> to the expression and pass it as a string.<br/>
+						Some valid examples are ->
+						<ul>
+							<li><span class="pft">"$($l.x) ? (l.y + l.z) : (l.a)"</span></li>
+							<li><span class="pft">"$(l.y + l.z + a)"</span>, a is global variable.</li>
+						</ul>
+					</li>
+					<li>
+						For using variables of callback in the current request, we need to put passStates: true, We can imagine it like a single statement.
+					</li>
+					<li>
+						By default, callback is used as a block(i.e., all the variables in the current request will be accessible by callback)
+					</li>
+					<li>
+						If you need to pass different set of arguments, just do
+						<pre>
+<div class="type">Request</div>
+var req = {
+	declare: {
+		args: {x: 'specific', y:'set', z:'of', a:'variables']
+	}
+	objectModel: 'ActionEngine',
+	method: 'processReq',
+	arguments: { 'reqName', '$l.args'}
+}
+
+						</pre>
+					</li>
+				</ol>
+			</li>
+			<li>
 				<h3>Method call</h3>
 				<ol>
 					<li>
 						<pre>
-//JS
+<div class = "type">JS</div>
 var elem = document.getElementById("hello");
 						</pre>
 						<pre>
-//Request
+<div class = "type">REQUEST</div>
 var getElem = {
 	objectModel : 'document',
 	method: 'getElementById',
@@ -186,13 +254,13 @@ var getElem = {
 					</li>
 					<li>
 						<pre>
-//JS
+<div class = "type">JS</div>
 var elem = document.createElement("div");
 document.body.appendChild(elem);
 elem.innerHTML = "Helloworld";
 						</pre>
 						<pre>
-//Request
+<div class = "type">REQUEST</div>
 var createElem = {
 	objectModel : 'document',
 	method: 'createElement',
@@ -209,6 +277,95 @@ var createElem = {
 				}
 			}
 		} 
+	}
+};
+						</pre>
+					</li>
+				</ol>
+			</li>
+			<li>
+				<h3>Request.extends</h3>
+				<ol>
+					<li>
+						<div class="desc">The below <span class="pft">child</span> request extends <span class="pft">req</span>(copies all the properties of req)</div>
+						<pre>
+<div class = "type">REQUEST</div>
+var req = {
+	declare: { x:5 },
+	return: '$l.x + 2'
+};
+var child = {
+	extends: 'req', 
+	return: '$l.x + 9' //updating return property inherited from previous request
+}
+						</pre>
+					</li>
+				</ol>
+
+			</li>
+			<li>
+				<h3>Request.delete</h3>
+				<ol>
+					<li>
+						<div class="desc">The below <span class="pft">child</span> request extends the declare property and then deletes <span class="pft">x</span> from <span class="pft">declare</span></div>
+						<pre>
+<div class = "type">REQUEST</div>
+var req = {
+	declare: { x:5, y:6 },
+};
+var child = {
+	extends: 'req', 
+	delete: {
+		declare: {
+			x:1
+		}
+	}
+}
+						</pre>
+					</li>
+				</ol>
+			</li>
+			<li>
+				<h3>Request.loop</h3>
+				<ol>
+					<li>
+						<div class="desc"><span class="pft">req</span> will print <span class="pft">Helloword</span> 5 times on the console.</div>
+						<pre>
+<div class = "type">REQUEST</div>
+var req = {
+	objectModel: 'console',
+	method: 'log',
+	arguments:'Helloworld',
+	loop:5
+};
+
+						</pre>
+					</li>
+				</ol>
+			</li>
+			<li>
+				<h3>Request.condition</h3>
+				<ol>
+					<li>
+						<div class="desc"><span class="pft">reqTrue</span> will print <span class="pft">x</span> whereas <span class='pft'>reqFalse</span> will not print anything.</div>
+						<pre>
+<div class = "type">REQUEST</div>
+var reqTrue = {
+	declare: { x:5 },
+	callback: {
+		condition: '$l.x > 3',
+		objectModel: 'console',
+		method: 'log',
+		arguments: '$l.x'
+	}
+};
+var reqFalse = {
+	declare: { x:5 },
+	callback: {
+		condition: '$l.x < 3',
+		objectModel: 'console',
+		method: 'log',
+		arguments: '$l.x'
 	}
 };
 						</pre>
