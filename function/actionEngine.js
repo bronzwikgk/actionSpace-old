@@ -6,7 +6,6 @@
 class ActionEngine{
 	
 	static maxDebugDepth = 10;
-
 	static processRequest(flowRequest, l = {}){
 
 		if(operate.isObject(flowRequest)){
@@ -131,7 +130,7 @@ class ActionEngine{
 				ActionEngine.processRequest(request['callback'], l);
 			}
 		}
-		if(request.hasOwnProperty('passState') && !request.passState){
+		if(!(request.hasOwnProperty('passStates') && request.passStates)) {
 			for(var key in lastl){
 				lastl[key] = l[key]; // updated variables
 			}
