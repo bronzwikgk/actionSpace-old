@@ -65,12 +65,8 @@
 						<th>Description</th>
 					</tr>
 					<tr>
-						<td>Request</td>
-						<td>A JSON where we will be coding the logic</td>
-					</tr>
-					<tr>
-						<td>ActionRequest</td> 
-						<td>A single Request(it can be a method call, several variable definition etc.)</td>
+						<td>ActionRequest</td>
+						<td>A JSON where we will be coding the logic. <br>A request can work like a method call, a method itself, or an if-block, or a loop, etc.</td>
 					</tr>
 					<tr>
 						<td>FlowRequest</td> 
@@ -86,6 +82,11 @@
 						<th>Datatype</th>
 						<th>Description</th>
 						<th>Default</th>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<b>General</b>
+						</td>
 					</tr>
 					<tr>
 						<td>extends</td>
@@ -119,6 +120,11 @@
 						<td>{}</td>
 					</tr>
 					<tr>
+						<td colspan="4">
+							<b>Method Call</b>
+						</td>
+					</tr>
+					<tr>
 						<td>method</td>
 						<td>string</td>
 						<td>The name of the method as string</td>
@@ -142,6 +148,12 @@
 						<td>The result of the method call will be stored in this variable locally(i.e., in this request).</td>
 						<td></td>
 					</tr>
+
+					<tr>
+						<td colspan="4">
+							<b>Uncategorized</b>
+						</td>
+					</tr>
 					<tr>
 						<td>callback</td>
 						<td>RequestModel</td>
@@ -152,7 +164,7 @@
 						<td>passStates</td>
 						<td>boolean</td>
 						<td>If true will pass all the variables to the parent otherwise not.</td>
-						<td>true</td>
+						<td>false</td>
 					</tr>
 					<tr>
 						<td>return</td>
@@ -186,6 +198,9 @@ return			</pre>
 			<li>
 				<h3>Things To Remember</h3>
 				<ol>
+					<li>A request cannot extend itself or any ancestor request(Or anything that makes an infinite loop). </li>
+					<li>A request cannot extend a flow request.</li>
+					<li>A request cannot extend a child request of any request.</li>
 					<li>For using local variables in the request, you should add a <span class="pft">l.</span> (el dot) prefix to each variable.</li>
 					<li>
 						For making an expression with global and local variables add a prefix <span class="pft">$</span> to the expression and pass it as a string.<br/>
@@ -199,7 +214,7 @@ return			</pre>
 						For using variables of callback in the current request, we need to put passStates: true, We can imagine it like a single statement.
 					</li>
 					<li>
-						By default, callback is used as a block(i.e., all the variables in the current request will be accessible by callback)
+						By default, callback is used as a block(i.e., all the variables in the current request will be accessible by callback, and the variables defined in this callback will not be accessible by the parent request)
 					</li>
 					<li>
 						If you need to pass different set of arguments, just do
@@ -208,13 +223,28 @@ return			</pre>
 var req = {
 	declare: {
 		args: {x: 'specific', y:'set', z:'of', a:'variables']
-	}
+	},
 	objectModel: 'ActionEngine',
-	method: 'processReq',
-	arguments: { 'reqName', '$l.args'}
+	method: 'processRequest',
+	arguments: { 'requestName', '$l.args'}
 }
 
 						</pre>
+					</li>
+					<li>
+						Difference between l and l.args
+						<table>
+							<tr>
+								<th></th>
+								<th>l</th>
+								<th>l.args</th>
+							</tr>
+							<tr>
+								<th>Type</th>
+								<td>json</td>
+								<td>array</td>
+							</tr>
+						</table>
 					</li>
 				</ol>
 			</li>

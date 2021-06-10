@@ -163,8 +163,46 @@ class Entity {
         return output;
 
     }
-    static deleteProps(req, del){ 
+    static equalizeArraysInDelete(req, del){ //Fixing function
+        var l = {req:req};
+        var callback = {
+            object:{
+                func: function(del, key, l){
+                    var clone = l.req;
 
+                    l.req = l.req[key];
+                    Entity.walk(del[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                },
+                args:[l]
+            },
+            array: {
+                func: function(del, key, l){
+                    while(del[key].length < l.req[key].length){
+                        del[key].push(undefined);
+                    }
+                    var clone = l.req;
+                    
+                    l.req = l.req[key];
+                    Entity.walk(del[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                }, 
+                args: [l]
+            }
+        }
+        l.callback = callback;
+        Entity.walk(del, callback);
+
+        return del;
+    }
+    static deleteProps(req, del){ 
+        console.log(del);
+        del = Entity.equalizeArraysInDelete(req, del);
+        console.log(del);
         var l = {req: req};
 
         var callback = { // iterating over del

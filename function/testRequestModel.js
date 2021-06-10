@@ -1,3 +1,11 @@
+var DefaultRequestModel = {
+   loop:1,
+   declare: {},
+   arguments:[],
+   condition:true,
+   passStates:false
+}
+
 var createElem = {
    objectModel : 'document',
    method: 'createElement',
