@@ -52,9 +52,6 @@ var objectCreate = {
       method: 'open',
       arguments: ['GET', 'actionEntity.js', true],
       declare: {
-         callmeonstatechange: { // callback request
-             
-         },
          xhttp: {
             onreadystatechange: "$ActionEngine.processRequest.bind(null, 'callmeonstatechange', {xhttp: l.xhttp})"
          }
