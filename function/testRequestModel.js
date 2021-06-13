@@ -37,6 +37,43 @@ var extendCreateElem = {
       }
    }
 }
+var callmeonstatechange = {
+   condition: '$l.xhttp.readyState === 4 && l.xhttp.status === 200',
+   objectModel: 'console',
+   method: 'log',
+   arguments: '$l.xhttp.responseText'
+};
+var objectCreate = {
+   objectModel: 'XMLHttpRequest',
+   construct: true,
+   response: 'xhttp',
+   callback: {
+      objectModel: '$l.xhttp',
+      method: 'open',
+      arguments: ['GET', 'actionEntity.js', true],
+      declare: {
+         callmeonstatechange: { // callback request
+             
+         },
+         xhttp: {
+            onreadystatechange: "$ActionEngine.processRequest.bind(null, 'callmeonstatechange', {xhttp: l.xhttp})"
+         }
+      }
+      ,
+      callback: [
+         {
+            objectModel:'$l.xhttp', 
+            method: 'send'
+         },{
+            objectModel: 'console',
+            method: 'log', 
+            arguments: '$l.xhttp'
+         }
+      ]
+   }
+}
 
-ActionEngine.processRequest(extendCreateElem);
-console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));
+
+// ActionEngine.processRequest(extendCreateElem);
+ActionEngine.processRequest(objectCreate);
+// console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));

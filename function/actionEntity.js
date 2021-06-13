@@ -29,6 +29,14 @@ class Entity {
             return key;
         }
     }
+    static getValue(str, l, x){
+        // console.log(str, l, x);
+        if(operate.isString(str) && str.charAt(0) == '$'){
+            // console.log(str, l);
+            return eval(str.substr(1));
+        }
+        return (x !== undefined) ? x : str;
+    }
     static uniqueId(obj){
         if(! obj.__uniqueId && !obj.hasAttribute('data-__uniqueId')){
             obj.__uniqueId = counter;
@@ -133,11 +141,6 @@ class Entity {
         } 
         return resultArr;
     }
-    static getValue(str, l){
-        if(operate.isString(str) && str.charAt(0) == '$')
-            return eval(str.substr(1));
-        return str;
-    }
     static stringToPath (path) {
 
         // If the path isn't a string, return it
@@ -181,7 +184,7 @@ class Entity {
             array: {
                 func: function(del, key, l){
                     while(del[key].length < l.req[key].length){
-                        del[key].push(undefined);
+                        del[key].push(null);
                     }
                     var clone = l.req;
                     
@@ -200,9 +203,9 @@ class Entity {
         return del;
     }
     static deleteProps(req, del){ 
-        console.log(del);
+        // console.log(del);
         del = Entity.equalizeArraysInDelete(req, del);
-        console.log(del);
+        // console.log(del);
         var l = {req: req};
 
         var callback = { // iterating over del
@@ -215,7 +218,7 @@ class Entity {
                         } else { // add this to the array
                             l.tmp.push(l.req[key]);
                         }
-                    } else if(obj[key]) // is not undefined
+                    } else if(obj[key]) // is not null
                         delete l.req[key];
 
                     return false;
@@ -279,7 +282,7 @@ class Entity {
         
         return l.req;
     }
-    static updateProps(req,model){
+    static updateProps(req,model, ALLSTATES = {}){
         
         // types should match in order to update
 
@@ -320,11 +323,12 @@ class Entity {
                 args: [l]
             }, 
             value:{
-                func: function(obj,  key, l){
-                    l.model[key] = obj[key];
+                func: function(obj,  key, l, ALLSTATES){
+                    l.model[key] = Entity.getValue(obj[key], ALLSTATES);
+                    // console.log(obj[key]);
                     return false;
                 }, 
-                args: [l]
+                args: [l, ALLSTATES]
             }
         };
         l.callback = callback;
@@ -465,6 +469,7 @@ class Entity {
         }
     }
     static copy(obj) {
+        // console.log("copying", obj);
         // creates an immultable copy of  object/array
         var clone;
         if(operate.isArray(obj))
@@ -508,7 +513,6 @@ class Entity {
                         l.clone.push({});
                     else 
                         l.clone[key] = {};
-                    
                     l.clone = l.clone[key];
                     Entity.walk(obj[key], l.callback);
                     l.clone = clone;
