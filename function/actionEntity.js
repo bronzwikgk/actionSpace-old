@@ -4,7 +4,6 @@ class Entity {
     
     static get(key,parent) {
         var keys = Entity.stringToPath(key);
-
         var hold = parent;
 
         var l = {keys: keys, hold: hold};
@@ -13,10 +12,8 @@ class Entity {
             value: {
                 func : function(i, l){
                     var key = l.keys[i];
-                    
                     if(!l.hold) return false;
                     l.hold = l.hold[key];
-
                     return false;
                 }, 
                 args: [l]
@@ -30,9 +27,7 @@ class Entity {
         }
     }
     static getValue(str, l, x){
-        // console.log(str, l, x);
         if(operate.isString(str) && str.charAt(0) == '$'){
-            // console.log(str, l);
             return eval(str.substr(1));
         }
         return (x !== undefined) ? x : str;

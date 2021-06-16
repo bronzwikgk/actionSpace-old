@@ -1,8 +1,3 @@
-//Generic observation.
-// All the methods' like get, expand, to be moved to actionEntity Class. 
-// ALl the test Request Models in form folder, testRequestModel.js file
-//All the sample request models in form folder, sampleRequestModel.js file
-//All the for loop to be removed from every methods, a generictor iterator as a callback back to be used.
 class ActionEngine{
    
    static maxDebugDepth = 10;
@@ -11,13 +6,21 @@ class ActionEngine{
       if(! operate.isArray(flowRequest)){
       	flowRequest = [flowRequest];
       }
-      for (var i = 0; i < flowRequest.length; i++) {
-         if(operate.isArray(flowRequest[i])){
-            processRequest(flowRequest[i], l);
-            continue;
-         }
-         ActionEngine.action(Entity.requestExpander(flowRequest[i]), l);
-      }
+      Entity.walk(
+      	{rngstart:0, rngend: flowRequest.length},
+      	{
+	      	value : {
+	      		func: function(i, flowRequest) {
+			         if(operate.isArray(flowRequest[i])){
+			            ActionEngine.processRequest(flowRequest[i], l);
+			            return false;
+			         }
+			         ActionEngine.action(Entity.requestExpander(flowRequest[i]), l);
+			      },
+			      args: [flowRequest]
+	      	}
+	      }
+      );
 
    }
    /* 
@@ -51,7 +54,6 @@ class ActionEngine{
    		request = Entity.get(request, window);
    	}
 
-      // console.log("Request.objectModel: ", request.objectModel);
       request = Entity.copy(request); // don't change itself
       var lastl;
 
@@ -66,127 +68,91 @@ class ActionEngine{
       
       request.loop = Entity.getValue(request.loop, l);
 
-      for (var i = 0; i < request.loop; i++) {
-         	// console.log('condition');
-            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
+      Entity.walk(
+      	{rngstart:0, rngend: request.loop},
+      	{
+      		value: {
+	      		func: async function(i, request){
 
-            if(! request.hasOwnProperty('condition')) request.condition = true;
-         
-            if(! eval(request['condition'])){ // we should not execute this
-               return false;
-            }
+		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
-         	// console.log('declare');
-            if(! request.hasOwnProperty('declare')) request.declare = {};
+		            if(! request.hasOwnProperty('condition')) request.condition = true;
+		         
+		            if(! eval(request['condition'])){ // we should not execute this
+		               return false;
+		            }
 
-            // console.log(request.declare);
-            // console.log(request.declare, l);	
-            var x = l;
+		            if(! request.hasOwnProperty('declare')) request.declare = {};
 
-            l = Entity.updateProps(request.declare, l, x);
+		            var x = l;
 
-         	// console.log('method');
-            // console.log(l);
-            if(request.hasOwnProperty('method')){
-               if(! request.hasOwnProperty('arguments'))request.arguments = [];
+		            l = Entity.updateProps(request.declare, l, x);
 
-               if(! operate.isArray(request.arguments)){
-                  request.arguments = [request.arguments];
-               }
-               for (var i = 0; i < request.arguments.length; i++) {
-                  // if(! operate.isString(request.arguments[i])){
-                     
-                  //    console.error("Request.arguments should contain only string. What's this?", request.arguments[i]);
-                  //    throw Error("Terminate Called");
+		            if(request.hasOwnProperty('method')){
+		               if(! request.hasOwnProperty('arguments'))request.arguments = [];
 
-                  // }
-                  request.arguments[i] = Entity.getValue(request.arguments[i], l);
-               }
+		               if(! operate.isArray(request.arguments)){
+		                  request.arguments = [request.arguments];
+		               }
+		               Entity.walk(
+				      	{rngstart:0, rngend: request.arguments.length},
+				      	{
+				      		value: {
+					      		func: function(i, request){
+					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
+					      		},
+					      		args: [request]
+					      	}
+					      });
 
-               if(! request.hasOwnProperty('objectModel')){
-               
-                  console.error("Request.objectModel is not present, while Request.method is.");
-                  throw Error("Terminate Called");
-               }
-               // console.log(request.objectModel);
-               // console.log(l[request.objectModel]);
+		               if(! request.hasOwnProperty('objectModel')){
+		               
+		                  console.error("Request.objectModel is not present, while Request.method is.");
+		                  throw Error("Terminate Called");
+		               }
 
-               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
-               if(!objectModel){
-                  console.error(objectModel, " is not a valid objectModel");
-                  throw Error("Terminate Called");
-               }
-               // console.log(objectModel);
-               var method = objectModel[request.method];
-               // console.log(method, objectModel);
-               // console.log(request.method);
-               var response = await method.apply(objectModel, request.arguments);
+		               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
+		               if(!objectModel){
+		                  console.error(objectModel, " is not a valid objectModel");
+		                  throw Error("Terminate Called");
+		               }
 
-               if(request.hasOwnProperty('response')){
-                  if(! operate.isString('response')){
-                     console.error("Request.response should be a string. What's this? ", request['response']);
-                     throw Error("Terminate Called");
-                  }
+		               var method = objectModel[request.method];
+		               var response = await method.apply(objectModel, request.arguments);
 
-                  l[request['response']] = response;
-                  // console.log('done', request['response'], response, l[request['response']]);
-               }
-            } else if (request.hasOwnProperty('construct') && request.construct){
-               if(! request.hasOwnProperty('arguments'))request.arguments = [];
+		               if(request.hasOwnProperty('response')){
+		                  if(! operate.isString('response')){
+		                     console.error("Request.response should be a string. What's this? ", request['response']);
+		                     throw Error("Terminate Called");
+		                  }
 
-               if(! operate.isArray(request.arguments)){
-                  console.error("Request.arguments should be a string or an array. What's this?", request.arguments);
-                  throw Error("Terminate Called");
-               }
-               
-               for (var i = 0; i < request.arguments.length; i++) {
-                  // if(! operate.isString(request.arguments[i])){
-                     
-                  //    console.error("Request.arguments should contain only string. What's this?", request.arguments[i]);
-                  //    throw Error("Terminate Called");
+		                  l[request['response']] = response;
+		               }
+		            }
 
-                  // }
-                  request.arguments[i] = Entity.getValue(request.arguments[i], l);
-               }
+		            if(request.hasOwnProperty('callback')){
+		               ActionEngine.processRequest(request['callback'], l);
+		            }
+		         },
+		         args: [request]
+		      }
+		   }
+		);
+      if(!(request.hasOwnProperty('passStates') && request.passStates)) 
+      {
+      	var x = {
+      		func: function(lastl, key, l){
+      			lastl[key] = l[key];
+      			return false;
+      		},
+      		args: [l]
+      	};
+      	Entity.walk(
+      		lastl, 
+      		{ object:x, array:x, value:x }
+      	);
 
-               if(! request.hasOwnProperty('objectModel')){
-               
-                  console.error("Request.objectModel is not present, while Request.method is.");
-                  throw Error("Terminate Called");
-               }
-
-               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
-               
-               if(!objectModel){
-                  console.error(objectModel, " is not a valid objectModel");
-                  throw Error("Terminate Called");
-               }
-               // console.log(objectModel);
-               var response = new objectModel(...request.arguments);
-
-               if(request.hasOwnProperty('response')){
-                  if(! operate.isString('response')){
-                     console.error("Request.response should be a string. What's this? ", request['response']);
-                     throw Error("Terminate Called");
-                  }
-
-                  l[request['response']] = response;
-                  // console.log('done', request['response'], response, l[request['response']]);
-               }
-            }
-
-            // console.log('callback');
-            if(request.hasOwnProperty('callback')){
-               ActionEngine.processRequest(request['callback'], l);
-            }
-
-      }
-      if(!(request.hasOwnProperty('passStates') && request.passStates)) {
-         // console.log(operate.trueTypeOf(l));
-         for(var key in lastl){
-            lastl[key] = l[key]; // updated variables
-         }
-         l = lastl; // return to the state
+         l = lastl;
       }
       if(request.hasOwnProperty('return')){
          return Entity.getValue(request.return);

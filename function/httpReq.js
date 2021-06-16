@@ -11,6 +11,7 @@ var reqParamsSchema = {
 }
 
 */
+//Please copy https://github.com/KGayatri15/Integration/blob/main/js/HttpService.js and just add methods you want to!
 
 
 
