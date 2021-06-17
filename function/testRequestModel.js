@@ -38,6 +38,34 @@ var extendCreateElem = {
    }
 }
 
+var getElem = {
+   objectModel: 'document',
+   method:'getElementById'
+}
+var log = {
+   objectModel:'console',
+   method:'log',
+   arguments:'clicked the button'
+};
+var req = {
+   extends:'getElem',
+   arguments:'addDiv',
+   response:'elem',
+   callback: [
+      {
+         extends:'log',
+         arguments:'$l.elem'
+      },
+      {
+         objectModel:'eventManager',
+         method:'addRequestListener',
+         arguments: ['$l.elem','click', '$log']
+      }
+   ]
+};
+window.onload= function(){
+   engine.processRequest(req);
+}
 
-ActionEngine.processRequest(extendCreateElem);
-console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));
+// ActionEngine.processRequest(extendCreateElem);
+// console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));

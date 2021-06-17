@@ -49,7 +49,6 @@ class ActionEngine{
 
    */
    static async action(request, l = {}){
-
    	if(operate.isString(request)){
    		request = Entity.get(request, window);
    	}
@@ -72,7 +71,7 @@ class ActionEngine{
       	{rngstart:0, rngend: request.loop},
       	{
       		value: {
-	      		func: async function(i, request){
+	      		func: async function(i, request, l){
 
 		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
@@ -85,26 +84,27 @@ class ActionEngine{
 		            if(! request.hasOwnProperty('declare')) request.declare = {};
 
 		            var x = l;
-
 		            l = Entity.updateProps(request.declare, l, x);
 
 		            if(request.hasOwnProperty('method')){
+
 		               if(! request.hasOwnProperty('arguments'))request.arguments = [];
 
 		               if(! operate.isArray(request.arguments)){
 		                  request.arguments = [request.arguments];
 		               }
 		               Entity.walk(
-				      	{rngstart:0, rngend: request.arguments.length},
-				      	{
-				      		value: {
-					      		func: function(i, request){
-					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
-					      		},
-					      		args: [request]
-					      	}
-					      });
-
+   				      	{rngstart:0, rngend: request.arguments.length},
+   				      	{
+   				      		value: {
+   					      		func: function(i, request, l){
+   					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
+   					      		},
+   					      		args: [request, l]
+   					      	}
+   					      }
+                     );
+                     
 		               if(! request.hasOwnProperty('objectModel')){
 		               
 		                  console.error("Request.objectModel is not present, while Request.method is.");
@@ -116,7 +116,6 @@ class ActionEngine{
 		                  console.error(objectModel, " is not a valid objectModel");
 		                  throw Error("Terminate Called");
 		               }
-
 		               var method = objectModel[request.method];
 		               var response = await method.apply(objectModel, request.arguments);
 
@@ -125,7 +124,6 @@ class ActionEngine{
 		                     console.error("Request.response should be a string. What's this? ", request['response']);
 		                     throw Error("Terminate Called");
 		                  }
-
 		                  l[request['response']] = response;
 		               }
 		            }
@@ -134,7 +132,7 @@ class ActionEngine{
 		               ActionEngine.processRequest(request['callback'], l);
 		            }
 		         },
-		         args: [request]
+		         args: [request, l]
 		      }
 		   }
 		);
@@ -159,3 +157,9 @@ class ActionEngine{
       }
    }
 }
+
+var engine = {
+   maxDebugDepth: ActionEngine.maxDebugDepth,
+   processRequest: ActionEngine.processRequest,
+   action: ActionEngine.action
+};

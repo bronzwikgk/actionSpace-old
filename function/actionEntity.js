@@ -61,8 +61,6 @@ class Entity {
             request = Entity.copy(parent);
             delete request['extends'];
             
-            // console.log(request);
-
             var del = rclone.delete;
             delete rclone.delete;
 
@@ -111,7 +109,6 @@ class Entity {
                             var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
                             
                             request = Entity.copy(parent);
-                            // console.log(request);
                         
                             var del = rclone.delete;
                             delete rclone.delete;
@@ -248,7 +245,6 @@ class Entity {
             }, 
             object: {
                 func: function(obj, key, l){
-                    // console.log('ooo', obj[key])
                     var clone = l.req;
                     var clonetmp  = l.tmp || null;
 
@@ -279,7 +275,6 @@ class Entity {
     }
     static updateProps(req,model, ALLSTATES = {}){
         
-        // types should match in order to update
 
         if(operate.trueTypeOf(req) != operate.trueTypeOf(model)){
             model = req;
@@ -319,7 +314,7 @@ class Entity {
             }, 
             value:{
                 func: function(obj,  key, l, ALLSTATES){
-                    l.model[key] = Entity.getValue(obj[key], ALLSTATES);
+                    l.model[key] = obj[key];
                     // console.log(obj[key]);
                     return false;
                 }, 
@@ -342,7 +337,7 @@ class Entity {
     static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
 
         if(depth > maxdepth) return;
-        // console.log(callback);
+
         var emp = function() {};
 
         if(! callback.value) callback.value = {};
@@ -464,7 +459,6 @@ class Entity {
         }
     }
     static copy(obj) {
-        // console.log("copying", obj);
         // creates an immultable copy of  object/array
         var clone;
         if(operate.isArray(obj))

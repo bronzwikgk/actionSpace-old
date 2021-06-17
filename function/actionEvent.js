@@ -6,7 +6,7 @@ class ActionEvent{
 
         events = events.split(" ");
         var obj = this;
-        //iteration to be handled by the iterator method.
+
         Entity.walk(
             {rngstart:0, rngend:events.length}, 
             {
@@ -34,7 +34,11 @@ class ActionEvent{
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
         }
-        addListener(domElement, events, ActionEngine.processRequest, req, args);
+        function x(event, req, args){
+            args['event'] = event;
+            ActionEngine.processRequest(req, args);
+        }
+        this.addListener(domElement, events, x, req, args);
     }
     handleEvent(obj, e){
         var uid = Entity.uniqueId(e.target);
@@ -51,8 +55,7 @@ class ActionEvent{
                     args: [obj, e]
                 }
             }
-        )
-        ;
+        );
     }
     removeListener(events){
         events = events.split(" ");
@@ -90,4 +93,5 @@ class ActionEvent{
 }
 
 var eventManager = new ActionEvent();
+
 
