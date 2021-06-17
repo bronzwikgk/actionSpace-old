@@ -341,27 +341,14 @@ class Entity {
         var emp = function() {};
 
         if(! callback.value) callback.value = {};
-        if(! callback.object) callback.object = {};
-        if(! callback.array) callback.array = {};
+        if(! callback.value.func) callback.value.func = emp;
+        if(! callback.value.args) callback.value.args = [];
+
         if(! callback.l ) callback.l = {};
 
-
-        if(! callback.value.func) callback.value.func = emp;
-        if(! callback.object.func) callback.object.func = emp;
-        if(! callback.array.func) callback.array.func = emp;
-
-
+        var rtype = operate.trueTypeOf(req);
         
-        if(! callback.value.args) callback.value.args = [];
-        if(! callback.object.args) callback.object.args = [];
-        if(! callback.array.args) callback.array.args = [];
-
-        if(! operate.isArray(callback.value.args)) callback.value.args = [callback.value.args];
-        if(! operate.isArray(callback.object.args)) callback.object.args = [callback.object.args];
-        if(! operate.isArray(callback.array.args)) callback.array.args = [callback.array.args];
-
-
-        if(operate.isObject(req) && req.hasOwnProperty('rngstart')){
+        if(rtype === 'object' && req.hasOwnProperty('rngstart')){
             if(!req.delta){
                 req.delta = 1;
             }
@@ -372,84 +359,61 @@ class Entity {
 
                     callback.value.func(...callback.l.args);
                 } else{
-                    engine.processRequest(callback.value, callback.l)
+                    engine.processRequest(callback.value.func, callback.l)
                 }
             }
-        } else if(operate.isArray(req)){
-
-            for(var i=0;i<req.length;i++){
-            
-
-                if(operate.isObject(req[i])){
-
-                    callback.l.args = [req, i, ...callback.object.args];
-
-                    if(operate.isFunction(callback.object.func)){
-
-                        if(callback.object.func(...callback.l.args))
-                            Entity.walk(req[i], callback, maxdepth, depth+1);
-                    }
-                    else if(engine.processRequest(callback.object.func, callback.l))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
-            
-                } else if(operate.isArray(req[i])){
-                    callback.l.args = [req, i, ...callback.array.args];
-                    
-                    if(operate.isFunction(callback.array.func)){
-                        if(callback.array.func(...callback.l.args))
-                            Entity.walk(req[i], callback, maxdepth, depth+1);
-                    }
-                    else if(engine.processRequest(callback.array.func, callback.l))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
-            
-                } else {
-                    callback.l.args = [req, i, ...callback.value.args];
-
-                    if(operate.isFunction(callback.value.func)){
-
-                        if(callback.value.func(...callback.l.args))
-                            Entity.walk(req[i], callback, maxdepth, depth+1);
-                    }
-                    else if(engine.processRequest(callback.value.func))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
-                }
-            }
-        } else if(operate.isObject(req)){
+        } else if(rtype === 'array'){
 
             for(var i in req){
-                
-                if(operate.isObject(req[i])){
 
-                    callback.l.args = [req, i, ...callback.object.args];
-
-                    if(operate.isFunction(callback.object.func)){
-
-                        if(callback.object.func(...callback.l.args))
-                            Entity.walk(req[i], callback, maxdepth, depth+1);
-                    }
-                    else if(engine.processRequest(callback.object.func, callback.l))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
-            
-                } else if(operate.isArray(req[i])){
-                    callback.l.args = [req, i, ...callback.array.args];
+                var type = operate.trueTypeOf(req[i]);
+                if(callback.hasOwnProperty(type)){
                     
-                    if(operate.isFunction(callback.array.func)){
-                        
-                        if(callback.array.func(...callback.l.args))
+                    callback.l.args = [req, i, ...callback[type].args];
+
+                    if(operate.isFunction(callback[type].func)){
+                        if(callback[type].func(...callback.l.args))
                             Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.array.func, callback.l))
+                    else if(engine.processRequest(callback[type].func, callback.l))
                         Entity.walk(req[i], callback, maxdepth, depth+1);
             
                 } else {
-                    callback.l.args = [req, i, ...callback.value.args];
+                    
+                    callback.l.args = [req, i, ...callback['value'].args];
 
-                    if(operate.isFunction(callback.value.func)){
-
-                        if(callback.value.func(...callback.l.args))
+                    if(operate.isFunction(callback['value'].func)){
+                        if(callback['value'].func(...callback.l.args))
                             Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback.value.func))
+                    else if(engine.processRequest(callback['value'].func, callback.l))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
+                }
+            }
+        } else if(rtype === 'object'){
+            for(var i in req){
+
+                var type = operate.trueTypeOf(req[i]);
+                if(callback.hasOwnProperty(type)){
+                    
+                    callback.l.args = [req, i, ...callback[type].args];
+
+                    if(operate.isFunction(callback[type].func)){
+                        if(callback[type].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback[type].func, callback.l))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
+            
+                } else {
+                    
+                    callback.l.args = [req, i, ...callback['value'].args];
+
+                    if(operate.isFunction(callback['value'].func)){
+                        if(callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }
+                    else if(engine.processRequest(callback['value'].func, callback.l))
                         Entity.walk(req[i], callback, maxdepth, depth+1);
                 }
             }
