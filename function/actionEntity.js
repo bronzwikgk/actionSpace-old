@@ -27,6 +27,7 @@ class Entity {
         }
     }
     static getValue(str, l, x){
+        // console.log(str, l, x);
         if(operate.isString(str) && str.charAt(0) == '$'){
             return eval(str.substr(1));
         }

@@ -1,11 +1,12 @@
 class ActionEngine{
    
    static maxDebugDepth = 10;
-   static processRequest(flowRequest, l = {}){
+   static async processRequest(flowRequest, l = {}){
 
       if(! operate.isArray(flowRequest)){
       	flowRequest = [flowRequest];
       }
+      var answer = [];
       Entity.walk(
       	{rngstart:0, rngend: flowRequest.length},
       	{
@@ -15,13 +16,14 @@ class ActionEngine{
 			            ActionEngine.processRequest(flowRequest[i], l);
 			            return false;
 			         }
-			         ActionEngine.action(Entity.requestExpander(flowRequest[i]), l);
+			         answer.push(ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
 			      },
-			      args: [flowRequest]
+			      args: [flowRequest, answer],
+               wait:true
 	      	}
 	      }
       );
-
+      return (answer.length > 1 ? answer : answer[0]);
    }
    /* 
       Request is evaluated Like->
@@ -67,7 +69,7 @@ class ActionEngine{
       
       request.loop = Entity.getValue(request.loop, l);
 
-      Entity.walk(
+      await Entity.walk(
       	{rngstart:0, rngend: request.loop},
       	{
       		value: {
@@ -132,10 +134,16 @@ class ActionEngine{
 		               ActionEngine.processRequest(request['callback'], l);
 		            }
 		         },
-		         args: [request, l]
+		         args: [request, l],
+               wait:true
 		      }
 		   }
 		);
+      var returnVal;
+      if(request.hasOwnProperty('return')){
+         
+         returnVal = Entity.getValue(request.return, l);
+      }
       if(!(request.hasOwnProperty('passStates') && request.passStates)) 
       {
       	var x = {
@@ -152,9 +160,7 @@ class ActionEngine{
 
          l = lastl;
       }
-      if(request.hasOwnProperty('return')){
-         return Entity.getValue(request.return);
-      }
+      return returnVal;
    }
 }
 

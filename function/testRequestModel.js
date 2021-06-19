@@ -49,22 +49,13 @@ var log = {
 };
 var req = {
    extends:'getElem',
-   arguments:'addDiv',
+   arguments:['addDiv'],
    response:'elem',
-   callback: [
-      {
-         extends:'log',
-         arguments:'$l.elem'
-      },
-      {
-         objectModel:'eventManager',
-         method:'addRequestListener',
-         arguments: ['$l.elem','click', '$log']
-      }
-   ]
+   return:'$l.elem'
 };
-window.onload= function(){
-   engine.processRequest(req);
+window.onload=async function(){
+   var x= await engine.processRequest('req');
+   console.log(x);
 }
 
 // ActionEngine.processRequest(extendCreateElem);
