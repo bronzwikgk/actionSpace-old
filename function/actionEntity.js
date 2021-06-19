@@ -375,22 +375,44 @@ class Entity {
                     callback.l.args = [req, i, ...callback[type].args];
 
                     if(operate.isFunction(callback[type].func)){
-                        if(callback[type].func(...callback.l.args))
+                        if(callback[type].wait){
+                            if(await (callback[type].func(...callback.l.args)))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback[type].func(...callback.l.args))
                             Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
                     }
-                    else if(engine.processRequest(callback[type].func, callback.l))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
-            
+                    else{
+                        if(callback[type].wait){
+                            if(await (engine.processRequest(callback[type].func, callback.l)))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback[type].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }   
                 } else {
-                    
                     callback.l.args = [req, i, ...callback['value'].args];
 
                     if(operate.isFunction(callback['value'].func)){
-                        if(callback['value'].func(...callback.l.args))
+                        if(callback['value'].wait){
+                            if(await (callback['value'].func(...callback.l.args)))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
+                    }
+                    else{
+                        if(callback['value'].wait){
+                            if(await (engine.processRequest(callback['value'].func, callback.l)))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback['value'].func, callback.l))
                             Entity.walk(req[i], callback, maxdepth, depth+1);
                     }
-                    else if(engine.processRequest(callback['value'].func, callback.l))
-                        Entity.walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else if(rtype === 'object'){
