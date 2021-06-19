@@ -38,24 +38,19 @@ var extendCreateElem = {
    }
 }
 
-var getElem = {
-   objectModel: 'document',
-   method:'getElementById'
-}
 var log = {
-   objectModel:'console',
-   method:'log',
-   arguments:'clicked the button'
-};
-var req = {
-   extends:'getElem',
-   arguments:['addDiv'],
-   response:'elem',
-   return:'$l.elem'
-};
+    objectModel:'console',
+    method:'log',
+    arguments:'click event occured'
+ };
+
+var evtClick = {
+    objectModel: 'eventManager',
+    method: 'addRequestListener',
+    arguments: ['$window', 'click', 'log']
+}
 window.onload=async function(){
-   var x= await engine.processRequest('req');
-   console.log(x);
+   engine.processRequest('evtClick');
 }
 
 // ActionEngine.processRequest(extendCreateElem);

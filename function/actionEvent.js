@@ -30,6 +30,7 @@ class ActionEvent{
         );
     }
     addRequestListener(domElement, events, req, args = {}){
+
         if(! operate.isObject(args)){
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
@@ -42,14 +43,42 @@ class ActionEvent{
     }
     handleEvent(obj, e){
         var uid = Entity.uniqueId(e.target);
-        if(! obj.listeners[e.type][uid]) return;
-        //iteratoration to be handled by the itertor method.
+        
+        if(obj.listeners[e.type][uid])
         Entity.walk(
             {rngstart:0, rngend:obj.listeners[e.type][uid].length}, 
             {
                 value:{
                     func: function(i, obj, e){
                         var f = obj.listeners[e.type][uid][i];
+                        f.func(e, ...f.args);
+                    },
+                    args: [obj, e]
+                }
+            }
+        );
+
+        if(obj.listeners[e.type]['window'])
+        Entity.walk(
+            {rngstart:0, rngend:obj.listeners[e.type]['window'].length}, 
+            {
+                value:{
+                    func: function(i, obj, e){
+                        var f = obj.listeners[e.type]['window'][i];
+                        f.func(e, ...f.args);
+                    },
+                    args: [obj, e]
+                }
+            }
+        );
+
+        if(obj.listeners[e.type]['document'])
+        Entity.walk(
+            {rngstart:0, rngend:obj.listeners[e.type]['document'].length}, 
+            {
+                value:{
+                    func: function(i, obj, e){
+                        var f = obj.listeners[e.type]['document'][i];
                         f.func(e, ...f.args);
                     },
                     args: [obj, e]

@@ -95,7 +95,7 @@ class ActionEngine{
 		               if(! operate.isArray(request.arguments)){
 		                  request.arguments = [request.arguments];
 		               }
-		               Entity.walk(
+		               await Entity.walk(
    				      	{rngstart:0, rngend: request.arguments.length},
    				      	{
    				      		value: {
