@@ -337,7 +337,7 @@ class Entity {
 
         return model;
     }
-    static walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
+    static async walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
 
         if(depth > maxdepth) return;
 
@@ -358,11 +358,23 @@ class Entity {
             for(var i=req.rngstart; i != req.rngend; i += req.delta){
                 callback.l.args = [i, ...callback.value.args];
 
-                if(operate.isFunction(callback.value.func)){
+                if(operate.isFunction(callback['value'].func)){
+                    if(callback['value'].wait){
+                        if(await callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
 
-                    callback.value.func(...callback.l.args);
-                } else{
-                    engine.processRequest(callback.value.func, callback.l)
+                    }
+                    else if(callback['value'].func(...callback.l.args))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
+                    
+                }
+                else{
+                    if(callback['value'].wait){
+                        if(await engine.processRequest(callback['value'].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    } 
+                    else if(engine.processRequest(callback['value'].func, callback.l))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
                 }
             }
         } else if(rtype === 'array'){
@@ -376,7 +388,7 @@ class Entity {
 
                     if(operate.isFunction(callback[type].func)){
                         if(callback[type].wait){
-                            if(await (callback[type].func(...callback.l.args)))
+                            if(await callback[type].func(...callback.l.args))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
 
                         }
@@ -386,7 +398,7 @@ class Entity {
                     }
                     else{
                         if(callback[type].wait){
-                            if(await (engine.processRequest(callback[type].func, callback.l)))
+                            if(await engine.processRequest(callback[type].func, callback.l))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
                         } 
                         else if(engine.processRequest(callback[type].func, callback.l))
@@ -397,7 +409,7 @@ class Entity {
 
                     if(operate.isFunction(callback['value'].func)){
                         if(callback['value'].wait){
-                            if(await (callback['value'].func(...callback.l.args)))
+                            if(await callback['value'].func(...callback.l.args))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
 
                         }
@@ -407,7 +419,7 @@ class Entity {
                     }
                     else{
                         if(callback['value'].wait){
-                            if(await (engine.processRequest(callback['value'].func, callback.l)))
+                            if(await engine.processRequest(callback['value'].func, callback.l))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
                         } 
                         else if(engine.processRequest(callback['value'].func, callback.l))
@@ -425,7 +437,7 @@ class Entity {
 
                     if(operate.isFunction(callback[type].func)){
                         if(callback[type].wait){
-                            if(await (callback[type].func(...callback.l.args)))
+                            if(await callback[type].func(...callback.l.args))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
 
                         }
@@ -435,7 +447,7 @@ class Entity {
                     }
                     else{
                         if(callback[type].wait){
-                            if(await (engine.processRequest(callback[type].func, callback.l)))
+                            if(await engine.processRequest(callback[type].func, callback.l))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
                         } 
                         else if(engine.processRequest(callback[type].func, callback.l))
@@ -446,7 +458,7 @@ class Entity {
 
                     if(operate.isFunction(callback['value'].func)){
                         if(callback['value'].wait){
-                            if(await (callback['value'].func(...callback.l.args)))
+                            if(await callback['value'].func(...callback.l.args))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
 
                         }
@@ -456,7 +468,7 @@ class Entity {
                     }
                     else{
                         if(callback['value'].wait){
-                            if(await (engine.processRequest(callback['value'].func, callback.l)))
+                            if(await engine.processRequest(callback['value'].func, callback.l))
                                 Entity.walk(req[i], callback, maxdepth, depth+1);
                         } 
                         else if(engine.processRequest(callback['value'].func, callback.l))
