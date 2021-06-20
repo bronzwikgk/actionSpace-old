@@ -49,9 +49,21 @@ var evtClick = {
     method: 'addRequestListener',
     arguments: ['$window', 'click', 'log']
 }
+var evtClickBubble = {
+    objectModel:'document',
+    method:'getElementById',
+    arguments:'addDiv',
+    response:'elem',
+    callback:{
+      objectModel: 'eventManager',
+      method:'addRequestListener',
+      arguments: ['$l.elem', 'click', 'log']
+    }
+}
 window.onload=async function(){
    engine.processRequest('evtClick');
+   engine.processRequest('evtClickBubble');
 }
 
 // ActionEngine.processRequest(extendCreateElem);
-// console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));
+// console.log(JSON.stringify(Entity.complexRequestExpander(extendCreateElem)));  

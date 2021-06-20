@@ -1,7 +1,7 @@
 
 
 class ActionEvent{
-    constructor(){ this.listeners = {}; }
+    constructor(bubble = true){ this.listeners = {}; this.bubble = bubble;}
     addListener(domElement, events, func, ...args){
 
         events = events.split(" ");
@@ -11,7 +11,7 @@ class ActionEvent{
             {rngstart:0, rngend:events.length}, 
             {
                 value: {
-                    func: function(i, obj, domElement,events, func, ...args){
+                    func: function(i, obj, domElement,events,func, ...args){
 
 
                         if(events[i] != ''){
@@ -42,49 +42,27 @@ class ActionEvent{
         this.addListener(domElement, events, x, req, args);
     }
     handleEvent(obj, e){
-        var uid = Entity.uniqueId(e.target);
-        
-        if(obj.listeners[e.type][uid])
-        Entity.walk(
-            {rngstart:0, rngend:obj.listeners[e.type][uid].length}, 
-            {
-                value:{
-                    func: function(i, obj, e){
-                        var f = obj.listeners[e.type][uid][i];
-                        f.func(e, ...f.args);
-                    },
-                    args: [obj, e]
-                }
-            }
-        );
+        var elem = e.target;
+        var first = true;
+        while(elem && ((obj.bubble && (!e.propogate)) || first)){
 
-        if(obj.listeners[e.type]['window'])
-        Entity.walk(
-            {rngstart:0, rngend:obj.listeners[e.type]['window'].length}, 
-            {
-                value:{
-                    func: function(i, obj, e){
-                        var f = obj.listeners[e.type]['window'][i];
-                        f.func(e, ...f.args);
-                    },
-                    args: [obj, e]
+            var uid = Entity.uniqueId(elem);
+            if(obj.listeners[e.type][uid])
+            Entity.walk(
+                {rngstart:0, rngend:obj.listeners[e.type][uid].length}, 
+                {
+                    value:{
+                        func: async function(i, obj, e){
+                            var f = obj.listeners[e.type][uid][i];
+                            f.func(e, ...f.args);
+                        },
+                        args: [obj, e]
+                    }
                 }
-            }
-        );
-
-        if(obj.listeners[e.type]['document'])
-        Entity.walk(
-            {rngstart:0, rngend:obj.listeners[e.type]['document'].length}, 
-            {
-                value:{
-                    func: function(i, obj, e){
-                        var f = obj.listeners[e.type]['document'][i];
-                        f.func(e, ...f.args);
-                    },
-                    args: [obj, e]
-                }
-            }
-        );
+            );
+            elem = ((!elem.parentNode) && elem!=window) ? window : elem.parentNode;
+            first = false;
+        }
     }
     removeListener(events){
         events = events.split(" ");
