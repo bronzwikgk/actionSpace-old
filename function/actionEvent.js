@@ -45,7 +45,7 @@ class ActionEvent{
         var elem = e.target;
         var first = true;
         e.propogate = obj.bubble;
-        while(elem && (e.propogate) || first){
+        while(elem && (e.propogate || first)){
 
             var uid = Entity.uniqueId(elem);
             if(obj.listeners[e.type][uid])
