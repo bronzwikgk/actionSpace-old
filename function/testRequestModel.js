@@ -47,7 +47,7 @@ var log = {
 var evtClick = {
     objectModel: 'eventManager',
     method: 'addRequestListener',
-    arguments: ['$window', 'click', 'log']
+    arguments: ['$window', 'click', '$log']
 }
 var evtClickBubble = {
     objectModel:'document',
@@ -57,7 +57,7 @@ var evtClickBubble = {
     callback:{
       objectModel: 'eventManager',
       method:'addRequestListener',
-      arguments: ['$l.elem', 'click', 'log']
+      arguments: ['$l.elem', 'click', '$log']
     }
 }
 window.onload=async function(){
