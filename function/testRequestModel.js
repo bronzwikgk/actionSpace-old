@@ -46,23 +46,15 @@ var log = {
 
 var evtClick = {
     objectModel: 'eventManager',
-    method: 'addRequestListener',
-    arguments: ['$window', 'click', '$log']
+    method: 'addListener',
+    arguments: ['$window', 'click', function(event){
+
+      ActionEngine.processRequest(log);
+    }]
 }
-var evtClickBubble = {
-    objectModel:'document',
-    method:'getElementById',
-    arguments:'addDiv',
-    response:'elem',
-    callback:{
-      objectModel: 'eventManager',
-      method:'addRequestListener',
-      arguments: ['$l.elem', 'click', '$log']
-    }
-}
+
 window.onload=async function(){
    engine.processRequest('evtClick');
-   engine.processRequest('evtClickBubble');
 }
 
 // ActionEngine.processRequest(extendCreateElem);
