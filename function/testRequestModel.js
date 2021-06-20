@@ -6,38 +6,25 @@ var DefaultRequestModel = {
    passStates:false
 }
 
-var createElem = {
-   objectModel : 'document',
-   method: 'createElement',
-   arguments : 'div',
-   response: 'elem',
-   callback: {
-      objectModel:'document.body',
-      method:'appendChild',
-      arguments:'$l.elem',
-      callback: {
-         declare:{
-            'elem':{
-               'innerHTML':'Helloworld'
-            }
-         }
-      } 
-   }
-};
-
-var extendCreateElem = {
-   extends: 'createElem',
-   callback:{
-      callback:{
-         declare:{
-            'elem':{
-               'innerHTML':'HOLA! WORKS PROPERLY.'
-            }
-         }
-      }
-   }
+var editor = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'addDiv',
+    response: 'editor'
 }
-
+var req = {
+    extends: 'editor',
+    callback: {
+        declare: {
+            'content': '$l.editor.innerHTML'
+        },
+        // callback:{
+          objectModel: 'console',
+          method: 'log',
+          arguments: '$l.content'
+        // }
+    }
+}
 var log = {
     objectModel:'console',
     method:'log',
@@ -54,7 +41,7 @@ var evtClick = {
 }
 
 window.onload=async function(){
-   engine.processRequest('evtClick');
+  engine.processRequest('req');
 }
 
 // ActionEngine.processRequest(extendCreateElem);

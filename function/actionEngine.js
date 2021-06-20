@@ -51,6 +51,7 @@ class ActionEngine{
 
    */
    static async action(request, l = {}){
+      console.log(request, l);
    	if(operate.isString(request)){
    		request = Entity.get(request, window);
    	}
@@ -86,7 +87,7 @@ class ActionEngine{
 		            if(! request.hasOwnProperty('declare')) request.declare = {};
 
 		            var x = l;
-		            l = Entity.updateProps(request.declare, l, x);
+		            l = await Entity.updateProps(request.declare, l, x);
 
 		            if(request.hasOwnProperty('method')){
 

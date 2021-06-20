@@ -276,7 +276,7 @@ class Entity {
         
         return l.req;
     }
-    static updateProps(req,model, ALLSTATES = {}){
+    static updateProps(req,model, ALLSTATES = {}, parse = true){
         
 
         if(operate.trueTypeOf(req) != operate.trueTypeOf(model)){
@@ -316,12 +316,15 @@ class Entity {
                 args: [l]
             }, 
             value:{
-                func: function(obj,  key, l, ALLSTATES){
-                    l.model[key] = obj[key];
+                func: function(obj,  key, l, ALLSTATES, parse){
+                    
+                    if(parse) l.model[key] = Entity.getValue(obj[key], ALLSTATES);
+                    else l.model[key] = obj[key];
+
                     // console.log(obj[key]);
                     return false;
                 }, 
-                args: [l, ALLSTATES]
+                args: [l, ALLSTATES, parse]
             }
         };
         l.callback = callback;
@@ -333,7 +336,7 @@ class Entity {
 
         model = Entity.copy(model);
         if(del) model = Entity.deleteProps(model, del);
-        model = Entity.updateProps(req , model);
+        model = Entity.updateProps(req , model, {}, false);
 
         return model;
     }
