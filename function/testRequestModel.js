@@ -3,7 +3,7 @@ var DefaultRequestModel = {
    declare: {},
    arguments:[],
    condition:true,
-   passStates:false
+   passStates:true
 }
 
 var editor = {
@@ -18,11 +18,9 @@ var req = {
         declare: {
             'content': '$l.editor.innerHTML'
         },
-        // callback:{
-          objectModel: 'console',
-          method: 'log',
-          arguments: '$l.content'
-        // }
+        objectModel: 'console',
+        method: 'log',
+        arguments: '$l.content'
     }
 }
 var log = {
@@ -39,6 +37,7 @@ var evtClick = {
       ActionEngine.processRequest(log);
     }]
 }
+
 
 window.onload=async function(){
   engine.processRequest('req');

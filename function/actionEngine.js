@@ -1,6 +1,6 @@
 class ActionEngine{
    
-   static maxDebugDepth = 10;
+   static maxDebugDepth = 100;
    static async processRequest(flowRequest, l = {}){
 
       if(! operate.isArray(flowRequest)){
@@ -51,7 +51,7 @@ class ActionEngine{
 
    */
    static async action(request, l = {}){
-      console.log(request, l);
+      // console.log(request, l);
    	if(operate.isString(request)){
    		request = Entity.get(request, window);
    	}
@@ -59,7 +59,7 @@ class ActionEngine{
       request = Entity.copy(request); // don't change itself
       var lastl;
 
-     	lastl = Entity.copy(l);
+     	lastl = {...l};
 
       if(! request.hasOwnProperty('loop')) request.loop = 1;
 
@@ -115,12 +115,16 @@ class ActionEngine{
 		               }
 
 		               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
-		               if(!objectModel){
+		               
+                     if(!objectModel){
 		                  console.error(objectModel, " is not a valid objectModel");
 		                  throw Error("Terminate Called");
 		               }
 		               var method = objectModel[request.method];
-		               var response = await method.apply(objectModel, request.arguments);
+		               
+                     // console.log(objectModel, method, request.objectModel, request.method);
+                     
+                     var response = await method.apply(objectModel, request.arguments);
 
 		               if(request.hasOwnProperty('response')){
 		                  if(! operate.isString('response')){
@@ -145,7 +149,7 @@ class ActionEngine{
          
          returnVal = Entity.getValue(request.return, l);
       }
-      if(!(request.hasOwnProperty('passStates') && request.passStates)) 
+      if(request.hasOwnProperty('passStates') && !request.passStates) 
       {
       	var x = {
       		func: function(lastl, key, l){

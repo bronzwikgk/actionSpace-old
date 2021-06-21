@@ -27,8 +27,8 @@ class Entity {
         }
     }
     static getValue(str, l, x){
-        // console.log(str, l, x);
         if(operate.isString(str) && str.charAt(0) == '$'){
+            console.log(str, l, x, eval(str.substr(1)));
             return eval(str.substr(1));
         }
         return (x !== undefined) ? x : str;
@@ -485,6 +485,7 @@ class Entity {
         }
     }
     static copy(obj) {
+        // console.log('copying', obj);
         // creates an immultable copy of  object/array
         var clone;
         if(operate.isArray(obj))

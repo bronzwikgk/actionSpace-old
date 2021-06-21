@@ -30,7 +30,7 @@ class ActionEvent{
         );
     }
     addRequestListener(domElement, events, req, args = {}){
-
+        console.log('Request', domElement, events, req, args);
         if(! operate.isObject(args)){
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
