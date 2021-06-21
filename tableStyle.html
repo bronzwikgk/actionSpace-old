@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        :root{
+            --rows: 4;
+            --cols: 15;
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: steelblue;
+            font-family: "Open Sans", arial;
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            height: 320px;
+            border-collapse: collapse;
+            border: 1px solid #38678f;
+            margin: 50px auto;
+            background: white;
+            white-space: nowrap;
+        }
+
+        th {
+            background: steelblue;
+            height: 54px;
+            width: calc(600/var(--rows));
+            font-weight: lighter;
+            text-shadow: 0 1px 0 #38678f;
+            color: white;
+            border: 1px solid #38678f;
+            box-shadow: inset 0px 1px 2px #568ebd;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        tr {
+            border-bottom: 1px solid #cccccc;
+            overflow: hidden;
+        }
+
+        tr:last-child {
+            border-bottom: 0px;
+        }
+
+        td {
+            border-right: 1px solid #cccccc;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+
+        td:last-child {
+            border-right: 0px;
+        }
+
+        td.selected {
+            background: #d7e4ef;
+            z-index: 1;
+        }
+
+        td input {
+            font-size: 14px;
+            background: none;
+            outline: none;
+            border: 0;
+            display: table-cell;
+            height: 100%;
+            width: 100%;
+        }
+
+        td input:focus {
+            box-shadow: 0 1px 0 steelblue;
+            color: steelblue;
+        }
+
+        ::-moz-selection {
+            background: steelblue;
+            color: white;
+        }
+
+        ::selection {
+            background: steelblue;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class='main'>
+        <table>
+            <thead>
+                <tr>
+                    <th>Body</th>
+                    <th>Section</th>
+                    <th>Article</th>
+                    <th>Table</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>13</td>
+                </tr>
+                <tr>
+                    <td>25</td>
+                    <td>2</td>
+                    <td>6</td>
+                    <td>654</td>
+                </tr>
+                <tr>
+                    <td>33</td>
+                    <td>44</td>
+                    <td>12</td>
+                    <td>00</td>
+                </tr>
+                <tr>
+                    <td>45</td>
+                    <td>22</td>
+                    <td>11</td>
+                    <td>49</td>
+                </tr>
+                <tr>
+                    <td>67</td>
+                    <td>69</td>
+                    <td>47</td>
+                    <td>38</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

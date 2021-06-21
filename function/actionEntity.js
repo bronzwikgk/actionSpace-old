@@ -1,312 +1,555 @@
-/**
- * Entity often referred as Action Entity, provides a wrapper for generic CRUD operation on an typeof object === ' object;
- * Accept command only from actionEngine.
- * Basic premise being, this becomes our template/componenet generator. Works similar to Web Componeents and provides similar api.
- * It has following methods :-
- *a. create: this method is used to create any kind of entity(html, JSON, File)
- *   it takes 2 arguments( input <can be JSONObject,HTMLElement,File> , output<can be JSONObject,HTMLElement,File>); a times more arguments can be passed. Ie. For iteration, specified properties.
- *b.read:this method is used to read/get any kind of entity(html, JSON, File)
- *   it takes 2 arguments( parent<can be JSONObject,HTMLElement,File>, key <can be String,Object,Array>); a times more arguments can be passed. Ie. For sync or async, fetching data from url, kind of result<JSONObject/HTMLElement/File> etc.
- * 
- * +points:- smartly using create or read, we can 
- *             > deep clone object, function or anything else.
- *             > filter object with specified properties and a particular Schema modal.
- *
- *c.update:this method is used to update any kind of entity(html, JSON, File);
- *   it takes 3 arguments( parent<can be JSONObject,HTMLElement,File>, key <can be String,Object,Array>, value<can be JSONObject,HTMLElement,File> ); a times more arguments can be passed. Ie. For iteration, .
- *d.delete: underConstruction
- *e.get4rmPath:helper
- *f.string2Path:helper
- *  
- */
+var counter = 0;
+
 class Entity {
-    constructor(input, output) {
-        //    console.log("entity", input, output)
-        this.input = input;
-        this.output = output;
-        //this.entity = process.processReq(input, output);
-    }
-    /**
-     *
-     */
-    static create(input, output) {
-        //console.log(input, output)
-        if (Operate.validate(input, 'isObject')) {
-            if (output.toUpperCase() == 'HTML') {
-                return this.createHTMLEntity(input);
-            } else if (output.toUpperCase() == 'JSON') {
-                return this.createJSONEntity(input);
+    
+    static get(key,parent) {
+        var keys = Entity.stringToPath(key);
+        var hold = parent;
+
+        var l = {keys: keys, hold: hold};
+
+        Entity.walk({rngstart:0, rngend:keys.length}, {
+            value: {
+                func : function(i, l){
+                    var key = l.keys[i];
+                    if(!l.hold) return false;
+                    l.hold = l.hold[key];
+                    return false;
+                }, 
+                args: [l]
             }
+        });
+
+        if (l.hold) {
+            return l.hold;
+        }else{
+            return key;
         }
     }
-    static createHTMLEntity(obj) {
-        if (Operate.validate(obj, 'isUseless')) return console.log('useless');
-        if (Operate.validate(obj, 'isString')) return document.createTextNode(obj);
-        if (Operate.validate(obj, 'isHTML')) return obj;
-        let  buffer,
-        result = [],
-            tagName = obj["name"] || obj["tagName"];
-        if (Operate.validate(obj, "isArray")) {
-            for (let i = 0; i < obj.length; i++) {
-                let value = this.createHTMLEntity(obj[i]);
-                if (value) result[i] = value;
-            }
-        } else {
-            if (!htmlElementList.includes(tagName) || bannedElements.includes(tagName)) return;
-            buffer = document.createElement(tagName);
-            for (const key in obj) {
-                let attr = obj[key];
-                if (key === "tagName") continue;
-                else if (Operate.validate(attr, 'isObject')) {
-                    let val = this.createHTMLEntity(attr);
-                    if (!Operate.validate(val, 'isUseless')) {
-                        if (Operate.validate(val, "isArray")) {
-                            for (let i = 0; i < val.length; i++) {
-                                result.appendChild(val[i])
-                            }
+    static getValue(str, l, x){
+        // console.log(str, l, x);
+        if(operate.isString(str) && str.charAt(0) == '$'){
+            return eval(str.substr(1));
+        }
+        return (x !== undefined) ? x : str;
+    }
+    static uniqueId(obj){
+        if(obj === window) return 'window';
+        if(obj === document) return 'document';
+        if(! obj.__uniqueId && !obj.hasAttribute('data-__uniqueId')){
+            obj.__uniqueId = counter;
+            obj.setAttribute('data-__uniqueId', counter++);
+        }
+        return (obj.__uniqueId || obj.getAttribute('data-__uniqueId'));
+    }
+    static requestExpander(request){
+        if(request == null) return;
+        
+        if(operate.isString(request)){
+            request = window[request];
+        }
+
+        if(! operate.isObject(request)){
+            console.error(request, " is not a valid Object");
+            throw Error("Terminate Called");
+        } 
+        
+        var rclone = Entity.copy(request);
+        var parent = null;
+        
+        if(request.hasOwnProperty('extends')){
+
+            var parent = Entity.requestExpander(window[request['extends']]); // parent is a JSON request
+            
+            request = Entity.copy(parent);
+            delete request['extends'];
+            
+            var del = rclone.delete;
+            delete rclone.delete;
+
+            request = Entity.extends(rclone, request, del);
+
+            delete request['extends'];
+        }
+        return request;
+        
+    }
+    static complexRequestExpander(requestArr, maxDebugDepth = 10, depth = 0){
+        if(requestArr == null) return;
+        
+        if(operate.isString(requestArr)){
+            requestArr = window[requestArr];
+        }
+
+        if(depth > maxDebugDepth){
+            console.warn('Will not expand when depth > ', maxDebugDepth);
+            return resultArr;
+        }
+
+        if(operate.isObject(requestArr)){
+            requestArr = [requestArr];
+        } else if(! operate.isArray(requestArr)){
+            console.error(requestArr, " is not a valid Object or Array");
+            throw Error("Terminate Called");
+
+        }
+        var resultArr = [];
+
+        Entity.walk(
+            {rngstart:0, rngend:requestArr.length}, 
+            {
+                value: {
+                    func : function(i, requestArr, resultArr) {
+                        var request = requestArr[i];
+            
+                        //single request
+                        // console.log(request);
+                        var rclone = Entity.copy(request);
+                        var parent = null;
+
+                        if(request.hasOwnProperty('extends')){
+                            
+                            var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
+                            
+                            request = Entity.copy(parent);
+                        
+                            var del = rclone.delete;
+                            delete rclone.delete;
+
+                            request = Entity.extends(rclone, request, del);
+
+                            delete request['extends'];
                         }
-                    }
-
-                } else if (htmlInheritedAttributes.includes(key) || htmlManualAttributes.includes(key))
-                    result.setAttribute(key, attr);
-            }
-        }
-
-        return result;
-    }
-    static createJSONEntity(obj, schema) {
-        let output = {};
-        for (const key in schema) {
-            let element = obj[key],
-                schemaVal = schema[key];
-            if (Operate.validate(element, 'isObject')) {
-                output[key] = this.createJSONEntity(element, schemaVal);
-            } else if (Operate.validate(element, 'isFunction')) {
-                output[key] = element.bind(obj);
-                for (let keyProp in element.prototype) {
-                    if (Object.prototype.hasOwnProperty.call(element.prototype, keyProp)) {
-                        output[key].prototype = {
-                            [keyProp]: element.prototype[keyProp]
+                        
+                        if(request.hasOwnProperty('callback')){
+                            request.callback = Entity.complexRequestExpander(request.callback, depth + 1);
                         }
-                    }
+
+                        resultArr.push(request);
+                    },
+                    args: [requestArr, resultArr]
                 }
-            } else {
-                output[key] = Operate.convert(element, schemaVal);
             }
-        }
-        return output;
+        );
+        if(resultArr.length == 1){
+            return resultArr[0];
+        } 
+        return resultArr;
     }
+    static stringToPath (path) {
 
-    static async createFileEntity(content, params, fileHandle) {
-        if (!fileHandle) fileHandle = await getHandle('OpenFile', params);
-        const writable = await fileHandle.createWritable();
-        await writable.write(content);
-        await writable.close();
-        return fileHandle;
-    }
-
-    static async getFileEntity(fileHandle, method) {
-        const file = await fileHandle.getFile();
-        return await file[method]();
-    }
-
-    static get(key, parent, output) {
-        //console.log("for Initaition", key, parent);
-        if (Operate.validate(key, ["isString", "isNumber"], false)) {
-            let getFromPath = Operate.validate([key, '.'], 'isInside') || Operate.validate([key, '['], 'isInside');
-            return getFromPath ? get4rmPath(key, parent) : parent[key] ? parent[key] : undefined;
-        } else if (Operate.validate(key, ["isArray", "isObject"], false)) return get4rmPath(key, parent);
-        else return console.log("objectNotfound");
-    }
-
-
-
-    static update(parent, [key, value], actionVal) {
-        let current = parent;
-        if (Operate.validate(parent, 'isHTML')) { //Only HTML creation
-            if (value) parent[actionVal](key, value);
-            else parent[actionVal](key)
-        } else if (Operate.validate(parent, 'isObject')) {
-            let path = stringToPath(actionVal);
-            for (var i = 0; i < path.length; i++) {
-                if (!current[path[i]]) return;
-                current = current[path[i]];
-            }
-            current[key] = value;
-        }
-        return parent;
-    }
-
-
-
-    static async del(entity) {
-        if (Operate.validate(entity, 'isHTML')) {
-            entity.remove()
-        } else if (Operate.validate(entity, 'isFile')) {
-            let directoryHandle = await this.getHandle('Directory', entity);
-            directoryHandle.removeEntry(entity.name, {
-                recursive: true
-            });
-        }
-    }
-
-    static async getHandle(action, params) {
-        let defaultParams = {
-            suggestedName: 'Untitled.txt',
-            types: [{
-                description: 'Text Documents',
-                accept: {
-                    'text/plain': ['.txt']
-                }
-            }]
-        }
-        if (!params) params = defaultParams;
-        let [fileHandle] = await window[`show${action}Picker`](params);
-        return fileHandle;
-    }
-
-    static get4rmPath(path, obj, def) {
-        // Get the path as an array
-        path = this.stringToPath(path);
-        console.log(path)
-        var current = obj;
-        for (var i = 0; i < path.length; i++) {
-            if (!current[path[i]]) return def;
-            current = current[path[i]];
-        }
-        return current;
-    }
-    /**
-     * If the path is a string, convert it to an array
-     * @param  {String|Array} path The path
-     * @return {Array}             The path array
-     */
-    static stringToPath(path) {
         // If the path isn't a string, return it
-        if (!Operate.validate(path, "isString")) return path;
+        if (typeof path !== 'string') return path;
         // Create new array
-        let output = [];
-        console.log()
+        var output = [];
+
         // Split to an array with dot notation
         path.split('.').forEach(function (item, index) {
+
             // Split to an array with bracket notation
             item.split(/\[([^}]+)\]/g).forEach(function (key) {
+
                 // Push to the new array
-                if (key !== '') output.push(key);
+                if (key.length > 0) {
+                    output.push(key);
+                }
 
             });
-        });
-        return output;
-    }
 
-    static merge(objects, filterFn) {
-        let result = {};
-        for (let i = 0; i < objects.length; i++) {
-            let obj = objects[i],
-                filtered = filter(obj, filterFn);
-            result = {
-                ...result,
-                ...filtered
-            };
-        }
-        return result;
+        });
+
+        return output;
+
     }
-    static filter(obj, filterFn) {
-        let result = {};
-        for (const key in obj) {
-            let value = obj[key];
-            if (Object.hasOwnProperty.call(obj, key)) {
-                if (Operate.validate([value, 'object'], 'isTypeof')) result[key] = filter(value, filterFn);
-                else if (value.constructor.name.includes('Function')) result[key] = value.bind(obj);
-                else if (filterFn(key, value, obj)) result[key] = value;
+    static equalizeArraysInDelete(req, del){ //Fixing function
+        var l = {req:req};
+        var callback = {
+            object:{
+                func: function(del, key, l){
+                    var clone = l.req;
+
+                    l.req = l.req[key];
+                    Entity.walk(del[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                },
+                args:[l]
+            },
+            array: {
+                func: function(del, key, l){
+                    while(del[key].length < l.req[key].length){
+                        del[key].push(null);
+                    }
+                    var clone = l.req;
+                    
+                    l.req = l.req[key];
+                    Entity.walk(del[key], l.callback);
+                    l.req = clone;
+
+                    return false;
+                }, 
+                args: [l]
             }
         }
-        return result;
+        l.callback = callback;
+        Entity.walk(del, callback);
+
+        return del;
     }
+    static deleteProps(req, del){ 
+        // console.log(del);
+        del = Entity.equalizeArraysInDelete(req, del);
+        // console.log(del);
+        var l = {req: req};
 
-    /*************************************************************************************************************
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    ***************************************************************************************************************/
+        var callback = { // iterating over del
+            value:{
+                func: function(obj, key, l){
+                    // console.log(l.tmp);
+                    if(l.tmp){  // is not null
+                        if(obj[key]){ // ignore this
+                            return ;
+                        } else { // add this to the array
+                            l.tmp.push(l.req[key]);
+                        }
+                    } else if(obj[key]) // is not null
+                        delete l.req[key];
 
+                    return false;
 
+                },
+                args: [l]
+            }, 
+            array: {
+                func: function(obj, key, l){
 
-    //This method walks through all the keys of an obect. By default it retunrs all the keys wile getting them from Window scope.
-    // It has optional patameter of Max Item, Max Depth and Recurse.
+                    var clone = l.req;
+                    var clonetmp = l.tmp || null;
 
-    // walkReqModel = {
-    //     name: 'eachKey',
-    //     objectModel: 'ActionEngine',
-    //     method: 'eachKey',
-    //     argument: ['input'],
-    //     params: {
-    //         response: {},// If present the response is stored here. If an object returned as an object, if an array return as an array.
-    //         recurse: 'true',
-    //         maxDepth: 5,
-    //         maxItem: 10,
-    //     }
-    // }
+                    l.tmp = [];
+                    l.req = l.req[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.req = clone;
 
-    // static walk(req) {
-    //     console.log("walk request", req['argument'])
-    //     //  if (!req['currentDepth']) { req['currentDepth'] = 0;console.log("it's a fresh start")}     
-    //     if (typeof req === 'object') {
-
-    //         for (var key in req['argument'][0]) {
-    //             //  req['currentDepth'] = req['currentDepth'] + 1; // add a break || continue condition to exit if more than max Depth
-    //             if (req['argument'][0].hasOwnProperty(key)) {
-
-    //                 //  console.log("iam Here raw", key, req['argument'][0][key]);
-
-    //                 if (operate.isString(req['argument'][0][key])) {
-
-    //                      console.log("before",req['argument'][0][key]);
-    //                     //checking if the value has a dot in it. Normally used to add Scope before a method
-    //                     //get the string Object from the window.
-
-    //                     var buffer = Entity.get(req['argument'][0][key], window);
-    //                     //console.log("found Object", key, req[key],)
-
-    //                     if (!Operate.validate(buffer, 'isUseless')) {
-
-    //                     req['argument'][0][key] = buffer;
-    //                     //  console.log("this updated", key,buffer)
-    //                 }
-    //                 } else if (typeof req['argument'][0][key] == 'object') {
-    //                     if (req.params['recurse'] == 'true') {
-    //                         //  console.log("recurse", req['argument'][0][key])
-    //                         var newWalkModelReq = walkReqModel;
-    //                         newWalkModelReq['argument'] = [req['argument'][0][key]];
-    //                         Entity.walk(newWalkModelReq);
-    //                     }
+                    var anstmp = l.tmp;
 
 
-    //                 }
+                    if(clonetmp)
+                        clonetmp.push(anstmp);
+                    else 
+                        l.req[key] = anstmp;
 
+                    l.tmp = clonetmp;
 
+                    return false;
+                },
+                args: [l]
+            }, 
+            object: {
+                func: function(obj, key, l){
+                    var clone = l.req;
+                    var clonetmp  = l.tmp || null;
 
-    //                 if (req['callBack']) {
-    //                     //   console.log("callback found", req['callBack'])
-    //                     //  var callBack = window[req['callBack']];
-    //                     //var response = this.reqProcessor(callBack, req[response]);
-    //                 }
+                    l.tmp = null;
 
+                    l.req = l.req[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.req = clone;
 
-    //                 //  console.log("found string",key,req[key]) 
-    //             }
+                    if(clonetmp)
+                        clonetmp.push(l.req[key]);
+                    // else 
+                    //     l.req[key] = l.req[key]; //lol
 
+                    l.tmp = clonetmp;
 
-    //             //  console.log("iam Here Intiated", key, req['argument'][0][key]);
-    //         }
-    //         //f(m,loc,expr,val,path);
-    //     }
-    //     return req;
-    // }
+                    return false;
+                },
+                args: [l]
+            }
 
+        }
+        l.callback = callback;
 
+        Entity.walk(del, callback);
+        
+        return l.req;
+    }
+    static updateProps(req,model, ALLSTATES = {}){
+        
 
+        if(operate.trueTypeOf(req) != operate.trueTypeOf(model)){
+            model = req;
+            return req;
+        }
 
+        var l = {model: model};
 
+        var callback = {
+            array: {
+                func: function(obj, key, l){
+
+                    l.model[key] = l.model[key] || [];
+                    var clone = l.model;
+
+                    l.model = l.model[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.model = clone;
+
+                    return false;
+                },
+                args: [l]
+            },
+            object: {
+                func: function(obj, key, l){
+                    
+                    l.model[key] = l.model[key] || {};
+                    var clone = l.model;
+
+                    l.model = l.model[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.model = clone;
+
+                    return false;
+                },
+                args: [l]
+            }, 
+            value:{
+                func: function(obj,  key, l, ALLSTATES){
+                    l.model[key] = Entity.getValue(obj[key], ALLSTATES);
+                    // console.log(obj[key]);
+                    return false;
+                }, 
+                args: [l, ALLSTATES]
+            }
+        };
+        l.callback = callback;
+        Entity.walk(req, callback);
+
+        return l.model;
+    }
+    static extends(req, model, del){
+
+        model = Entity.copy(model);
+        if(del) model = Entity.deleteProps(model, del);
+        model = Entity.updateProps(req , model);
+
+        return model;
+    }
+    static async walk(req, callback, maxdepth = 0, depth = 0){ // it goes for depth first 
+
+        if(depth > maxdepth) return;
+
+        var emp = function() {};
+
+        if(! callback.value) callback.value = {};
+        if(! callback.value.func) callback.value.func = emp;
+        if(! callback.value.args) callback.value.args = [];
+
+        if(! callback.l ) callback.l = {};
+
+        var rtype = operate.trueTypeOf(req);
+        
+        if(rtype === 'object' && req.hasOwnProperty('rngstart')){
+            if(!req.delta){
+                req.delta = 1;
+            }
+            for(var i=req.rngstart; i != req.rngend; i += req.delta){
+                callback.l.args = [i, ...callback.value.args];
+
+                if(operate.isFunction(callback['value'].func)){
+                    if(callback['value'].wait){
+                        if(await callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                    }
+                    else if(callback['value'].func(...callback.l.args))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
+                    
+                }
+                else{
+                    if(callback['value'].wait){
+                        if(await engine.processRequest(callback['value'].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    } 
+                    else if(engine.processRequest(callback['value'].func, callback.l))
+                        Entity.walk(req[i], callback, maxdepth, depth+1);
+                }
+            }
+        } else if(rtype === 'array'){
+
+            for(var i in req){
+
+                var type = operate.trueTypeOf(req[i]);
+                if(callback.hasOwnProperty(type)){
+                    
+                    callback.l.args = [req, i, ...callback[type].args];
+
+                    if(operate.isFunction(callback[type].func)){
+                        if(callback[type].wait){
+                            if(await callback[type].func(...callback.l.args))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback[type].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
+                    }
+                    else{
+                        if(callback[type].wait){
+                            if(await engine.processRequest(callback[type].func, callback.l))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback[type].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }   
+                } else {
+                    callback.l.args = [req, i, ...callback['value'].args];
+
+                    if(operate.isFunction(callback['value'].func)){
+                        if(callback['value'].wait){
+                            if(await callback['value'].func(...callback.l.args))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
+                    }
+                    else{
+                        if(callback['value'].wait){
+                            if(await engine.processRequest(callback['value'].func, callback.l))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback['value'].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }
+                }
+            }
+        } else if(rtype === 'object'){
+            for(var i in req){
+
+                var type = operate.trueTypeOf(req[i]);
+                if(callback.hasOwnProperty(type)){
+                    
+                    callback.l.args = [req, i, ...callback[type].args];
+
+                    if(operate.isFunction(callback[type].func)){
+                        if(callback[type].wait){
+                            if(await callback[type].func(...callback.l.args))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback[type].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
+                    }
+                    else{
+                        if(callback[type].wait){
+                            if(await engine.processRequest(callback[type].func, callback.l))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback[type].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }   
+                } else {
+                    callback.l.args = [req, i, ...callback['value'].args];
+
+                    if(operate.isFunction(callback['value'].func)){
+                        if(callback['value'].wait){
+                            if(await callback['value'].func(...callback.l.args))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+
+                        }
+                        else if(callback['value'].func(...callback.l.args))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                        
+                    }
+                    else{
+                        if(callback['value'].wait){
+                            if(await engine.processRequest(callback['value'].func, callback.l))
+                                Entity.walk(req[i], callback, maxdepth, depth+1);
+                        } 
+                        else if(engine.processRequest(callback['value'].func, callback.l))
+                            Entity.walk(req[i], callback, maxdepth, depth+1);
+                    }
+                }
+            }
+        } else {
+            console.warn("req should be an object/array.What's this? ", req);
+            return;
+        }
+    }
+    static copy(obj) {
+        // creates an immultable copy of  object/array
+        var clone;
+        if(operate.isArray(obj))
+            clone = [];
+        else if(operate.isObject(obj))
+            clone = {};
+        else if(operate.isHTML(obj))
+            return obj.cloneNode(true);
+        else 
+            return obj;
+
+        var l = {clone:clone};
+
+        var callback = {
+            array: {
+                func: function(obj, key, l){
+
+                    var clone = l.clone;
+
+                    if(operate.isArray(obj))
+                        l.clone.push([]);
+                    else 
+                        l.clone[key] = [];
+
+                    l.clone = l.clone[key];
+
+                    Entity.walk(obj[key], l.callback);
+                    
+                    l.clone = clone;
+
+                    return false;
+                },
+                args: [l]
+            },
+            object: {
+                func: function(obj, key, l){
+
+                    var clone = l.clone;
+
+                    if(operate.isArray(obj))
+                        l.clone.push({});
+                    else 
+                        l.clone[key] = {};
+                    l.clone = l.clone[key];
+                    Entity.walk(obj[key], l.callback);
+                    l.clone = clone;
+
+                    return false;
+                },
+                args: [l]
+            }, 
+            value:{
+                func: function(obj,  key, l){
+                    if(operate.isArray(obj))
+                        l.clone.push(obj[key]);
+                    else 
+                        l.clone[key] = obj[key];
+
+                    return false;
+                }, 
+                args: [l]
+            }
+        };
+
+        l.callback = callback;
+
+        Entity.walk(obj,callback);
+
+        return l.clone;
+    }
 }

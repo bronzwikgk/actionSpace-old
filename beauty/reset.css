@@ -155,6 +155,10 @@ body{
     background-color: rgb(255, 255, 255);
     user-select: none;
 }
+.topNavBar>.actionBar>*{
+    user-select: none;
+}
+
 .topNavBar>.actionBar>.editorTools{
     position: absolute;
     display: inline-block;
@@ -286,59 +290,66 @@ body{
     height: 92%;
 }
 
-.centerArea>.rightSide{
+.rightSide{
+    background-color: rgb(218, 200, 42);
     position: absolute;
     background-color: rgb(255, 255, 255);
     border-left: 1px solid rgb(186, 186, 186);
     width: 16%;
     height: 100%;
     right: 0;
+    top: 0;
     overflow: hidden;
     resize: horizontal;
 }
 
-.centerArea>.rightSide>.navigator{
-    background-color: rgb(238, 238, 238);
+.rightSide>.navigator{
+    background-color: rgb(238, 238, 238);;
     position: absolute;
     box-sizing: border-box;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 5%;
     overflow: auto;
 }
-.centerArea>.rightSide>.navigator>.collection{
+
+.navigator .collection{
     display: block;
-}
-.centerArea>.rightSide>.navigator>.collection.accordion{
     cursor: pointer;
     transition: 0.4s;
 }
-.centerArea>.rightSide>.navigator .collection>.panel {
+.navigator .collectionLabel.root{
+    background-color: rgb(204, 204, 204);
+    border: 1px solid rgb(186, 186, 186);
+    font-weight: bold;
+}
+.navigator .collection .collectionLabel{
+    display: block;
+    padding: 1px 0px 1px 5px;
+}
+.navigator .collection .item {
     padding: 0 0 0 16px;
     display: none;
     overflow: hidden;
 }
-.centerArea>.rightSide>.navigator .collection.active>.panel {
-    display: block;
-}
-.centerArea>.rightSide>.navigator span{
+.navigator .collection.active>.item {
     display: block;
 }
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.accordion.active .collectionLabel, .accordion:hover .collectionLabel{
-    background-color: #ccc;
+.collection.active>.collectionLabel, .collection:hover>.collectionLabel{
+    background-color: rgb(204, 204, 204);
 }
-  
+
   /* Style the accordion panel. Note: hidden by default */
   
 .arrow.lt, .arrow.gt{
     transform: rotate(0deg);
     transition: all .35s ease-in-out;
 }
- .active .arrow.lt, .active .arrow.gt{
+ .active>.collectionLabel>.arrow.lt, .active>.collectionLabel>.arrow.gt{
     transform: rotate(90deg);
 }
+
 
 .scroll--simple::-webkit-scrollbar {
     width: 6px;

@@ -1,170 +1,171 @@
-/** 
-*Main Class/ Modal Class/ Processor
-*takes requests from actionView and actionEvent
-*only class to co-ordinate b/w all other classes for processing input and rendering output
-*
-*/
-class ActionEngine {
-    constructor() {
-      this._flowResultState = {};
-      this._currentReq=[]; // need to be set in database A quick generator Pattenr .
-      this._response ;
-      //console.log(Entity.create(main, 'html'))
-      ActionView.renderDOM(ActionView.getDOM(document, 'getElementById', 'root'), Entity.create(main, 'html'), 'append')
-    }
+class ActionEngine{
+   
+   static maxDebugDepth = 10;
+   static async processRequest(flowRequest, l = {}){
 
-    action(req, result) {
-      //testing if the req is an object
-      if (!Operate.validate(req, 'isObject')) {
-        return console.error("Need a JSON, Please refer to the documentation", "Does this >", req, "look like JSON to you. It's damn", Operate.is(req));
+      if(! operate.isArray(flowRequest)){
+      	flowRequest = [flowRequest];
       }
-      var scope = Entity.get(req.scope, window);
-      var argument = result ? result : req.args;
+      var answer = [];
+      Entity.walk(
+      	{rngstart:0, rngend: flowRequest.length},
+      	{
+	      	value : {
+	      		func: function(i, flowRequest) {
+			         if(operate.isArray(flowRequest[i])){
+			            ActionEngine.processRequest(flowRequest[i], l);
+			            return false;
+			         }
+			         answer.push(ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
+			      },
+			      args: [flowRequest, answer],
+               wait:true
+	      	}
+	      }
+      );
+      return (answer.length > 1 ? answer : answer[0]);
+   }
+   /* 
+      Request is evaluated Like->
       
-      console.log(scope, req.method, argument)
-      scope[req.method](...argument);
-      if (req['callBack']) {
-        var callBack = window[req['callBack']];
-        var response = this.action(callBack, req[response]);
+         extends{
+            delete                     // default:{}
+         }
+
+
+         Loop {                        // default:1
+            condition {                //default:true
+               declare
+               if(method exists){
+                  arguments            //default:[]
+                  objectModel
+                  method
+                  response
+                  
+               }
+               callback
+            }
+         }
+         passStates
+         return
+
+   */
+   static async action(request, l = {}){
+   	if(operate.isString(request)){
+   		request = Entity.get(request, window);
+   	}
+
+      request = Entity.copy(request); // don't change itself
+      var lastl;
+
+     	lastl = Entity.copy(l);
+
+      if(! request.hasOwnProperty('loop')) request.loop = 1;
+
+      if((! operate.isInt(request['loop'])) || request.loop < 0) {
+         console.error("Request.loop should be a whole number. What's this?", request.loop);
+         throw Error("Terminate Called");
       }
-      return response;
-    }
-  //   /**
-  //    *  This method executes an action Request or a callback given duration.
-  //    *  few optaional parameter are present.
-  //    * @param {*} time : Time in miliseconds
-  //    * @param {*} callback : default value is action, can be call back.
-  //    */
-  //   actionAfter(time, callback) {
-  //     let timerId = setTimeout(() => alert("never happens"), 1000);
-  
-  //   }
-  //   /**
-  //    * This method exectues an action Reques or makes a callback in conitnues internal with the given time duration.
-  //    * An optional Property of time out and number of times can be used to stop the execution.
-  //    * 
-  //    * @param {*} time 
-  //    * @param {*} callback 
-  //    */
-  //   actionAfterEvery(time, callback) {
-  //     let timerId = setTimeout(() => alert("never happens"), 1000);
-  //     //   let timerId = setInterval(() => alert('tick'), 2000);
-  //     console.log(arguments)
-  //     //    setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
-  //   }
-    
-  //   /**
-  //    * This method is used for parallel requests
-  //    * @param {FlowRequest} reqObj - request object containing array of objects
-  //    */
-  //   processReqArray(reqObj) {
-  //     const state = this._flowResultState;
-  //     if (Operate.isFlowRequest(reqObj) && Operate.isArray(reqObj.flowRequest)) {
-  //       var flowRequest = reqObj.flowRequest;
-  //       for (var i = 0; i < flowRequest.length; i++) {
-  //         var request = flowRequest[i];
-  //         var args = request.arguments;
-  //         var requestArgs = [];
-  //         for (var p = 0; p < args.length; p++) {
-  //           var reqArg = args[p];
-  //           if (state[reqArg]) { requestArgs[p] = state[reqArg]; }
-  //           else { requestArgs[p] = reqArg; }
-  //         }
-  //         var updatedRequest = { ...request, arguments: requestArgs };
-  //         const result = this.processReq(updatedRequest);
-  //         if (result) {
-  //           state[request.reqName] = result;
-  //         }
-  //       }
-  //     }
-  //     return null;
-  //   }
-  //   /**
-  //    * This method is used for nested requests
-  //    * @param {RequestObj} reqObj - request object containing nested requests
-  //    */
-  //   processReqNestedObject(reqObj) {
-  //     /**
-  //      * This method is used for recursion and ensuring the requests are performed sequentially
-  //      * @param {RequestObj} request - Current request object
-  //      */
-  //     function recursiveThen(request) {
-  //       var reqArg = request.arguments;
-  //       var requestArgs = [];
-  //       for (var j = 0; j < reqArg.length; j++) {
-  //         if (this._flowResultState[reqArg[j]]) {
-  //           requestArgs[j] = this._flowResultState[reqArg[j]];
-  //         } else {
-  //           requestArgs[j] = reqArg[j];
-  //         }
-  //       }
-  
-  //       var updatedRequest = { ...request, arguments: requestArgs };
-  //       var tempRequest = {};
-  //       for (var [key, value] of Object.entries(updatedRequest)) {
-  //         if (key !== "andThen") {
-  //           tempRequest[key] = value
-  //         }
-  //       }
-  //       var result = this.processReq(tempRequest);
-  //       if (result) {
-  //         this._flowResultState[request.reqName] = result;
-  //       }
-  
-  //       if (request.andThen) {
-  //         var nestedReq = request.andThen;
-  //         if (!nestedReq.objectModel) {
-  //           nestedReq.objectModel = result;
-  //         }
-  //         recursiveThen.call(this, nestedReq);
-  //       }
-  //     }
-  //     recursiveThen.call(this, reqObj);
-  //   }
       
-  //   static promisifyRequest(request) {
-  //     return new Promise((resolve, reject) => {
-  //         // @ts-ignore - file size hacks
-  //         request.oncomplete = request.onsuccess = () => resolve(request.result);
-  //         // @ts-ignore - file size hacks
-  //         request.onabort = request.onerror = () => reject(request.error);
-  //     });
-  // }
-  //   validateAllTrue(value, rules) {
-  //     var self = this;
-  //     return rules.every(function (rule) {
-  //         return self[rule](value);
-  //     });
-  // };
-  //   validateSomeTrue(value, rules) {
-  //     var self = this;
-  //     return rules.some(function (rule) {
-  //         return self[rule](value);
-  //     });
-  // };
-  
-  //   validate (value, key,params) {
-  //     if (this.validateAllTrue(value, key.validator)) {
-  //         if (params['onTrue'] === 'true') {
-  //             //doThis
-  //             return true;
-  //         } 
-  //        // key.value = value;
-          
-  //     }
-  //     else if (params['onFalse'] === 'false'){
-  //         //do This
-  //         return false;
-  //     }
-      
-  // };
-  
-  }
-  
-  
-  //var DOMJson = engine.processReq(singleReq);
-  console.log("engine is chalu")
-  
-  //engine.processReq(actionFlowModelReq)
-  
-  //engine.processReq(setInnerHTML)
+      request.loop = Entity.getValue(request.loop, l);
+
+      await Entity.walk(
+      	{rngstart:0, rngend: request.loop},
+      	{
+      		value: {
+	      		func: async function(i, request, l){
+
+		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
+
+		            if(! request.hasOwnProperty('condition')) request.condition = true;
+		         
+		            if(! eval(request['condition'])){ // we should not execute this
+		               return false;
+		            }
+
+		            if(! request.hasOwnProperty('declare')) request.declare = {};
+
+		            var x = l;
+		            l = Entity.updateProps(request.declare, l, x);
+
+		            if(request.hasOwnProperty('method')){
+
+		               if(! request.hasOwnProperty('arguments'))request.arguments = [];
+
+		               if(! operate.isArray(request.arguments)){
+		                  request.arguments = [request.arguments];
+		               }
+		               await Entity.walk(
+   				      	{rngstart:0, rngend: request.arguments.length},
+   				      	{
+   				      		value: {
+   					      		func: function(i, request, l){
+   					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
+   					      		},
+   					      		args: [request, l]
+   					      	}
+   					      }
+                     );
+                     
+		               if(! request.hasOwnProperty('objectModel')){
+		               
+		                  console.error("Request.objectModel is not present, while Request.method is.");
+		                  throw Error("Terminate Called");
+		               }
+
+		               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
+		               if(!objectModel){
+		                  console.error(objectModel, " is not a valid objectModel");
+		                  throw Error("Terminate Called");
+		               }
+		               var method = objectModel[request.method];
+		               var response = await method.apply(objectModel, request.arguments);
+
+		               if(request.hasOwnProperty('response')){
+		                  if(! operate.isString('response')){
+		                     console.error("Request.response should be a string. What's this? ", request['response']);
+		                     throw Error("Terminate Called");
+		                  }
+		                  l[request['response']] = response;
+		               }
+		            }
+
+		            if(request.hasOwnProperty('callback')){
+		               ActionEngine.processRequest(request['callback'], l);
+		            }
+		         },
+		         args: [request, l],
+               wait:true
+		      }
+		   }
+		);
+      var returnVal;
+      if(request.hasOwnProperty('return')){
+         
+         returnVal = Entity.getValue(request.return, l);
+      }
+      if(!(request.hasOwnProperty('passStates') && request.passStates)) 
+      {
+      	var x = {
+      		func: function(lastl, key, l){
+      			lastl[key] = l[key];
+      			return false;
+      		},
+      		args: [l]
+      	};
+      	Entity.walk(
+      		lastl, 
+      		{ object:x, array:x, value:x }
+      	);
+
+         l = lastl;
+      }
+      return returnVal;
+   }
+}
+
+var engine = {
+   maxDebugDepth: ActionEngine.maxDebugDepth,
+   processRequest: ActionEngine.processRequest,
+   action: ActionEngine.action
+};
