@@ -1,7 +1,0 @@
-{
-  "access_token": "ya29.a0AfH6SMDqBCfiD2akauPRrWFWA80k7TXtL1X_zMtHzHvSWbCde0gSKJp2doAqPyJE9oZQfRXRhDgbad2B0jqD5sfATD_asXFvx8i6qwE8ActinLrYKxjSSh3z3U5bbuNZ2wMtt5H1Su4G63JH8MPvh4tn6eWc",
-  "expires_in": 3599,
-  "refresh_token": "1//0gQqGzAE5tdqMCgYIARAAGBASNwF-L9Ir8OHcX7TJl6RgVpHDtbuMJ25-yuztjZYHcyPoGcMfXTF7uN0fLgOgwFMUlX9HiCSl1iI",
-  "scope": "https://www.googleapis.com/auth/spreadsheets",
-  "token_type": "Bearer"
-}
