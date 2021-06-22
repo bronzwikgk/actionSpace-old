@@ -55,7 +55,10 @@ class ActionEngine{
 
    */
    static async action(request, l = {}){
-      // console.log(request, l);
+      // console.log(request, l.obj);
+      l = {...l};
+
+
    	if(operate.isString(request)){
    		request = Entity.get(request, window);
    	}
