@@ -7,22 +7,26 @@ class ActionEngine{
       	flowRequest = [flowRequest];
       }
       var answer = [];
-      Entity.walk(
+      await Entity.walk(
       	{rngstart:0, rngend: flowRequest.length},
       	{
 	      	value : {
-	      		func: function(i, flowRequest) {
+	      		func: async function(i, flowRequest, l, answer) {
+                  if(operate.isString(flowRequest[i]))
+                     flowRequest[i] = Entity.get(flowRequest, window);
+
 			         if(operate.isArray(flowRequest[i])){
-			            ActionEngine.processRequest(flowRequest[i], l);
+			            answer.push((await ActionEngine.processRequest(flowRequest[i], l)) || []);
 			            return false;
 			         }
-			         answer.push(ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
+			         answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
 			      },
-			      args: [flowRequest, answer],
+			      args: [flowRequest, l, answer],
                wait:true
 	      	}
 	      }
       );
+      // console.log("Returning", answer, "for", flowRequest);
       return (answer.length > 1 ? answer : answer[0]);
    }
    /* 
@@ -81,7 +85,8 @@ class ActionEngine{
 		            if(! request.hasOwnProperty('condition')) request.condition = true;
 		         
 		            if(! eval(request['condition'])){ // we should not execute this
-		               return false;
+		               request.__exitRequest = true;
+                     return false;
 		            }
 
 		            if(! request.hasOwnProperty('declare')) request.declare = {};
@@ -121,8 +126,8 @@ class ActionEngine{
 		                  throw Error("Terminate Called");
 		               }
 		               var method = objectModel[request.method];
-		               
-                     // console.log(objectModel, method, request.objectModel, request.method);
+		               if(method === undefined)
+                        console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method);
                      
                      var response = await method.apply(objectModel, request.arguments);
 
@@ -144,11 +149,14 @@ class ActionEngine{
 		      }
 		   }
 		);
+
       var returnVal;
-      if(request.hasOwnProperty('return')){
+
+      if((!request.__exitRequest) && request.hasOwnProperty('return')){
          
          returnVal = Entity.getValue(request.return, l);
       }
+      // console.log(returnVal);
       if(request.hasOwnProperty('passStates') && !request.passStates) 
       {
       	var x = {
@@ -165,7 +173,11 @@ class ActionEngine{
 
          l = lastl;
       }
-      return returnVal;
+      if(!request.__exitRequest){
+         request.__exitRequest = false;
+         return returnVal;
+      }
+      return null;
    }
 }
 
