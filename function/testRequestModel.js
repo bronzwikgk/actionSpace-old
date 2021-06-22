@@ -23,24 +23,32 @@ var req = {
         arguments: '$l.content'
     }
 }
-var log = {
-    objectModel:'console',
-    method:'log',
-    arguments:'click event occured'
- };
-
-var evtClick = {
-    objectModel: 'eventManager',
-    method: 'addListener',
-    arguments: ['$window', 'click', function(event){
-
-      ActionEngine.processRequest(log);
-    }]
-}
-
+var loginRequest = [
+    {
+        response:'GetUsername',
+        objectModel:'document',
+        method: "getElementById",
+        arguments: ["username"],
+        return:'$l.GetUsername.value',
+    },
+    {
+        response :'GetPassword',
+        objectModel:'document',
+        method: "getElementById",
+        arguments: ["password"],
+        return:'$l.GetPassword.value', 
+    },
+    {
+        declare:{
+            paramsJSON:{
+              'Username':'$l.GetUsername.value'
+            }
+        }
+    }
+]
 
 window.onload=async function(){
-  engine.processRequest('req');
+  console.log(await engine.processRequest('loginRequest'));
 }
 
 // ActionEngine.processRequest(extendCreateElem);

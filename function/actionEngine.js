@@ -54,9 +54,9 @@ class ActionEngine{
          return
 
    */
-   static async action(request, l = {}){
-      // console.log(request, l.obj);
-      l = {...l};
+   static async action(request, l = {}, copyl = false){
+      console.log(request, l);
+      if(copyl) l = {...l};
 
 
    	if(operate.isString(request)){
