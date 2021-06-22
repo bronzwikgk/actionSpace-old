@@ -54,41 +54,42 @@ class ActionEngine{
          return
 
    */
-   static async action(request, l = {}, copyl = false){
-      console.log(request, l);
+   static async action(requestF, l = {}, copyl = false){
+      // console.log(requestF, l);
       if(copyl) l = {...l};
 
 
-   	if(operate.isString(request)){
-   		request = Entity.get(request, window);
+   	if(operate.isString(requestF)){
+   		requestF = Entity.get(requestF, window);
    	}
 
-      request = Entity.copy(request); // don't change itself
       var lastl;
 
      	lastl = {...l};
 
-      if(! request.hasOwnProperty('loop')) request.loop = 1;
+      if(! requestF.hasOwnProperty('loop')) requestF.loop = 1;
 
-      if((! operate.isInt(request['loop'])) || request.loop < 0) {
-         console.error("Request.loop should be a whole number. What's this?", request.loop);
+      requestF.loop = Entity.getValue(requestF.loop, l);
+
+      if((! operate.isInt(requestF['loop'])) || requestF.loop < 0) {
+         console.error("Request.loop should be a whole number. What's this?", requestF.loop);
          throw Error("Terminate Called");
       }
       
-      request.loop = Entity.getValue(request.loop, l);
 
       await Entity.walk(
-      	{rngstart:0, rngend: request.loop},
+      	{rngstart:0, rngend: requestF.loop},
       	{
       		value: {
-	      		func: async function(i, request, l){
+	      		func: async function(i, requestF, l){
+                  var request = {...requestF};
 
 		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
 		            if(! request.hasOwnProperty('condition')) request.condition = true;
 		         
 		            if(! eval(request['condition'])){ // we should not execute this
-		               request.__exitRequest = true;
+		               requestF.__exitRequest = true;
                      return false;
 		            }
 
@@ -96,7 +97,7 @@ class ActionEngine{
 
 		            var x = l;
 		            l = await Entity.updateProps(request.declare, l, x);
-
+                  // console.log(l);
 		            if(request.hasOwnProperty('method')){
 
 		               if(! request.hasOwnProperty('arguments'))request.arguments = [];
@@ -108,10 +109,11 @@ class ActionEngine{
    				      	{rngstart:0, rngend: request.arguments.length},
    				      	{
    				      		value: {
-   					      		func: function(i, request, l){
+   					      		func: async function(i, request, l){
    					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
    					      		},
-   					      		args: [request, l]
+   					      		args: [request, l],
+                              wait:true
    					      	}
    					      }
                      );
@@ -131,7 +133,7 @@ class ActionEngine{
 		               var method = objectModel[request.method];
 		               if(method === undefined)
                         console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method);
-                     
+
                      var response = await method.apply(objectModel, request.arguments);
 
 		               if(request.hasOwnProperty('response')){
@@ -144,10 +146,10 @@ class ActionEngine{
 		            }
 
 		            if(request.hasOwnProperty('callback')){
-		               ActionEngine.processRequest(request['callback'], l);
+		               await ActionEngine.processRequest(request['callback'], l);
 		            }
 		         },
-		         args: [request, l],
+		         args: [requestF, l],
                wait:true
 		      }
 		   }
@@ -155,12 +157,12 @@ class ActionEngine{
 
       var returnVal;
 
-      if((!request.__exitRequest) && request.hasOwnProperty('return')){
+      if((!requestF.__exitRequest) && requestF.hasOwnProperty('return')){
          
-         returnVal = Entity.getValue(request.return, l);
+         returnVal = Entity.getValue(requestF.return, l);
       }
       // console.log(returnVal);
-      if(request.hasOwnProperty('passStates') && !request.passStates) 
+      if(requestF.hasOwnProperty('passStates') && !requestF.passStates) 
       {
       	var x = {
       		func: function(lastl, key, l){
@@ -176,8 +178,8 @@ class ActionEngine{
 
          l = lastl;
       }
-      if(!request.__exitRequest){
-         request.__exitRequest = false;
+      if(!requestF.__exitRequest){
+         requestF.__exitRequest = false;
          return returnVal;
       }
       return null;

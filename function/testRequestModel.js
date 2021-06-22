@@ -47,8 +47,23 @@ var loginRequest = [
     }
 ]
 
+var naturalNumber = {
+  declare:{
+    x:0, 
+    n:5
+  },
+  callback: {
+    loop:'$l.n',
+    declare:{
+      x:'$l.x+1'
+    },
+    objectModel:'console', 
+    method:'log',
+    arguments:'$l.x'
+  }
+}
 window.onload=async function(){
-  console.log(await engine.processRequest('loginRequest'));
+  console.log(await engine.processRequest('naturalNumber'));
 }
 
 // ActionEngine.processRequest(extendCreateElem);
