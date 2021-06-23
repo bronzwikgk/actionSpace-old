@@ -30,21 +30,24 @@ class ActionEvent{
         );
     }
     addRequestListener(domElement, events, req, args = {}){
-        console.log('Request', domElement, events, req, args);
+        // console.log('Request', domElement, events, req, args);
         if(! operate.isObject(args)){
             console.error("args should be an object of arguments to the request. What's this?", args);
             return;
         }
         function x(event, req, args){
             args['event'] = event;
-            ActionEngine.processRequest(req, args);
+            ActionEngine.processRequest(req, args, true);
         }
         this.addListener(domElement, events, x, req, args);
     }
     handleEvent(obj, e){
+        // if(e.type == 'mousedown')
+        //     console.log('calling handleEvent', obj, e);
         var elem = e.target;
         var first = true;
         e.propogate = obj.bubble;
+
         while(elem && (e.propogate || first)){
 
             var uid = Entity.uniqueId(elem);
@@ -56,11 +59,13 @@ class ActionEvent{
                         func: async function(i, obj, e){
                             var f = obj.listeners[e.type][uid][i];
                             f.func(e, ...f.args);
+                            // console.log(f);
                         },
                         args: [obj, e]
                     }
                 }
             );
+            // if(e.type =='mousedown') console.log(elem);
             elem = ((!elem.parentNode) && elem!=window) ? window : elem.parentNode;
             first = false;
         }

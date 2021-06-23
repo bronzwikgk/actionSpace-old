@@ -1,7 +1,7 @@
 class ActionEngine{
    
    static maxDebugDepth = 100;
-   static async processRequest(flowRequest, l = {}){
+   static async processRequest(flowRequest, l = {}, copyl = false){
 
       if(! operate.isArray(flowRequest)){
       	flowRequest = [flowRequest];
@@ -16,10 +16,10 @@ class ActionEngine{
                      flowRequest[i] = Entity.get(flowRequest, window);
 
 			         if(operate.isArray(flowRequest[i])){
-			            answer.push((await ActionEngine.processRequest(flowRequest[i], l)) || []);
+			            answer.push((await ActionEngine.processRequest(flowRequest[i], l, copyl)) || []);
 			            return false;
 			         }
-			         answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
+			         answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l, copyl));
 			      },
 			      args: [flowRequest, l, answer],
                wait:true
@@ -55,9 +55,11 @@ class ActionEngine{
 
    */
    static async action(requestF, l = {}, copyl = false){
-      // console.log(requestF, l);
-      if(copyl) l = {...l};
+      // console.log(requestF, l, copyl);
+      if(copyl) 
+         l = {...l};
 
+      requestF = {...requestF}; //copy the request
 
    	if(operate.isString(requestF)){
    		requestF = Entity.get(requestF, window);
@@ -88,7 +90,7 @@ class ActionEngine{
 
 		            if(! request.hasOwnProperty('condition')) request.condition = true;
 		         
-		            if(! eval(request['condition'])){ // we should not execute this
+		            if(! (eval(request['condition']))){ // we should not execute this
 		               requestF.__exitRequest = true;
                      return false;
 		            }
@@ -178,8 +180,8 @@ class ActionEngine{
 
          l = lastl;
       }
+      // console.log(requestF, l, returnVal, requestF.__exitRequest);
       if(!requestF.__exitRequest){
-         requestF.__exitRequest = false;
          return returnVal;
       }
       return null;
