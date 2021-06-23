@@ -359,6 +359,7 @@ class Entity {
             if(!req.delta){
                 req.delta = 1;
             }
+            // console.log(callback.value.func, req.rngstart, req.rngend);
             for(var i=req.rngstart; i != req.rngend; i += req.delta){
                 callback.l.args = [i, ...callback.value.args];
 
@@ -433,7 +434,7 @@ class Entity {
             }
         } else if(rtype === 'object'){
             for(var i in req){
-                i = Entity.getValue(i, ALLSTATES);
+                // i = Entity.getValue(i, ALLSTATES);
 
                 var type = operate.trueTypeOf(req[i]);
                 if(callback.hasOwnProperty(type)){

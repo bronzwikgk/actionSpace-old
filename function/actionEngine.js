@@ -11,17 +11,23 @@ class ActionEngine{
       	{rngstart:0, rngend: flowRequest.length},
       	{
 	      	value : {
-	      		func: async function(i, flowRequest, l, answer) {
-                  if(operate.isString(flowRequest[i]))
-                     flowRequest[i] = Entity.get(flowRequest, window);
+	      		func: async function(i, flowRequest, l, answer, copyl) {
+                  var copy = flowRequest[i];
 
+                  if(operate.isString(flowRequest[i])){
+
+                     flowRequest[i] = Entity.get(flowRequest[i], window);
+                  }
 			         if(operate.isArray(flowRequest[i])){
 			            answer.push((await ActionEngine.processRequest(flowRequest[i], l, copyl)) || []);
-			            return false;
-			         }
-			         answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l, copyl));
-			      },
-			      args: [flowRequest, l, answer],
+			         } else if(operate.isObject(flowRequest[i]))
+			            answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l, copyl));
+                  else {
+                        console.error("Request should be an object/array. What's this? ",copy, "evaluates to", flowRequest[i]);
+                        throw Error("Terminate Called");
+                  } 
+			      }, 
+			      args: [flowRequest, l, answer, copyl],
                wait:true
 	      	}
 	      }
@@ -55,7 +61,7 @@ class ActionEngine{
 
    */
    static async action(requestF, l = {}, copyl = false){
-      console.log(requestF, l, copyl);
+      // console.log(requestF, l, copyl);
       if(copyl) 
          l = {...l};
 
@@ -67,6 +73,7 @@ class ActionEngine{
 
       var lastl;
 
+       
      	lastl = {...l};
 
       if(! requestF.hasOwnProperty('loop')) requestF.loop = 1;
