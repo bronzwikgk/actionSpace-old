@@ -55,7 +55,7 @@ class ActionEngine{
 
    */
    static async action(requestF, l = {}, copyl = false){
-      // console.log(requestF, l, copyl);
+      console.log(requestF, l, copyl);
       if(copyl) 
          l = {...l};
 
@@ -133,7 +133,7 @@ class ActionEngine{
 		                  throw Error("Terminate Called");
 		               }
 		               var method = objectModel[request.method];
-		               if(method === undefined)
+		               if(!operate.isFunction(method))
                         console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method);
 
                      var response = await method.apply(objectModel, request.arguments);
