@@ -276,12 +276,27 @@ class Entity {
         
         return l.req;
     }
+    static setProps(req, model, ALLSTATES = {}){
+
+        for(var key in req){
+            // console.log(ALLSTATES, key, req[key]);
+            var subkeys = Entity.stringToPath(key);
+            var parent = ALLSTATES;
+            for(var i=0;i<subkeys.length-1;i++){
+                // console.log(parent);
+                parent = parent[subkeys[i]];
+            }
+            // console.log("SETPROPS", parent, subkeys[subkeys.length-1], req[key]);
+            parent[subkeys[subkeys.length-1]] = Entity.updateProps(req[key], null, ALLSTATES, true);
+        }
+    }
     static updateProps(req,model, ALLSTATES = {}, parse = true){
         
 
-        if(operate.trueTypeOf(req) != operate.trueTypeOf(model)){
-            model = req;
-            return req;
+        if((operate.trueTypeOf(req) != operate.trueTypeOf(model)) || (!req)){
+            if(operate.isArray(req) && (!operate.isArray(model))) model = [];
+            else if(operate.isObject(req) && (!operate.isObject(model))) model = {};
+            else return (model = Entity.getValue(req, ALLSTATES));
         }
 
         var l = {model: model};
@@ -322,7 +337,7 @@ class Entity {
                     if(parse) l.model[key] = Entity.getValue(obj[key], ALLSTATES);
                     else l.model[key] = obj[key];
 
-                    // console.log(obj[key]);
+                    // console.log(l.model, key, l.model[key], obj[key]);
                     return false;
                 }, 
                 args: [l, ALLSTATES, parse]
@@ -434,7 +449,10 @@ class Entity {
             }
         } else if(rtype === 'object'){
             for(var i in req){
+                // var x = i;
                 // i = Entity.getValue(i, ALLSTATES);
+                
+                // if(x!=i)console.log("x, i:", x, i, ALLSTATES);
 
                 var type = operate.trueTypeOf(req[i]);
                 if(callback.hasOwnProperty(type)){

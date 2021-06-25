@@ -60,19 +60,15 @@ class ActionEngine{
          return
 
    */
-   static async action(requestF, l = {}, copyl = false){
-      // console.log(requestF, l, copyl);
-      if(copyl) 
-         l = {...l};
-
-      requestF = {...requestF}; //copy the request
-
+   //COPYL TO BE REMOVED
+   static async action(requestF, l, copyl = false){
+      
    	if(operate.isString(requestF)){
    		requestF = Entity.get(requestF, window);
    	}
+      requestF = JSON.parse(JSON.stringify(requestF));
 
       var lastl;
-
        
      	lastl = {...l};
 
@@ -105,7 +101,7 @@ class ActionEngine{
 		            if(! request.hasOwnProperty('declare')) request.declare = {};
 
 		            var x = l;
-		            l = await Entity.updateProps(request.declare, l, x);
+		            await Entity.setProps(request.declare, l, x);
                   // console.log(l);
 		            if(request.hasOwnProperty('method')){
 
