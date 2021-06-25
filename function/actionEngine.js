@@ -1,7 +1,7 @@
 class ActionEngine{
    
    static maxDebugDepth = 100;
-   static async processRequest(flowRequest, l = {}, copyl = false){
+   static async processRequest(flowRequest, l = {}){
 
       if(! operate.isArray(flowRequest)){
       	flowRequest = [flowRequest];
@@ -11,7 +11,10 @@ class ActionEngine{
       	{rngstart:0, rngend: flowRequest.length},
       	{
 	      	value : {
-	      		func: async function(i, flowRequest, l, answer, copyl) {
+	      		func: async function(i, flowRequest, l, answer, ignore) {
+                  
+                  if(ignore.ignore) return "SIGNAL_IGNORE_REQUEST";
+
                   var copy = flowRequest[i];
 
                   if(operate.isString(flowRequest[i])){
@@ -19,15 +22,25 @@ class ActionEngine{
                      flowRequest[i] = Entity.get(flowRequest[i], window);
                   }
 			         if(operate.isArray(flowRequest[i])){
-			            answer.push((await ActionEngine.processRequest(flowRequest[i], l, copyl)) || []);
-			         } else if(operate.isObject(flowRequest[i]))
-			            answer.push(await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l, copyl));
+			         
+                     answer.push((await ActionEngine.processRequest(flowRequest[i], l)) || []);
+			         
+                  } else if(operate.isObject(flowRequest[i])){
+			            
+                     var result = await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l)
+                     
+                     if(result[1] === 'SIGNAL_EXIT_FLOW_REQUEST')
+                        ignore.ignore = true;
+
+                     answer.push(result[0]);
+                  }
                   else {
                         console.error("Request should be an object/array. What's this? ",copy, "evaluates to", flowRequest[i]);
                         throw Error("Terminate Called");
                   } 
+                  return false;
 			      }, 
-			      args: [flowRequest, l, answer, copyl],
+			      args: [flowRequest, l, answer, {ignore:false}],
                wait:true
 	      	}
 	      }
@@ -62,7 +75,7 @@ class ActionEngine{
    */
    //COPYL TO BE REMOVED
    static async action(requestF, l, copyl = false){
-      
+
    	if(operate.isString(requestF)){
    		requestF = Entity.get(requestF, window);
    	}
@@ -87,7 +100,7 @@ class ActionEngine{
       	{
       		value: {
 	      		func: async function(i, requestF, l){
-                  var request = {...requestF};
+                  var request = JSON.parse(JSON.stringify(requestF));
 
 		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
@@ -184,10 +197,12 @@ class ActionEngine{
          l = lastl;
       }
       // console.log(requestF, l, returnVal, requestF.__exitRequest);
-      if(!requestF.__exitRequest){
-         return returnVal;
-      }
-      return null;
+      
+
+      if(requestF.hasOwnProperty('exit') && requestF.exit)
+         return [returnVal, "SIGNAL_EXIT_FLOW_REQUEST"];
+      else 
+         return [returnVal, "SIGNAL_CONTINUE_FLOW_REQUEST"];
    }
 }
 
