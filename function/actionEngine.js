@@ -173,11 +173,13 @@ class ActionEngine{
 		   }
 		);
 
-      var returnVal;
+      var returnVal, signal = 'SIGNAL_CONTINUE_FLOW_REQUEST';
 
       if((!requestF.__exitRequest) && requestF.hasOwnProperty('return')){
          
          returnVal = Entity.getValue(requestF.return, l);
+         if(requestF.hasOwnProperty('exit') && requestF.exit)
+            signal  = "SIGNAL_EXIT_FLOW_REQUEST";
       }
       // console.log(returnVal);
       if(requestF.hasOwnProperty('passStates') && !requestF.passStates) 
@@ -197,12 +199,7 @@ class ActionEngine{
          l = lastl;
       }
       // console.log(requestF, l, returnVal, requestF.__exitRequest);
-      
-
-      if(requestF.hasOwnProperty('exit') && requestF.exit)
-         return [returnVal, "SIGNAL_EXIT_FLOW_REQUEST"];
-      else 
-         return [returnVal, "SIGNAL_CONTINUE_FLOW_REQUEST"];
+      return [returnVal, signal];
    }
 }
 
