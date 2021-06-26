@@ -106,7 +106,7 @@ class ActionEngine{
 
 		            if(! request.hasOwnProperty('condition')) request.condition = true;
 		         
-		            if(! (eval(request['condition']))){ // we should not execute this
+		            if(! request['condition']) { // we should not execute this
 		               requestF.__exitRequest = true;
                      return false;
 		            }
@@ -175,9 +175,11 @@ class ActionEngine{
 
       var returnVal, signal = 'SIGNAL_CONTINUE_FLOW_REQUEST';
 
-      if((!requestF.__exitRequest) && requestF.hasOwnProperty('return')){
+      if((!requestF.__exitRequest)){
          
-         returnVal = Entity.getValue(requestF.return, l);
+         if(requestF.hasOwnProperty('return'))
+            returnVal = Entity.getValue(requestF.return, l);
+
          if(requestF.hasOwnProperty('exit') && requestF.exit)
             signal  = "SIGNAL_EXIT_FLOW_REQUEST";
       }
