@@ -3,66 +3,67 @@ var DefaultRequestModel = {
    declare: {},
    arguments:[],
    condition:true,
-   passStates:false
+   passStates:true
 }
 
-var createElem = {
-   objectModel : 'document',
-   method: 'createElement',
-   arguments : 'div',
-   response: 'elem',
-   callback: {
-      objectModel:'document.body',
-      method:'appendChild',
-      arguments:'$l.elem',
-      callback: {
-         declare:{
-            'elem':{
-               'innerHTML':'Helloworld'
-            }
-         }
-      } 
-   }
-};
-
-var extendCreateElem = {
-   extends: 'createElem',
-   callback:{
-      callback:{
-         declare:{
-            'elem':{
-               'innerHTML':'HOLA! WORKS PROPERLY.'
-            }
-         }
-      }
-   }
+var editor = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'addDiv',
+    response: 'editor'
 }
-
-var log = {
-    objectModel:'console',
-    method:'log',
-    arguments:'click event occured'
- };
-
-var evtClick = {
-    objectModel: 'eventManager',
-    method: 'addRequestListener',
-    arguments: ['$window', 'click', '$log']
-}
-var evtClickBubble = {
-    objectModel:'document',
-    method:'getElementById',
-    arguments:'addDiv',
-    response:'elem',
-    callback:{
-      objectModel: 'eventManager',
-      method:'addRequestListener',
-      arguments: ['$l.elem', 'click', '$log']
+var req = {
+    extends: 'editor',
+    callback: {
+        declare: {
+            'content': '$l.editor.innerHTML'
+        },
+        objectModel: 'console',
+        method: 'log',
+        arguments: '$l.content'
     }
 }
+var loginRequest = [
+    {
+        response:'GetUsername',
+        objectModel:'document',
+        method: "getElementById",
+        arguments: ["username"],
+        return:'$l.GetUsername.value',
+    },
+    {
+        response :'GetPassword',
+        objectModel:'document',
+        method: "getElementById",
+        arguments: ["password"],
+        return:'$l.GetPassword.value', 
+    },
+    {
+        declare:{
+            paramsJSON:{
+              'Username':'$l.GetUsername.value'
+            }
+        }
+    }
+]
+
+var naturalNumber = {
+  declare:{
+    x:0, 
+    n:5
+  },
+  callback: {
+    loop:'$l.n',
+    declare:{
+      x:'$l.x+1'
+    },
+    objectModel:'console', 
+    method:'log',
+    arguments:'$l.x'
+  }
+}
 window.onload=async function(){
-   engine.processRequest('evtClick');
-   engine.processRequest('evtClickBubble');
+  console.log(await engine.processRequest('naturalNumber'));
 }
 
 // ActionEngine.processRequest(extendCreateElem);

@@ -69,9 +69,7 @@ var closeFileInEditor = {
     extends: 'editor',
     callback: {
         declare: {
-            'editor': {
-                'innerHTML': ''
-            }
+            'editor.innerHTML': ''
         },
         objectModel: 'CreateEntity',
         method: 'setProps',
@@ -175,9 +173,7 @@ var getUserInputFile = {
                                 response: 'editor',
                                 callback: {
                                     declare: {
-                                        'editor': {
-                                            'innerHTML': '$l.fileText'
-                                        },
+                                        'editor.innerHTML': '$l.fileText',
                                         'editorProps': {
                                             'data-fileid': '$l.uid',
                                             'data-filename': '$l.retrivedfH.name',

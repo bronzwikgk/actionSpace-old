@@ -155,6 +155,6 @@ var generateAccessToken = {
     ]
 }
 
-document.getElementById('clickBtn').onclick = function () {
-    ActionEngine.processRequest(getClientCredentials);
-}
+// document.getElementById('clickBtn').onclick = function () {
+//     ActionEngine.processRequest(getClientCredentials);
+// }

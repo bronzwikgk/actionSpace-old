@@ -1,7 +1,7 @@
 var sample = {
-    "id": "<uid>",
     "name": "tagName",
     "attributes": {
+        "id": "<uid>",
         "class": "classNames", //separated by space or comma
         "style": "CSSStyle", //in case we need inline style
         // any other attribute
@@ -16,9 +16,9 @@ var sample = {
     }
 }
 var sampleModel = {
-    "id": "<uid>",
     "name": "div",
     "attributes": {
+        "id": "<uid>",
         "class": "anyclass", //separated by space or comma
         // any other attribute
     },
@@ -1111,7 +1111,7 @@ var centerArea = {
 
 
 
-var main = [
+var editorUI_main = [
     topNavBar,
     leftSideNav,
     centerArea
@@ -1120,7 +1120,10 @@ var main = [
 var processUI = {
     objectModel: 'CreateEntity',
     method: 'create',
-    arguments: [main, document.getElementById('root')]
+    arguments: [sampleModel, document.getElementById('root')]
 }
 
-ActionEngine.processRequest(processUI)
+CreateEntity.create(editorUI_main, document.getElementById('root'));
+
+//ActionEngine.processRequest(processUI);
+console.log('hello');

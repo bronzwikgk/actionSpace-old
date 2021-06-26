@@ -1,28 +1,51 @@
 class ActionEngine{
    
-   static maxDebugDepth = 10;
+   static maxDebugDepth = 100;
    static async processRequest(flowRequest, l = {}){
 
       if(! operate.isArray(flowRequest)){
       	flowRequest = [flowRequest];
       }
       var answer = [];
-      Entity.walk(
+      await Entity.walk(
       	{rngstart:0, rngend: flowRequest.length},
       	{
 	      	value : {
-	      		func: function(i, flowRequest) {
+	      		func: async function(i, flowRequest, l, answer, ignore) {
+                  
+                  if(ignore.ignore) return "SIGNAL_IGNORE_REQUEST";
+
+                  var copy = flowRequest[i];
+
+                  if(operate.isString(flowRequest[i])){
+
+                     flowRequest[i] = Entity.get(flowRequest[i], window);
+                  }
 			         if(operate.isArray(flowRequest[i])){
-			            ActionEngine.processRequest(flowRequest[i], l);
-			            return false;
-			         }
-			         answer.push(ActionEngine.action(Entity.requestExpander(flowRequest[i]), l));
-			      },
-			      args: [flowRequest, answer],
+			         
+                     answer.push((await ActionEngine.processRequest(flowRequest[i], l)) || []);
+			         
+                  } else if(operate.isObject(flowRequest[i])){
+			            
+                     var result = await ActionEngine.action(Entity.requestExpander(flowRequest[i]), l)
+                     
+                     if(result[1] === 'SIGNAL_EXIT_FLOW_REQUEST')
+                        ignore.ignore = true;
+
+                     answer.push(result[0]);
+                  }
+                  else {
+                        console.error("Request should be an object/array. What's this? ",copy, "evaluates to", flowRequest[i]);
+                        throw Error("Terminate Called");
+                  } 
+                  return false;
+			      }, 
+			      args: [flowRequest, l, answer, {ignore:false}],
                wait:true
 	      	}
 	      }
       );
+      // console.log("Returning", answer, "for", flowRequest);
       return (answer.length > 1 ? answer : answer[0]);
    }
    /* 
@@ -50,44 +73,49 @@ class ActionEngine{
          return
 
    */
-   static async action(request, l = {}){
-   	if(operate.isString(request)){
-   		request = Entity.get(request, window);
+   //COPYL TO BE REMOVED
+   static async action(requestF, l, copyl = false){
+
+   	if(operate.isString(requestF)){
+   		requestF = Entity.get(requestF, window);
    	}
+      requestF = JSON.parse(JSON.stringify(requestF));
 
-      request = Entity.copy(request); // don't change itself
       var lastl;
+       
+     	lastl = {...l};
 
-     	lastl = Entity.copy(l);
+      if(! requestF.hasOwnProperty('loop')) requestF.loop = 1;
 
-      if(! request.hasOwnProperty('loop')) request.loop = 1;
+      requestF.loop = Entity.getValue(requestF.loop, l);
 
-      if((! operate.isInt(request['loop'])) || request.loop < 0) {
-         console.error("Request.loop should be a whole number. What's this?", request.loop);
+      if((! operate.isInt(requestF['loop'])) || requestF.loop < 0) {
+         console.error("Request.loop should be a whole number. What's this?", requestF.loop);
          throw Error("Terminate Called");
       }
       
-      request.loop = Entity.getValue(request.loop, l);
 
       await Entity.walk(
-      	{rngstart:0, rngend: request.loop},
+      	{rngstart:0, rngend: requestF.loop},
       	{
       		value: {
-	      		func: async function(i, request, l){
+	      		func: async function(i, requestF, l){
+                  var request = JSON.parse(JSON.stringify(requestF));
 
 		            if(request.hasOwnProperty('condition')) request.condition = Entity.getValue(request.condition, l);
 
 		            if(! request.hasOwnProperty('condition')) request.condition = true;
 		         
-		            if(! eval(request['condition'])){ // we should not execute this
-		               return false;
+		            if(! (eval(request['condition']))){ // we should not execute this
+		               requestF.__exitRequest = true;
+                     return false;
 		            }
 
 		            if(! request.hasOwnProperty('declare')) request.declare = {};
 
 		            var x = l;
-		            l = Entity.updateProps(request.declare, l, x);
-
+		            await Entity.setProps(request.declare, l, x);
+                  // console.log(l);
 		            if(request.hasOwnProperty('method')){
 
 		               if(! request.hasOwnProperty('arguments'))request.arguments = [];
@@ -99,10 +127,11 @@ class ActionEngine{
    				      	{rngstart:0, rngend: request.arguments.length},
    				      	{
    				      		value: {
-   					      		func: function(i, request, l){
+   					      		func: async function(i, request, l){
    					      			request.arguments[i] = Entity.getValue(request.arguments[i], l);
    					      		},
-   					      		args: [request, l]
+   					      		args: [request, l],
+                              wait:true
    					      	}
    					      }
                      );
@@ -114,12 +143,16 @@ class ActionEngine{
 		               }
 
 		               var objectModel = Entity.getValue(request.objectModel, l, null) || Entity.get(request.objectModel, window);
-		               if(!objectModel){
+		               
+                     if(!objectModel){
 		                  console.error(objectModel, " is not a valid objectModel");
 		                  throw Error("Terminate Called");
 		               }
 		               var method = objectModel[request.method];
-		               var response = await method.apply(objectModel, request.arguments);
+		               if(!operate.isFunction(method))
+                        console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method);
+
+                     var response = await method.apply(objectModel, request.arguments);
 
 		               if(request.hasOwnProperty('response')){
 		                  if(! operate.isString('response')){
@@ -131,20 +164,23 @@ class ActionEngine{
 		            }
 
 		            if(request.hasOwnProperty('callback')){
-		               ActionEngine.processRequest(request['callback'], l);
+		               await ActionEngine.processRequest(request['callback'], l);
 		            }
 		         },
-		         args: [request, l],
+		         args: [requestF, l],
                wait:true
 		      }
 		   }
 		);
+
       var returnVal;
-      if(request.hasOwnProperty('return')){
+
+      if((!requestF.__exitRequest) && requestF.hasOwnProperty('return')){
          
-         returnVal = Entity.getValue(request.return, l);
+         returnVal = Entity.getValue(requestF.return, l);
       }
-      if(!(request.hasOwnProperty('passStates') && request.passStates)) 
+      // console.log(returnVal);
+      if(requestF.hasOwnProperty('passStates') && !requestF.passStates) 
       {
       	var x = {
       		func: function(lastl, key, l){
@@ -160,7 +196,13 @@ class ActionEngine{
 
          l = lastl;
       }
-      return returnVal;
+      // console.log(requestF, l, returnVal, requestF.__exitRequest);
+      
+
+      if(requestF.hasOwnProperty('exit') && requestF.exit)
+         return [returnVal, "SIGNAL_EXIT_FLOW_REQUEST"];
+      else 
+         return [returnVal, "SIGNAL_CONTINUE_FLOW_REQUEST"];
    }
 }
 

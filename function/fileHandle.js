@@ -294,8 +294,8 @@ window.HandleFileSys = class {
 }
 ////////////////////////////////////////////Testing///////////////////////////////////////////////////////////
 
-document.getElementById('clickBtn').onclick = async function () {
-    var dir = await HandleFileSys.getDirHandle();
-    var fileHandle = await HandleFileSys.getNewFileHandle(false, dir, "anyFile.txt", true);
-    await HandleFileSys.writeFile(fileHandle, "Hello! this is vipin suthar");
-}
+// document.getElementById('clickBtn').onclick = async function () {
+//     var dir = await HandleFileSys.getDirHandle();
+//     var fileHandle = await HandleFileSys.getNewFileHandle(false, dir, "anyFile.txt", true);
+//     await HandleFileSys.writeFile(fileHandle, "Hello! this is vipin suthar");
+// }
