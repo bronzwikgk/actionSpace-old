@@ -949,8 +949,9 @@ var navigatorFileTemp = {
     "name": "span",
     "attributes": {
         "class": "item file activeFileTemp",
-        "data-action-type": "",
-        "data-action-value": ""
+        "data-action-type": "openFromNavigation",
+        "data-action-value": "file",
+        "data-fileid": ""
     },
     "items": {
         "text##0": " Lorem ipsum ..."

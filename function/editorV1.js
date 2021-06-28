@@ -84,12 +84,10 @@ window.Editor = class {
                 ])
                 break;
             case 'export':
-                fileID = ActionEngine.processRequest(getOpenFileID);
-                    // ActionEngine.processRequest([
-                    //     saveFileToLS,
-                    //     closeFileInEditor
-                    // ])
-                ActionEngine.processRequest(getUserSaveFile);
+                    ActionEngine.processRequest([
+                        saveFileToLS,
+                        getUserSaveFile
+                    ])
                 break;
 
             default:

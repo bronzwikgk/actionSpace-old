@@ -1,4 +1,4 @@
-var handleClickEventFunc = function (event) {
+var handleClickEventFunc = async function (event) {
     // ActionEngine.processRequest('log');
     // console.log(event);
     var trueTarget = event.target;
@@ -11,6 +11,7 @@ var handleClickEventFunc = function (event) {
     }
     var actionType = trueTarget.getAttribute('data-action-type'),
         actionValue = trueTarget.getAttribute('data-action-value'),
+        fileKey = trueTarget.getAttribute('data-fileid'),
         actionTargetElementId = trueTarget.getAttribute('data-action-target-element-id'),
         actionTargetElement;
     if (!operate.isUseless(actionTargetElementId)) {
@@ -36,6 +37,17 @@ var handleClickEventFunc = function (event) {
         Editor.handleDirSystem(actionValue);
     } else if (actionType === 'toggleClass') {
         actionTargetElement.classList.toggle(actionValue);
+    } else if (actionType === 'openFromNavigation'){
+        let result = await ActionEngine.processRequest('getFromIDB', {
+            'DBName': 'ActionSpaceDefaultDB',
+            'storeName': 'fileOrDirHandles',
+            'key': fileKey
+        });
+        
+        ActionEngine.processRequest('openFileInEditor', {
+            'fH': result,
+            'uid': fileKey
+        });
     }
 }
 

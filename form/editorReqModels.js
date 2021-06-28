@@ -23,7 +23,21 @@ var log = {
     arguments: 'Hello Handsome!'
 };
 
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var getFileName = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'fileName',
+    response: 'Fname'
+}
+
+var getUniqueID = {
+    objectModel: 'CreateEntity',
+    method: 'uniqueId',
+    arguments: 12,
+    response: 'uid',
+    return: '$l.uid'
+}
 
 var editor = {
     objectModel: 'document',
@@ -32,17 +46,136 @@ var editor = {
     response: 'editor'
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var getOpenFileID = {
     objectModel: 'document',
     method: 'getElementById',
     arguments: 'editor',
     response: 'editor',
+    return: '$l.fileID',
     callback: {
         objectModel: "$l.editor",
         method: 'getAttribute',
         arguments: 'data-open-fileid',
-        response: 'fileID',
-        return: '$l.fileID'
+        response: 'fileID'
+    }
+}
+
+/*
+ActionEngine.processRequest('getFromIDB', {
+    'DBName': <Name of the DataBase>,
+    'storeName': <Name of the Store>,
+    'key': <key>
+})
+*/
+var getFromIDB = {
+    objectModel: 'IndexedDataBase',
+    method: 'createStore',
+    arguments: ['$l.DBName', '$l.storeName'],
+    response: 'storeFunc',
+    return: '$l.result',
+    callback: {
+        objectModel: 'IndexedDataBase',
+        method: 'get',
+        arguments: ['$l.key', '$l.storeFunc'],
+        response: 'result',
+        return: '$l.result'
+    }
+}
+
+/*
+ActionEngine.processRequest('setToIDB', {
+    'DBName': <Name of the DataBase>,
+    'storeName': <Name of the Store>,
+    'key': <key>,
+    'value': <value>
+})
+*/
+var setToIDB = {
+    objectModel: 'IndexedDataBase',
+    method: 'createStore',
+    arguments: ['$l.DBName', '$l.storeName'],
+    response: 'storeFunc',
+    callback: {
+        objectModel: 'IndexedDataBase',
+        method: 'set',
+        arguments: ['$l.key', '$l.value', '$l.storeFunc'],
+        response: 'result'
+    }
+}
+
+/*
+ActionEngine.processRequest('openFileInEditor', {
+    'fH': <fileHandle>,
+    'uid': <uid of fileHandle in IDB>
+})
+*/
+var openFileInEditor = {
+    objectModel: 'HandleFileSys',
+    method: 'getFile',
+    arguments: ['$l.fH'],
+    response: 'file',
+    callback: {
+        objectModel: 'HandleFileSys',
+        method: 'readFile',
+        arguments: ['$l.file'],
+        response: 'fileText',
+        callback: {
+            objectModel: 'document',
+            method: 'getElementById',
+            arguments: 'editor',
+            response: 'editor',
+            callback: {
+                declare: {
+                    'editor.innerText': '$l.fileText',
+                    'fileName': '$l.fH.name.slice(0,l.fH.name.lastIndexOf("."))',
+                    'fileExt': '$l.fH.name.slice(l.fH.name.lastIndexOf("."))',
+                    'editorProps': {
+                        'data-fileid': '$l.uid',
+                        'data-filename': '$l.fileName',
+                        'data-fileext': '$l.fileExt',
+                        'data-filetype': 'text/plain'
+                    }
+                },
+                objectModel: 'CreateEntity',
+                method: 'setProps',
+                arguments: ['$l.editor', '$l.editorProps'],
+                callback: {
+                    objectModel: 'document',
+                    method: 'querySelector',
+                    arguments: '.titleBar .dName',
+                    response: 'docNameElem',
+                    callback: {
+                        declare: {
+                            'docNameElem.value': '$l.fileName'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+var closeFileInEditor = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'editor',
+    response: 'editor',
+    callback: {
+        declare: {
+            'editor.innerHTML': '',
+            'props': {
+                'data-fileid': '',
+                'data-filename': '',
+                'data-fileext': '',
+                'data-filetype': '',
+                'data-has-unsaved-data': ''
+            }
+        },
+        objectModel: 'CreateEntity',
+        method: 'setProps',
+        arguments: ['$l.editor', '$l.props']
     }
 }
 
@@ -73,12 +206,12 @@ var newFileReqFlow = {
 }
 
 var saveFileToLS = {
-    condition: '$l.editor.getAttribute("data-is-unsaved")',
     objectModel: 'document',
     method: 'getElementById',
     arguments: 'editor',
     response: 'editor',
     callback: {
+        condition: '$l.editor.getAttribute("data-is-unsaved") === "true"', // 
         objectModel: "CreateEntity",
         method: 'getProps',
         arguments: ['$l.editor', ['data-open-fileid']],
@@ -93,43 +226,6 @@ var saveFileToLS = {
         }
     }
 }
-
-var closeFileInEditor = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'editor',
-    response: 'editor',
-    callback: {
-        declare: {
-            'editor.innerHTML': '',
-            'props': {
-                'data-fileid': '',
-                'data-filename': '',
-                'data-has-unsaved-data': 'false'
-            }
-        },
-        objectModel: 'CreateEntity',
-        method: 'setProps',
-        arguments: ['$l.editor', '$l.props']
-    }
-}
-
-var getFileName = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'fileName',
-    response: 'Fname'
-}
-
-var getUniqueID = {
-    objectModel: 'CreateEntity',
-    method: 'uniqueId',
-    arguments: 12,
-    response: 'uid',
-    return: '$l.uid'
-}
-
-
 
 var getUserInputFile = {
     objectModel: 'HandleFileSys',
@@ -149,52 +245,41 @@ var getUserInputFile = {
         arguments: 12,
         response: 'uid',
         callback: {
-            objectModel: 'IndexedDataBase',
-            method: 'createStore',
-            arguments: ['ActionSpaceDefaultDB', 'fileOrDirHandles'],
-            response: 'storeFunc',
-            callback: {
-                objectModel: 'IndexedDataBase',
-                method: 'set',
-                arguments: ['$l.uid', '$l.fH', '$l.storeFunc'],
-                callback: {
-                    objectModel: 'IndexedDataBase',
-                    method: 'get',
-                    arguments: ['$l.uid', '$l.storeFunc'],
-                    response: 'retrivedfH',
-                    callback: {
-                        objectModel: 'HandleFileSys',
-                        method: 'getFile',
-                        arguments: ['$l.retrivedfH'],
-                        response: 'file',
-                        callback: {
-                            objectModel: 'HandleFileSys',
-                            method: 'readFile',
-                            arguments: ['$l.file'],
-                            response: 'fileText',
-                            callback: {
-                                objectModel: 'document',
-                                method: 'getElementById',
-                                arguments: 'editor',
-                                response: 'editor',
-                                callback: {
-                                    declare: {
-                                        'editor.innerHTML': '$l.fileText',
-                                        'editorProps': {
-                                            'data-fileid': '$l.uid',
-                                            'data-filename': '$l.retrivedfH.name',
-                                            'data-fileext': '.txt',
-                                            'data-filetype': 'text/plain'
-                                        }
-                                    },
-                                    objectModel: 'CreateEntity',
-                                    method: 'setProps',
-                                    arguments: ['$l.editor', '$l.editorProps']
-                                }
-                            }
-                        }
-                    }
+            declare: {
+                'IDBSetReqArgs': {
+                    'DBName': 'ActionSpaceDefaultDB',
+                    'storeName': 'fileOrDirHandles',
+                    'key': '$l.uid',
+                    'value': '$l.fH'
                 }
+            },
+            objectModel: 'ActionEngine',
+            method: 'processRequest',
+            arguments: ['$setToIDB', '$l.IDBSetReqArgs'],
+            callback: {
+                declare: {
+                    'IDBGetReqArgs': {
+                        'DBName': 'ActionSpaceDefaultDB',
+                        'storeName': 'fileOrDirHandles',
+                        'key': '$l.uid',
+                    }
+                },
+                objectModel: 'ActionEngine',
+                method: 'processRequest',
+                arguments: ['$getFromIDB', '$l.IDBGetReqArgs'],
+                response: 'retrivedfH',
+                callback: {
+                    declare: {
+                        'reqArgs': {
+                            'fH': '$l.retrivedfH',
+                            'uid': '$l.uid'
+                        }
+                    },
+                    objectModel: 'ActionEngine',
+                    method: 'processRequest',
+                    arguments: ['$openFileInEditor', '$l.reqArgs']
+                }
+                // }
             }
         }
     }
@@ -229,31 +314,39 @@ var exportFile = {
             response: 'respArr',
             callback: {
                 declare: {
-                    'uid': '$l.respArr[0]'
+                    'uid': '$l.respArr[0]',
+                    'IDBSetReqArgs': {
+                        'DBName': 'ActionSpaceDefaultDB',
+                        'storeName': 'fileOrDirHandles',
+                        'key': '$l.uid',
+                        'value': '$l.fH'
+                    }
                 },
-                objectModel: 'IndexedDataBase',
-                method: 'createStore',
-                arguments: ['ActionSpaceDefaultDB', 'fileOrDirHandles'],
-                response: 'storeFunc',
+                objectModel: 'ActionEngine',
+                method: 'processRequest',
+                arguments: ['$setToIDB', '$l.IDBSetReqArgs'],
                 callback: {
-                    objectModel: 'IndexedDataBase',
-                    method: 'set',
-                    arguments: ['$l.uid', '$l.fH', '$l.storeFunc'],
-                    callback: {
-                        objectModel: 'IndexedDataBase',
-                        method: 'get',
-                        arguments: ['$l.uid', '$l.storeFunc'],
-                        response: 'retrivedfH',
-                        callback: {
-                            declare: {
-                                'content': '$l.editor.innerHTML'
-                            },
-                            objectModel: 'HandleFileSys',
-                            method: 'writeFile',
-                            arguments: ['$l.retrivedfH', '$l.content']
+                    declare: {
+                        'IDBGetReqArgs': {
+                            'DBName': 'ActionSpaceDefaultDB',
+                            'storeName': 'fileOrDirHandles',
+                            'key': '$l.uid',
                         }
+                    },
+                    objectModel: 'ActionEngine',
+                    method: 'processRequest',
+                    arguments: ['$getFromIDB', '$l.IDBGetReqArgs'],
+                    response: 'retrivedfH',
+                    callback: {
+                        declare: {
+                            'content': '$l.editor.innerHTML'
+                        },
+                        objectModel: 'HandleFileSys',
+                        method: 'writeFile',
+                        arguments: ['$l.retrivedfH', '$l.content']
                     }
                 }
+
             }
         }
     }
@@ -412,7 +505,6 @@ var getUserInputDir = {
                                             method: 'processRequest',
                                             arguments: ['$getUserInputDir', '$l.reqArgs']
                                         }
-
                                     }
                                 }
                             }

@@ -262,7 +262,6 @@ body{
     background-color: rgb(238, 238, 238);
 }
 .leftSideNav>span>label{
-    background-color: aqua;
     position: absolute;
     display: none;
     left:0;
