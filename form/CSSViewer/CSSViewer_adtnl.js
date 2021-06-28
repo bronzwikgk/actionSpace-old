@@ -234,7 +234,7 @@ window.onmouseover = async function (e) {
         cssbox.remove();
         activeElem.classList.remove('CSSViewerActiveElem');
     }
-    console.log(e)
+    // console.log(e)
     if ((cssbox == null || typeof cssbox === 'undefined') && e.path.includes(document.getElementById('editor'))) {
         updateCSSObj(targetElem, CSSViewer_categoriesProperties);
         targetElem.classList.add('CSSViewerActiveElem');

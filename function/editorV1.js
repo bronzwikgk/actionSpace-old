@@ -1,65 +1,4 @@
-var getColorReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getLinkReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getFblockReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getHeadingReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getHtmlReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getTextReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-var getImageReqFlow = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'clickBtn',
-    response: 'elem',
-    return: "$l.elem"
-}
-
-
-
-//ActionEngine.processRequest(getUserInputFile)
-
-
-class Editor {
+window.Editor = class {
     static async setFormatting(cmdName, showUI = false, value = "") {
 
         if (operate.isUseless(cmdName) || !operate.isString(cmdName) || cmdName === "") {
@@ -117,52 +56,39 @@ class Editor {
         }
     }
 
-    static handleFileSys(reqName) {
+    static handleFileSys(reqName, reqValue) {
         if (operate.isUseless(reqName) || !operate.isString(reqName)) {
-            console.error('Not a valid request', reqName)
+            console.error('Not a valid request', reqName);
+            return;
         }
-        var isFileOpen = "false",
-            hasUnsavedData = "false",
-            fileID = "";
         switch (reqName) {
             case 'new':
-                fileID = ActionEngine.processRequest(getOpenFileID);
-                if (fileID != "0") {
-                    ActionEngine.processRequest([
-                        saveFileToLS,
-                        closeFileInEditor
-                    ])
-                }
-                ActionEngine.processRequest(newFileReqFlow);
+                ActionEngine.processRequest([
+                    saveFileToLS,
+                    closeFileInEditor,
+                    newFileReqFlow
+                ])
                 break;
             case 'open':
-                fileID = ActionEngine.processRequest(getOpenFileID);
-                if (fileID != "0") {
-                    // ActionEngine.processRequest([
-                    //     saveFileToLS,
-                    //     closeFileInEditor
-                    // ])
-                }
-                ActionEngine.processRequest(getUserInputFile);
+                ActionEngine.processRequest([
+                    saveFileToLS,
+                    closeFileInEditor,
+                    getUserInputFile
+                ])
                 break;
-            case 'download':
-                fileID = ActionEngine.processRequest(getOpenFileID);
-                if (fileID != "0") {
-                    // ActionEngine.processRequest([
-                    //     saveFileToLS,
-                    //     closeFileInEditor
-                    // ])
-                }
-                ActionEngine.processRequest(exportFile);
+            case 'openInEditor':
+                break;
+            case 'save':
+                ActionEngine.processRequest([
+                    saveFileToLS
+                ])
                 break;
             case 'export':
                 fileID = ActionEngine.processRequest(getOpenFileID);
-                if (fileID != "0") {
                     // ActionEngine.processRequest([
                     //     saveFileToLS,
                     //     closeFileInEditor
                     // ])
-                }
                 ActionEngine.processRequest(getUserSaveFile);
                 break;
 
@@ -170,49 +96,20 @@ class Editor {
                 break;
         }
     }
-}
+    static async handleDirSystem(reqName) {
+        var dirHandle;
+        switch (reqName) {
+            case 'open':
+                dirHandle = await HandleFileSys.getDirHandle();
+                ActionEngine.processRequest(getUserInputDir, {
+                    'currHandle': dirHandle,
+                    'activeCollDom': document.getElementById('fileSysNavigation'),
+                    'isDone': false
+                });
+                break;
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-var evtClick = {
-    objectModel: 'eventManager',
-    method: 'addListener',
-    arguments: ['$window', 'click', function (event) {
-        //ActionEngine.processRequest('log');
-        //console.log(event);
-        var trueTarget = event.target.hasAttribute('data-action-type') ? event.target : event.target.parentElement,
-         actionType = event.target.getAttribute('data-action-type') || event.target.parentElement.getAttribute('data-action-type'),
-        actionValue = event.target.getAttribute('data-action-value') || event.target.parentElement.getAttribute('data-action-value'),
-        actionTargetElementId = trueTarget.getAttribute('data-action-target-element-id'),
-        actionTargetElement;
-        if (!operate.isUseless(actionTargetElementId)) {
-            if (actionTargetElementId == 'this') {
-                actionTargetElementId = trueTarget.id;
-            }
-            actionTargetElement = document.getElementById(actionTargetElementId);
+            default:
+                break;
         }
-        
-        if (actionType === 'format') {
-            // if (document.queryCommandState(actionValue)) {
-            //     trueTarget.classList.add('active');
-            // }
-            // else{
-            //     if (trueTarget.classList.contains('active')) {
-            //         trueTarget.classList.remove('active')
-            //     }
-            // }
-            Editor.setFormatting(actionValue);
-        }
-        else if (actionType === 'file') {
-            Editor.handleFileSys(actionValue);
-        }
-        else if (actionType === 'toggleClass') {
-            actionTargetElement.classList.toggle(actionValue);
-        }
-    }]
-}
-
-window.onload = function () {
-    ActionEngine.processRequest(newFileReqFlow);
-    ActionEngine.processRequest(evtClick);
+    }
 }

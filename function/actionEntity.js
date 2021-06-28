@@ -1,6 +1,6 @@
 var counter = 0;
 
-class Entity {
+window.Entity = class {
     
     static get(key,parent) {
         var keys = Entity.stringToPath(key);

@@ -6,13 +6,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="./beauty/new.css">
-  <link rel="stylesheet" href="./beauty/reset.css">
+  <link rel="stylesheet" href="./beauty/click-and-draw/style.css">
+  <link rel="stylesheet" href="./beauty/css-viewer/new.css">
+  <link rel="stylesheet" href="./beauty/main/reset.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
-<body>
+<body class="unselectable">
   <div id="root">Hover Me</div>
+  <canvas id="drawlines"></canvas>
+      <div class="fc" data-tag="editable"></div>
   <!-- <button id="clickBtn">click me</button> -->
 
 
@@ -27,13 +30,22 @@
   <script src="./function/actionEngine.js"></script>
   <script src="./function/fileHandle.js"></script>
   <!-- <script src="./form/sampleDataModel.js"></script> -->
+
+  <!-- main editor -->
   <script src="./form/editorUI.js"></script>
   <script src="./form/editorReqModels.js"></script>
   <script src="./function/editorV1.js"></script>
+  <script src="./form/eventReqModels.js"></script>
 
   <!-- Css Viewer -->
   <script src="./form/CSSViewer/CSSViewer_ui.js"></script>
   <script src="./form/CSSViewer/CSSViewer_adtnl.js"></script>
+
+  <!-- Click and Draw -->
+  <!-- <script src="./form/click-and-draw/sorted-set.js"></script>
+  <script src="./form/click-and-draw/cad.js"></script> -->
+  
+
 </body>
 
 </html>

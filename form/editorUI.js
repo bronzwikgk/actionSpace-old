@@ -1,7 +1,7 @@
 var sample = {
+    "id": "<uid>",
     "name": "tagName",
     "attributes": {
-        "id": "<uid>",
         "class": "classNames", //separated by space or comma
         "style": "CSSStyle", //in case we need inline style
         // any other attribute
@@ -16,9 +16,9 @@ var sample = {
     }
 }
 var sampleModel = {
+    "id": "<uid>",
     "name": "div",
     "attributes": {
-        "id": "<uid>",
         "class": "anyclass", //separated by space or comma
         // any other attribute
     },
@@ -41,6 +41,8 @@ var sampleModel = {
         }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* 
 
@@ -152,11 +154,7 @@ var sampleModel = {
 
 */
 
-// let result = {};
-// CreateEntity.create(document.getElementById('root'), result)
-// console.log(JSON.stringify(result));
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var titleBar = {
     "name": "div",
@@ -180,25 +178,33 @@ var titleBar = {
             }
         },
         "element##1": {
-            "name": "input",
+            "name": "span",
             "attributes": {
-                "type": "text",
-                "id": "fileName",
-                "class": "dName",
-                "value": "Document Name"
-            },
-            "items": {}
-        },
-        "element##2": {
-            "name": "label",
-            "attributes": {
-                "class": "dLabel"
+                "class": "docIdentifier"
             },
             "items": {
-                "text##0": "anyTag"
+                "element##0": {
+                    "name": "input",
+                    "attributes": {
+                        "type": "text",
+                        "id": "fileName",
+                        "class": "dName",
+                        "value": "Document Name"
+                    },
+                    "items": {}
+                },
+                "element##1": {
+                    "name": "label",
+                    "attributes": {
+                        "class": "dLabel"
+                    },
+                    "items": {
+                        "text##0": "anyTag"
+                    }
+                }
             }
         },
-        "element##3": {
+        "element##2": {
             "name": "span",
             "attributes": {
                 "class": "sharedLabels"
@@ -260,7 +266,7 @@ var titleBar = {
                 }
             }
         },
-        "element##4": {
+        "element##3": {
             "name": "span",
             "attributes": {
                 "class": "searchBar"
@@ -283,7 +289,7 @@ var titleBar = {
                 }
             }
         },
-        "element##5": {
+        "element##4": {
             "name": "span",
             "attributes": {
                 "class": "notification"
@@ -298,7 +304,7 @@ var titleBar = {
                 }
             }
         },
-        "element##6": {
+        "element##5": {
             "name": "span",
             "attributes": {
                 "class": "userIcon dropdown"
@@ -788,17 +794,11 @@ var actionBar = {
                                 "class": "far fa-star"
                             },
                             "items": {}
-                        }
-                    }
-                },
-                "element##1": {
-                    "name": "span",
-                    "attributes": {},
-                    "items": {
-                        "element##0": {
+                        },
+                        "element##1": {
                             "name": "i",
                             "attributes": {
-                                "class": "fas fa-download"
+                                "class": "fas fa-save"
                             },
                             "items": {}
                         }
@@ -897,7 +897,9 @@ var leftSideNav = {
         "element##3": {
             "name": "span",
             "attributes": {
-                "id": "newColl"
+                "id": "newColl",
+                "data-action-type": "dir",
+                "data-action-value": "open"
             },
             "items": {
                 "element##0": {
@@ -917,30 +919,6 @@ var leftSideNav = {
             }
         },
         "element##4": {
-            "name": "span",
-            "attributes": {
-                "id": "saveDoc",
-                "data-action-type": "file",
-                "data-action-value": "save"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-save"
-                    },
-                    "items": {}
-                },
-                "element##1": {
-                    "name": "label",
-                    "attributes": {},
-                    "items": {
-                        "text##0": "Save Document"
-                    }
-                }
-            }
-        },
-        "element##5": {
             "name": "span",
             "attributes": {
                 "id": "exportDoc",
@@ -967,11 +945,23 @@ var leftSideNav = {
     }
 }
 
-var navigatorTemp = {
+var navigatorFileTemp = {
+    "name": "span",
+    "attributes": {
+        "class": "item file activeFileTemp",
+        "data-action-type": "",
+        "data-action-value": ""
+    },
+    "items": {
+        "text##0": " Lorem ipsum ..."
+    }
+}
+
+var navigatorCollTemp = {
     "name": "span",
     "attributes": {
         "id": "collection_uid",
-        "class": "item collection"
+        "class": "item collection activeCollTemp"
     },
     "items": {
         "element##0": {
@@ -990,23 +980,13 @@ var navigatorTemp = {
                     },
                     "items": {}
                 },
-                "text##1": " collection"
-            }
-        },
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "class": "item file"
-            },
-            "items": {
-                "text##0": " Lorem ipsum ..."
+                "text##1": "collection Template"
             }
         }
     }
 }
 
 /* 
-
 
 <div class="rightSide" data-__uniqueid="3">
         <div class="navigator" data-__uniqueid="2">
@@ -1024,14 +1004,6 @@ var navigatorTemp = {
             
         </div>
     </div>
-"element##0": {
-                                    "name": "i",
-                                    "attributes": {
-                                        "class": "arrow gt fas fa-angle-right"
-                                    },
-                                    "items": {}
-                                },
-                                "text##1": "Root collection"
 
 */
 
@@ -1050,39 +1022,10 @@ var centerArea = {
                 "element##0": {
                     "name": "div",
                     "attributes": {
+                        "id": "fileSysNavigation",
                         "class": "navigator"
                     },
-                    "items": {
-                        "element##0": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "rootCollection",
-                                "class": "collection active"
-                            },
-                            "items": {
-                                "element##0": {
-                                    "name": "label",
-                                    "attributes": {
-                                        "class": "collectionLabel root",
-                                        "data-action-type": "toggleClass",
-                                        "data-action-value": "active",
-                                        "data-action-target-element-id": "rootCollection"
-                                    },
-                                    "items": {
-                                        "element##0": {
-                                            "name": "i",
-                                            "attributes": {
-                                                "class": "arrow gt fas fa-angle-right"
-                                            },
-                                            "items": {}
-                                        },
-                                        "text##1": " Root collection"
-                                    }
-                                },
-                                "element##1": navigatorTemp
-                            },
-                        }
-                    }
+                    "items": {}
                 }
             }
         },
@@ -1098,9 +1041,9 @@ var centerArea = {
                         "id": "editor",
                         "class": "editor",
                         "contenteditable": "true",
-                        "data-fileid": "",
+                        "data-open-fileid": "",
                         "data-filename": "",
-                        "data-has-unsaved-data": "false"
+                        "data-is-unsaved": "false"
                     },
                     "items": {}
                 }
@@ -1111,19 +1054,22 @@ var centerArea = {
 
 
 
-var editorUI_main = [
+var main = [
     topNavBar,
     leftSideNav,
     centerArea
 ];
 
 var processUI = {
-    objectModel: 'CreateEntity',
-    method: 'create',
-    arguments: [sampleModel, document.getElementById('root')]
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'root',
+    response: 'root',
+    callback: {
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$main', '$l.root']
+    }
 }
 
-CreateEntity.create(editorUI_main, document.getElementById('root'));
-
-//ActionEngine.processRequest(processUI);
-console.log('hello');
+ActionEngine.processRequest(processUI)

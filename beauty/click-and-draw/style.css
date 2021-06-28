@@ -1,0 +1,47 @@
+*{
+	overflow:visible;
+}
+body{
+	margin:0;
+	overflow:auto;
+}
+#drawlines{
+	position:absolute;
+	top:10vh;
+	left:10vw;
+	z-index:-1;
+
+}
+.cad-element, .cad{
+	position: absolute;
+	border:1px solid #000;
+	overflow:visible;
+	background:#ff0;
+}
+.fc{
+	top:10vh;
+	left:10vw;
+	width:100vw;
+	height:100vh;
+	box-sizing: border-box;
+	background: transparent;
+}
+.ghost{
+	opacity:0.5;
+	z-index:10000;
+}
+.unselectable{
+	user-select:none;
+	-moz-user-select:none;
+	-khtml-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+}
+.cad-menu{
+	position:absolute;
+	top:0;
+	left:0;
+}
+.snapped-to{
+	background:blue;
+}
