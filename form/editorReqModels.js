@@ -112,6 +112,7 @@ ActionEngine.processRequest('openFileInEditor', {
 })
 */
 var openFileInEditor = {
+    condition: '$HandleFileSys.verifyPermission(l.fH, true)',
     objectModel: 'HandleFileSys',
     method: 'getFile',
     arguments: ['$l.fH'],
