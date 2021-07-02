@@ -100,7 +100,7 @@ var CSSViewer_categoriesTitle = {
 var addCSSViewerBox = {
     objectModel: 'CreateEntity',
     method: 'create',
-    arguments: [CSSViewer_ui_main, '$document.body'],
+    arguments: ['$CSSViewer_ui_main', '$document.body'],
     callback: {
         declare: {
             'x': -1,
@@ -135,7 +135,7 @@ var addCSSViewerBox = {
                     },
                     objectModel: 'CreateEntity',
                     method: 'create',
-                    arguments: [CSSViewerTabTemp, '$l.tabContainer'],
+                    arguments: ['$CSSViewerTabTemp', '$l.tabContainer'],
                     loop: '$l.m',
                     callback: {
                         objectModel: 'document',
@@ -173,7 +173,7 @@ var addCSSViewerBox = {
                                     callback: {
                                         objectModel: 'CreateEntity',
                                         method: 'create',
-                                        arguments: [CSSViewerPropTemp, '$l.lastTabContent'],
+                                        arguments: ['$CSSViewerPropTemp', '$l.lastTabContent'],
                                         loop: '$l.n',
                                         callback: {
                                             declare: {
@@ -181,19 +181,15 @@ var addCSSViewerBox = {
                                             },
                                             callback: {
                                                 declare: {
-                                                    'lastPropElem': '$l.lastTabContent.children[l.y]',
+                                                    // 'lastPropElem': '$l.lastTabContent.children[l.y]',
                                                     'lastPropNameElem': '$l.lastTabContent.children[l.y].children[0]',
+                                                    'lastPropNameElem.innerHTML': '$l.propertiesNames[l.y]',
                                                     'lastPropValueElem': '$l.lastTabContent.children[l.y].children[1]',
-                                                    'propElemValue': {
-                                                        'value': '$l.propertiesValues[l.y]'
-                                                    }
+                                                    'lastPropValueElem.value': '$l.propertiesValues[l.y]'
                                                 },
-                                                objectModel: 'CreateEntity',
-                                                method: 'setProps',
-                                                arguments: ['$l.lastPropValueElem', '$l.propElemValue'],
                                                 callback: {
                                                     declare: {
-                                                        'lastPropNameElem.innerHTML': '$l.propertiesNames[l.y]'
+                                                        
                                                     }
                                                 }
                                             }
@@ -223,61 +219,4 @@ var updateCSSObj = function (elem, obj) {
         }
     }
     return obj;
-}
-
-window.onmouseover = async function (e) {
-    var targetElem = e.target,
-        cssbox = document.getElementById('CSSViewerBox'),
-        activeElem = document.getElementsByClassName('CSSViewerActiveElem')[0];
-    if (cssbox && !e.path.includes(cssbox)) {
-        console.log('removed');
-        cssbox.remove();
-        activeElem.classList.remove('CSSViewerActiveElem');
-    }
-    // console.log(e)
-    if ((cssbox == null || typeof cssbox === 'undefined') && e.path.includes(document.getElementById('editor'))) {
-        updateCSSObj(targetElem, CSSViewer_categoriesProperties);
-        targetElem.classList.add('CSSViewerActiveElem');
-        await ActionEngine.processRequest(addCSSViewerBox);
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        // var top = e.offsetY, left = e.offsetX, width = e.target.scrollWidth, height = e.target.scrollHeight;
-        // if (top + height > window.innerHeight/2) {
-            // console.log(top, height,  window.innerHeight, cssbox.scrollHeight, (top - cssbox.scrollHeight) + "px")
-            // cssbox.style.position = (top - cssbox.scrollHeight) + "px";
-        // }
-        // else{
-        //     cssbox.style.position = (top + height) + "px";
-        // }
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        document.querySelectorAll("#CSSViewerBox>#tabContainer>.tab>.tabContent>.property>input").forEach(function (item) {
-            item.onchange = function (e) {
-                let propName = this.previousElementSibling.innerText.trim(),
-                    value = this.value.trim();
-                document.querySelector(".CSSViewerActiveElem").style[propName] = value;
-            }
-        })
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        document.querySelectorAll(".accordion>.tab>.tabTitle>.pointer").forEach(function (item) {
-            item.onclick = function (e) {
-                let targetTab = this.parentElement.parentElement,
-                    activeTab = document.querySelector('.accordion>.tab.active');
-                if (targetTab.classList.contains('active')) {
-                    targetTab.classList.remove('active');
-                    targetTab.style.height = "30px";
-                } else {
-                    if (activeTab) {
-                        activeTab.classList.remove("active");
-                        activeTab.style.height = "30px";
-                    };
-                    targetTab.classList.add("active");
-                    targetTab.style.height = targetTab.scrollHeight + "px"
-                }
-
-            };
-        })
-    }
 }

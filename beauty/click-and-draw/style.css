@@ -7,22 +7,23 @@ body{
 }
 #drawlines{
 	position:absolute;
-	top:10vh;
-	left:10vw;
+	top:0;
+	left:0;
 	z-index:-1;
 
 }
 .cad-element, .cad{
 	position: absolute;
+	box-sizing: border-box;
 	border:1px solid #000;
 	overflow:visible;
 	background:#ff0;
 }
 .fc{
-	top:10vh;
-	left:10vw;
-	width:100vw;
-	height:100vh;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
 	box-sizing: border-box;
 	background: transparent;
 }

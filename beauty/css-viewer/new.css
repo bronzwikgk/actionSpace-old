@@ -2,13 +2,14 @@
 	background-color: rgb(231, 231, 231);
 	position: absolute;
 	box-sizing: border-box;
-	top: 30%;
-	left: 30%;
-	width: 35%;
+	top: 10%;
+	left: 0;
+	width: 350px;
 	height: 50%;
 	border-radius: 5px;
 	box-shadow: 3px 3px 15px rgba(189, 189, 189, 0.8);
 	overflow: hidden;
+	z-index: 99;
 }
 
 .CSSViewer>.elemIdentifier {
@@ -110,8 +111,10 @@
 }
 
 .propName{
+	background-color: chocolate;
 	position: relative;
 	left: 0;
+	width: 100px;
 	font-size: 16px;
 	padding: 4px;
 }
@@ -135,12 +138,7 @@
 
 
 /* //////////////////////////////////////////////////////////////////////////////////////////////////// */
+
 .CSSViewerActiveElem{
 	border: 2px dashed rgba(159, 255, 49, 0.7);
-}
-.fun{
-	display: none;
-}
-.CSSViewerActiveElem>.fun{
-	display: initial;
 }

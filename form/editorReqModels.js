@@ -1,28 +1,8 @@
-var createElem = {
-    objectModel: 'document',
-    method: 'createElement',
-    arguments: 'div',
-    response: 'elem',
-    callback: {
-        objectModel: 'document.body',
-        method: 'appendChild',
-        arguments: '$l.elem',
-        callback: {
-            declare: {
-                'elem': {
-                    'innerHTML': 'Helloworld'
-                }
-            }
-        }
-    }
-};
-
 var log = {
     objectModel: 'console',
     method: 'log',
     arguments: 'Hello Handsome!'
 };
-
 
 var getFileName = {
     objectModel: 'document',
@@ -129,7 +109,7 @@ var openFileInEditor = {
             response: 'editor',
             callback: {
                 declare: {
-                    'editor.innerText': '$l.fileText',
+                    'editor.innerHTML': '$l.fileText', // editor[l.editor.setContent]
                     'fileName': '$l.fH.name.slice(0,l.fH.name.lastIndexOf("."))',
                     'fileExt': '$l.fH.name.slice(l.fH.name.lastIndexOf("."))',
                     'editorProps': {
@@ -149,7 +129,7 @@ var openFileInEditor = {
                     response: 'docNameElem',
                     callback: {
                         declare: {
-                            'docNameElem.value': '$l.fileName'
+                            'docNameElem.value': '$l.fileName + l.fileExt'
                         }
                     }
                 }
@@ -289,7 +269,7 @@ var getUserInputFile = {
 var exportFile = {
     objectModel: 'document',
     method: 'getElementById',
-    arguments: 'editor',
+    arguments: 'workSpace',
     response: 'editor',
     callback: {
         declare: {
@@ -515,5 +495,4 @@ var getUserInputDir = {
             ]
         }
     }
-
 }

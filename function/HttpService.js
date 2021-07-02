@@ -1,7 +1,7 @@
 const boundary = '-------314159265358979323846';
 const delimiter = "\r\n--" + boundary + "\r\n";
 const close_delim = "\r\n--" + boundary + "--";
-class HttpService{    
+window.HttpService = class {    
     static urlBuilder(url,params){
         var service = url +"?" +HttpService.buildEncodedUri(params);
         return service;

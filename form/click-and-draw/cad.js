@@ -37,6 +37,7 @@ class MultisetUtil{
       }
    }
    getNearest(v){ // left
+      // console.log(v);
       var it = this.pairset.findIterator({f: v, s: 0});
       
       if(it.value() == null){
@@ -57,6 +58,7 @@ class MultisetUtil{
       return this.pairset.map(function(x){ return x.f;});
    }
 }
+
 var Multiset = function () {return new MultisetUtil();}
 
 var elemById = {objectModel:'document', method:'getElementById'};
@@ -146,6 +148,7 @@ var CADIhtml = `
             <option value = "draggable">Draggable</option>
          </select>
       `;
+var CADLIMIT  = 1e7;
 var CAD = { // constructor(elem:HTMLObject, proximityQ:number)
    declare:{
 
@@ -211,17 +214,17 @@ var CAD = { // constructor(elem:HTMLObject, proximityQ:number)
          method:'Multiset',
          response:'linesY'
       },
-      // {
-      //    declare:{
-      //          args4:{
-      //             elem : '$l.obj.root',
-      //             obj : '$l.obj'
-      //          }
-      //       }
-      //    objectModel:'engine',
-      //    method:'processRequest',
-      //    arguments:['$l.obj.addLines', '$l.args4', true]
-      // },
+      {
+         declare:{
+            args4:{
+               elem : '$l.obj.root',
+               obj : '$l.obj'
+            }
+         },
+         objectModel:'engine',
+         method:'processRequest',
+         arguments:['$l.obj.addLines', '$l.args4', true]
+      },
       {
          declare:{
             args:{
@@ -452,9 +455,9 @@ var CADCreated = [ //(event, obj)
             obj : '$l.obj'
          }
       },
-      // objectModel:'engine',
-      // method:'processRequest',
-      // arguments:['$l.obj.addLines', '$l.args4', true]
+      objectModel:'engine',
+      method:'processRequest',
+      arguments:['$l.obj.addLines', '$l.args4', true]
    },
    {
       declare:{
@@ -497,13 +500,10 @@ var CADDrag = {
    callback:[ //obj
       {
          declare:{
-            'obj.elem.style.zIndex':1000000,
             'obj.subtreeElems':[],
             'obj.subtreeRects':[]
          },
-         // objectModel:'engine',
-         // method:'processRequest',
-         // arguments:['$l.obj.removeLines', '$l.args6', true]
+         
       },
       {
          declare:{
@@ -533,6 +533,26 @@ var CADDrag = {
             //    method:'log',
             //    arguments:['$l.obj.subtreeElems']
             // }
+         }
+      },
+      {
+         declare:{
+            i:-1
+         },
+         callback:{
+            loop:'$l.obj.subtreeElems.length',
+            declare:{
+               i:'$l.i+1',
+               melem:'$l.obj.subtreeElems[l.i]',
+               'melem.style.zIndex':'$CADLIMIT',
+               args:{
+                  elem:'$l.melem',
+                  obj:'$l.obj'
+               }
+            },
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['$l.obj.removeLines', '$l.args']
          }
       },
       {
@@ -600,13 +620,318 @@ var CADDragging = { //(event, obj)
                pos:'$l.pos',
                obj:'$l.obj'
             }
-         }
-         // objectModel:'engine',
-         // method:'processRequest',
-         // arguments:['$l.obj.snap', '$l.args77']
+         },
+         objectModel:'engine',
+         method:'processRequest',
+         arguments:['$l.obj.snap', '$l.args77']
       }
    ]
 }
+var CADSnap = [//(pos, obj)
+   {
+      condition:'$l.obj.snapMode == "elem-edges"',
+      declare:{
+         args:{
+            elem: '$l.obj.elem',
+            obj:'$l.obj'
+         }
+      },
+      objectModel:'engine',
+      method:'processRequest',
+      arguments: ['$l.obj.snapToElemEdges', '$l.args']
+   },
+   {
+      condition:'$l.obj.snapMode == "grid-lines"',
+      declare:{
+         args:{
+            elem: '$l.obj.elem',
+            obj:'$l.obj'
+         }
+      },
+      objectModel:'engine',
+      method:'processRequest',
+      arguments: ['$l.obj.snapToGridLines', '$l.args']
+   }
+];
+var CADSnapToElemEdges = [ // (elem, obj)
+   {
+      declare:{
+         args:{
+            elem:'$l.elem'
+         }
+      },
+      objectModel:'engine',
+      method:'processRequest',
+      arguments:['$l.obj.getLines', '$l.args'],
+      response:'eLines',
+   },
+   {
+      declare:{
+         distance:[],
+         nearest:[],
+         i:-1
+      },
+      callback:{
+         loop:3,
+         declare:{
+            i:'$l.i+1'
+         },
+         callback:[
+            {
+               objectModel:'$l.obj.linesX',
+               method:'getNearest',
+               arguments:'$l.eLines[l.i]',
+               response:'tmpVar',
+               callback:{
+                  objectModel: 'Entity',
+                  method:'setObjKeyVal',
+                  arguments:['$l.nearest', '$l.i', '$l.tmpVar']
+               }
+            },
+            {
+               objectModel:'Math',
+               method:'abs',
+               arguments:'$l.eLines[l.i] - l.nearest[l.i]',
+               response:'tmpVar',
+               callback:{
+                  objectModel: 'Entity',
+                  method:'setObjKeyVal',
+                  arguments:['$l.distance', '$l.i', '$l.tmpVar']
+               }
+            },
+         ]
+      }
+   },
+   {
+      declare:{
+         i:2
+      },
+      callback:{
+         loop:3,
+         declare:{
+            i:'$l.i+1'
+         },
+         callback:[
+            {
+               objectModel:'$l.obj.linesY',
+               method:'getNearest',
+               arguments:'$l.eLines[l.i]',
+               response:'tmpVar',
+               callback:{
+                  objectModel: 'Entity',
+                  method:'setObjKeyVal',
+                  arguments:['$l.nearest', '$l.i', '$l.tmpVar']
+               }
+            },
+            {
+               objectModel:'Math',
+               method:'abs',
+               arguments:'$l.eLines[l.i] - l.nearest[l.i]',
+               response:'tmpVar',
+               callback:{
+                  objectModel: 'Entity',
+                  method:'setObjKeyVal',
+                  arguments:['$l.distance', '$l.i', '$l.tmpVar']
+               }
+            },
+         ]
+      }
+   },
+   {
+      declare:{
+         mindistance:'$CADLIMIT',
+         minline: 0,
+         i:-1,
+         delta:{}
+      },
+
+      callback:[
+         {
+            loop:3,
+            declare:{
+               i : '$l.i+1',
+               
+            },
+            callback:{
+               condition:'$l.distance[l.i] < l.mindistance',
+               declare:{
+                  mindistance:'$l.distance[l.i]',
+                  minline:'$l.i'
+               },
+               objectModel:'console',
+               method:'log',
+               arguments:['True', '$l.distance[l.i]', '$l.mindistance']
+            }
+         },
+         {
+            objectModel:'console',
+            method:'log',
+            arguments:['minmax', '$l.mindistance', '$l.obj.pq']
+         },
+         {
+            callback:{
+               condition:'$l.mindistance <= l.obj.pq',
+               callback:[
+                  {
+                     condition:'$l.minline==0',
+                     declare:{
+                        'delta.y' : '$l.nearest[l.minline]',
+                     }
+                  },
+                  {
+                     condition:'$l.minline==1',
+                     declare:{
+                        'delta.y' : '$l.nearest[l.minline] - l.obj.subtreeRects[0].h',
+                     }
+                  },
+                  {
+                     condition:'$l.minline==2',
+                     declare:{
+                        'delta.y' : '$l.nearest[l.minline] - l.obj.subtreeRects[0].h/2',
+                     }
+                  },
+                  {
+
+                     objectModel:'console',
+                     method:'log',
+                     arguments:['op', '$l.minline']
+                  }
+               ]
+            }
+         }
+      ]
+   },
+   {
+      declare:{
+         mindistance:'$CADLIMIT',
+         minline: 3,
+         i:2
+      },
+      callback:[
+         {
+            loop:3,
+            declare:{
+               i : '$l.i+1',
+               
+            },
+            callback:{
+               condition:'$l.distance[l.i] < l.mindistance',
+               declare:{
+                  mindistance:'$l.distance[l.i]',
+                  minline:'$l.i'
+               },
+               objectModel:'console',
+               method:'log',
+               arguments:['True', '$l.distance[l.i]', '$l.mindistance']
+            }
+         },
+         {
+            objectModel:'console',
+            method:'log',
+            arguments:['minmax', '$l.mindistance', '$l.minline']
+         },
+         {
+            callback:{
+               condition:'$l.mindistance <= l.obj.pq',
+               callback:[
+                  {
+                     condition:'$l.minline==3',
+                     declare:{
+                        'delta.x' : '$l.nearest[l.minline]',
+                     }
+                  },
+                  {
+                     condition:'$l.minline==4',
+                     declare:{
+                        'delta.x' : '$l.nearest[l.minline] - l.obj.subtreeRects[0].w',
+                     }
+                  },
+                  {
+                     condition:'$l.minline==5',
+                     declare:{
+                        'delta.x' : '$l.nearest[l.minline] - l.obj.subtreeRects[0].w/2',
+                     }
+                  },
+                  {
+
+                     objectModel:'console',
+                     method:'log',
+                     arguments:['op', '$l.minline']
+                  }
+               ]
+            }
+         }
+      ]
+   },
+   {
+         objectModel:'console',
+         method:'log',
+         arguments:['Wanna see this working', '$l.delta']
+   },
+   {
+      objectModel:'$l.obj.elem',
+      method:'getBoundingClientRect',
+      response:'rect',
+      callback:{
+         declare:{
+            'delta.y':'$l.delta.y - (l.rect.top + window.pageYOffset)',
+            'delta.x':'$l.delta.x - (l.rect.left + window.pageXOffset)'
+         }
+      }
+   },
+   {
+      declare:{
+         i:-1
+      },
+      callback:{
+         loop:'$l.obj.subtreeElems.length',
+         declare:{
+            i : '$l.i + 1',
+            sy: '$l.obj.subtreeElems[l.i].style.top',
+            sx: '$l.obj.subtreeElems[l.i].style.left'
+         },
+         callback:[
+            {
+               objectModel:'$l.sy',
+               method:'substr',
+               arguments:[0, '$l.sy.length-2'],
+               response:'sy',
+               callback:{
+                  objectModel:'window',
+                  method:'parseFloat',
+                  arguments:'$l.sy',
+                  response:'sy'
+               }
+            },
+            {
+               objectModel:'$l.sx',
+               method:'substr',
+               arguments:[0, '$l.sx.length-2'],
+               response:'sx',
+               callback:{
+                  objectModel:'window',
+                  method:'parseFloat',
+                  arguments:'$l.sx',
+                  response:'sx'
+               }
+            },
+            {
+               declare:{
+                  melem:'$l.obj.subtreeElems[l.i]',
+                  'melem.style.top':'$(l.sy + l.delta.y) + "px"',
+                  'melem.style.left':'$(l.sx + l.delta.x) + "px"'
+               },
+               callback:{
+                  objectModel:'console',
+                  method:'log',
+                  arguments:['HERER~! ', '$l.sx', '$l.sy', '$l.delta.x', '$l.delta.y']
+               }
+            }
+         ]
+      },
+   }
+];
+
 var CADDragged = {//(event, obj)
    callback:[
       {
@@ -614,11 +939,11 @@ var CADDragged = {//(event, obj)
          method:"getBoundingClientRect",
          response:'recta'
       },
-      {
-         objectModel:'$l.obj.root',
-         method:"getBoundingClientRect",
-         response:'roct'
-      },
+      // {
+      //    objectModel:'$l.obj.root',
+      //    method:"getBoundingClientRect",
+      //    response:'roct'
+      // },
       {
          declare:{
             'obj.elem.style.visibility':'hidden'
@@ -684,11 +1009,11 @@ var CADDragged = {//(event, obj)
                         arguments:["CADAsNodes" ,'$l.CADAsNodes', "with", "$l.nodething"]
                      },
                   },
-                  // {
-                  //    objectModel:'engine',
-                  //    method:'processRequest',
-                  //    arguments:['$l.obj.addLines', '$l.args91', true]
-                  // },
+                  {
+                     objectModel:'engine',
+                     method:'processRequest',
+                     arguments:['$l.obj.addLines', '$l.args91', true]
+                  },
                   {
                      declare:{
                         args98:{
@@ -712,6 +1037,92 @@ var CADDragged = {//(event, obj)
       }
    ]
 };
+var CADGetLines = { // (elem)
+   objectModel:'$l.elem',
+   method:'getBoundingClientRect',
+   response:'rect',
+   callback:{
+      declare:{
+         ret:[
+            '$l.rect.top + window.pageYOffset',
+            '$l.rect.top + window.pageYOffset + l.rect.height',
+            '$l.rect.top + window.pageYOffset + l.rect.height/2',
+            '$l.rect.left + window.pageXOffset',
+            '$l.rect.left + window.pageXOffset + l.rect.width',
+            '$l.rect.left + window.pageXOffset + l.rect.width/2'
+         ]
+      }
+   },
+   return:'$l.ret'
+}
+var CADAddLines = { // (elem)
+   objectModel:'$l.elem',
+   method:'getBoundingClientRect',
+   response:'rect',
+   callback:{
+      declare:{
+         ret:[
+            '$l.rect.top + window.pageYOffset',
+            '$l.rect.top + window.pageYOffset + l.rect.height',
+            '$l.rect.top + window.pageYOffset + l.rect.height/2',
+            '$l.rect.left + window.pageXOffset',
+            '$l.rect.left + window.pageXOffset + l.rect.width',
+            '$l.rect.left + window.pageXOffset + l.rect.width/2'
+         ],
+         i:-1,
+      },
+      callback:[
+         {
+            loop:3,
+            declare:{i:'$l.i+1'},
+            objectModel:'$l.obj.linesX',
+            method:'insert',
+            arguments:['$l.ret[l.i]']
+         },
+         {
+            loop:3,
+            declare:{i:'$l.i+1'},
+            objectModel:'$l.obj.linesY',
+            method:'insert',
+            arguments:['$l.ret[l.i]']
+         }
+      ]
+   }
+}
+var CADRemoveLines = { // (elem)
+   objectModel:'$l.elem',
+   method:'getBoundingClientRect',
+   response:'rect',
+   callback:{
+      declare:{
+         ret:[
+            '$l.rect.top + window.pageYOffset',
+            '$l.rect.top + window.pageYOffset + l.rect.height',
+            '$l.rect.top + window.pageYOffset + l.rect.height/2',
+            '$l.rect.left + window.pageXOffset',
+            '$l.rect.left + window.pageXOffset + l.rect.width',
+            '$l.rect.left + window.pageXOffset + l.rect.width/2'
+         ],
+         i:-1,
+      },
+      callback:[
+         {
+            loop:3,
+            declare:{i:'$l.i+1'},
+            objectModel:'$l.obj.linesX',
+            method:'remove',
+            arguments:['$l.ret[l.i]']
+         },
+         {
+            loop:3,
+            declare:{i:'$l.i+1'},
+            objectModel:'$l.obj.linesY',
+            method:'remove',
+            arguments:['$l.ret[l.i]']
+         }
+      ]
+   }
+}
 var CADElemsinTree = { //(nodeId, response, rect, obj)
    extends:'elemById',
    arguments:['$"cad-"+l.nodeId'],
@@ -776,13 +1187,15 @@ var CADElemsinTree = { //(nodeId, response, rect, obj)
          // callback:{
          //    objectModel:'console',
          //    method:'log',
-         //    arguments:['$l.response']
+         //    arguments:['$l.rect']
          // }
       }
    ]
 }
 
 doThisOnce();
+
+
 
 function addClassListener(event, selector, doit){
    document.addEventListener(event, function(e){

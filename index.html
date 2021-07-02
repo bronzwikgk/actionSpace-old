@@ -6,16 +6,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="./beauty/click-and-draw/style.css">
+  <!-- <link rel="stylesheet" href="./beauty/login-signup/login_style.css"> -->
+  <link rel="stylesheet" href="./beauty/loader.css">
+  <link rel="stylesheet" href="./beauty/click-and-draw/style.css"> 
   <link rel="stylesheet" href="./beauty/css-viewer/new.css">
   <link rel="stylesheet" href="./beauty/main/reset.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
-<body class="unselectable">
-  <div id="root">Hover Me</div>
-  <canvas id="drawlines"></canvas>
-      <div class="fc" data-tag="editable"></div>
+<body>
+
+  <!-- Loader Animation -->
+  <div id="loaderPage" class="container loader">
+    <div class="box">
+      <h1>Loading</h1>
+  </div>
+  </div>
+
+
+  <div id="root"></div>
+  <!-- <canvas id="drawlines"></canvas>
+  <div class="fc" data-tag="editable"></div> -->
   <!-- <button id="clickBtn">click me</button> -->
 
 
@@ -29,6 +40,8 @@
   <script src="./function/actionEntity.js"></script>
   <script src="./function/actionEngine.js"></script>
   <script src="./function/fileHandle.js"></script>
+  <script src="./form/spa.js"></script>
+  <script src="./form/generalReqModels.js"></script>
   <!-- <script src="./form/sampleDataModel.js"></script> -->
 
   <!-- main editor -->
@@ -41,10 +54,14 @@
   <script src="./form/CSSViewer/CSSViewer_ui.js"></script>
   <script src="./form/CSSViewer/CSSViewer_adtnl.js"></script>
 
-  <!-- Click and Draw -->
-  <!-- <script src="./form/click-and-draw/sorted-set.js"></script>
-  <script src="./form/click-and-draw/cad.js"></script> -->
-  
+  <!-- Click and Draw & Drag and Drop -->
+  <script src="./form/click-and-draw/sorted-set.js"></script>
+  <script src="./form/click-and-draw/cad.js"></script>
+
+  <!-- Login Page -->
+  <script src="./form/login_signup/login_ui.js"></script>
+  <script src="./form/login_signup/login_addtnl.js"></script>
+
 
 </body>
 

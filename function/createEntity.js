@@ -21,8 +21,7 @@ window.CreateEntity = class {
                 let canTable = input.every(item => Array.isArray(item));
                 if (canTable) {
                     this.append(output, this.parse2D(input));
-                }
-                else{
+                } else {
                     for (let i = 0; i < input.length; i++) {
                         var element = input[i];
                         if (operate.isObject(element)) {
@@ -32,12 +31,12 @@ window.CreateEntity = class {
                         }
                     }
                 }
-            } else if(operate.isObject(output)){
-                for(let i = 0; i<input.length; i++){
+            } else if (operate.isObject(output)) {
+                for (let i = 0; i < input.length; i++) {
                     let value = input[i];
                     output[`${i}`] = value;
                 }
-            }else if(Array.isArray(output)) {
+            } else if (Array.isArray(output)) {
                 output.push(this.clone(input));
             }
         } else if (operate.isObject(input)) {
@@ -98,7 +97,7 @@ window.CreateEntity = class {
         }
     }
 
-    static getProps(input, props){
+    static getProps(input, props) {
         var result = [];
         for (let i = 0; i < props.length; i++) {
             var key = props[i];
@@ -107,7 +106,7 @@ window.CreateEntity = class {
             } else if (operate.isObject(input)) {
                 result.push(input[key]);
             }
-            
+
         }
         return result;
     }
@@ -123,7 +122,7 @@ window.CreateEntity = class {
                     if (Object.hasOwnProperty.call(valueObj, key)) {
                         let value = valueObj[key],
                             type = key;
-                        if(key.indexOf("##") > -1){
+                        if (key.indexOf("##") > -1) {
                             type = key.slice(0, key.indexOf("##"));
                         }
                         switch (type) {
@@ -208,7 +207,7 @@ window.CreateEntity = class {
     static clone(obj) {
         if (typeof obj === 'undefined' || obj === null) return;
         else if (obj === window || obj === document) return obj;
-        
+
         var output;
         if (Array.isArray(obj)) {
             output = [];
@@ -286,12 +285,57 @@ window.CreateEntity = class {
 
     }
 
+    /* 
+    
+    (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)){ return; }
+    js = d.createElement(s); js.id = id;
+    js.onload = function(){
+        // remote script has loaded
+    };
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+    
+    */
+    static injectScripts(src, opts = {}) {
+        if (Array.isArray(src)) {
+            console.log(src);
+            for (let i = 0; i < src.length; i++) {
+                this.injectScripts(src[i], opts);
+            }
+        } else {
+            var js, fjs = document.getElementsByTagName('script')[0];
+            // if (document.getElementById(id)){ return; }
+            js = document.createElement('script'); // js.id = id;
+            for (const key in opts) {
+                if (Object.hasOwnProperty.call(opts, key)) {
+                    var propVal = opts[key];
+                    if(key === "attrs") {
+                        for (const key2 in propVal) {
+                            if (Object.hasOwnProperty.call(propVal, key2)) {
+                                js.setAttribute(key2, propVal[key2]);
+                            }
+                        }
+                    } else js[key] = propVal;
+                }
+            }
+            js.onload = function () {
+                console.log('remote script has loaded');
+            };
+            js.src = src;
+            fjs.parentNode.appendChild(js); //sarr.parentNode.insertBefore(js, sarr[0]);
+        }
+
+    }
+
     static uniqueId(length) {
         if (operate.isUseless(length) || !operate.isInt(length)) length = 12;
         let randy = Math.floor(Math.random() * Math.pow(10, 4) * 36),
             timmy = Date.now();
         length = Math.min(12, length);
-        return (timmy.toString(36).slice(-8) +randy.toString(36).padStart(4, '0'));
+        return (timmy.toString(36).slice(-8) + randy.toString(36).padStart(4, '0'));
     }
 
 }
