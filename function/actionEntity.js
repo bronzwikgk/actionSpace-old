@@ -28,10 +28,13 @@ class Entity {
     }
     static getValue(str, l, x){
         if(operate.isString(str) && str.charAt(0) == '$'){
-                // console.log(str, l, x, eval(str.substr(1)));
+                // console.log(str, l, x);
             return eval(str.substr(1));
         }
         return (x !== undefined) ? x : str;
+    }
+    static setObjKeyVal(obj, key, val){
+        obj[key] = val;
     }
     static uniqueId(obj){
         if(obj === window) return 'window';
@@ -136,6 +139,38 @@ class Entity {
         } 
         return resultArr;
     }
+    // static get2(path, l) {
+
+    //     var start = 0, inside = false;
+    //     var parent = l;
+    //     function get2Simple(key){
+    //         if(it has a .)
+    //     }
+
+    //     for(var i=0;i<path.length;i++){
+    //         var ch = path.charAt(i);
+
+    //         if((ch == '[' || ch == '.') && !inside){
+    //             //get Ready we have to do something
+    //             key = '';
+    //             inside = true;
+    //         } else if(ch == '\'' || ch == '\"'){
+    //             continue;
+    //         } else if( ch == ']'){
+    //             inside = false;
+    //             parent = parent[get2(key)];
+    //         } else if( path[i] == '.'){
+    //             inside = true;
+    //             parent = parent[get2(key)];
+    //             key='';
+    //         } else 
+    //             key += ch;
+    //         if(key != ''){
+    //             parent = parent[key];
+    //         }
+    //     }   
+    //     return parent;
+    // }
     static stringToPath (path) {
 
         // If the path isn't a string, return it
@@ -506,3 +541,4 @@ class Entity {
         }
     }
 }
+window.Entity = Entity;
