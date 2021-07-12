@@ -60,7 +60,19 @@ class MultisetUtil{
 }
 
 var Multiset = function () {return new MultisetUtil();}
-
+var UtilGetStyle = { // (elem, value)
+   objectModel:'$window',
+   method:'getComputedStyle',
+   arguments:['$l.elem', null],
+   response:'pv',
+   callback:{
+      objectModel:'$l.pv',
+      method:'getPropertyValue',
+      arguments:'$l.value',
+      response:'res'
+   },
+   return:'$l.res'
+}
 var CADGetId = [ // (obj, elem)
    {
       condition: '$!l.elem',
@@ -156,10 +168,13 @@ var CAD = { // constructor(elem:HTMLObject, proximityQ:number)
       CADAsNodes:[],
       idCounter:0,
       obj:'$l',
+      keysDown:[],
 
       //functions
 
       mousedown:'CADMouseDown',
+      keydown:'CADKeyDown',
+      keyup:'CADKeyUp',
       create:'CADCreate',
       creating:'CADCreating',
       created:'CADCreated',
@@ -204,6 +219,11 @@ var CAD = { // constructor(elem:HTMLObject, proximityQ:number)
          arguments:'cad-root'
       },
       {
+         objectModel:'$l.obj.root.classList',
+         method:'add',
+         arguments:'unselectable'
+      },
+      {
          objectModel:'$l.obj.root',
          method:'setAttribute',
          arguments:['data-tag', 'editable']
@@ -246,13 +266,50 @@ var CAD = { // constructor(elem:HTMLObject, proximityQ:number)
                obj:'$l.obj'
             }
          },
-         objectModel:'eventManager',
-         method:'addRequestListener',
-         arguments:['$l.obj.root', 'mousedown', '$l.obj.mousedown', '$l.args']
+         callback:[
+            {
+               objectModel:'eventManager',
+               method:'addRequestListener',
+               arguments:['$l.obj.root', 'mousedown', '$l.obj.mousedown', '$l.args']
+            },
+            {
+               objectModel:'eventManager',
+               method:'addRequestListener',
+               arguments:['$window', 'keydown', '$l.obj.keydown', '$l.args']
+            },
+            {
+               objectModel:'eventManager',
+               method:'addRequestListener',
+               arguments:['$window', 'keyup', '$l.obj.keyup', '$l.args']
+            }
+         ]
       }
    ],
    return:'$l'
-}
+};
+var CADKeyDown = {
+   objectModel:'$l.obj.keysDown',
+   method:'includes',
+   arguments:'$l.event.code',
+   response:'incl',
+   callback:{
+      condition:'$! l.incl',
+      objectModel:'$l.obj.keysDown',
+      method:'push',
+      arguments:'$l.event.code'
+   }
+};
+var CADKeyUp = {
+   objectModel:'$l.obj.keysDown',
+   method:'indexOf',
+   arguments:'$l.event.code',
+   response:'ind',
+   callback:{
+      objectModel:'$l.obj.keysDown',
+      method:'splice',
+      arguments:['$l.ind',1]
+   }
+};
 var CADGetAncestorWhichContainsClass = {
    callback:[//(elem, cl, obj)
       {
@@ -1143,7 +1200,7 @@ var CADCreatedCurve = [//event,obj
       declare:{'obj.telem':null}
    }
 ];
-var CADUpdateCurve = [ //(curveId, obj)
+var CADUpdateCurve = [ //(curveId, obj, updateType)
    {
       declare:{
          a:[]
@@ -1388,6 +1445,11 @@ var CADUpdateCurve = [ //(curveId, obj)
    {
       callback:[
          {
+            declare:{
+               'obj.root.style.overflow':'auto'
+            }
+         },
+         {
             declare:{args:{p:'$l.p1', rect:'$l.rect', roct:'$l.roct'}},
             objectModel:'engine',
             method:'processRequest',
@@ -1436,6 +1498,157 @@ var CADUpdateCurve = [ //(curveId, obj)
                declare:{
                   'cp2c[0]':'$l.cp2c[0] + 5',
                   'cp2c[1]':'$l.cp2c[1] + 5'
+               }
+            }
+         },
+      ]
+   },
+   {
+      condition:'$l.updateType === "whole-root"',
+      callback:[
+         {
+            declare:{
+               'obj.root.style.overflow':'hidden',
+            }
+         },
+         {
+            callback:[
+               {
+                  declare:{
+                     args:{elem:'$l.obj.root', value:"width"}
+                  },
+                  objectModel:'engine',
+                  method:'processRequest',
+                  arguments:['UtilGetStyle', '$l.args'],
+                  response:'tmp',
+                  callback:{
+                     declare:{args:{str:'$l.tmp'}},
+                     objectModel:'engine',
+                     method:'processRequest',
+                     arguments:['UtilGetPx', '$l.args'],
+                     response:'tmpw'
+                  }
+               },
+               {
+                  declare:{
+                     args:{elem:'$l.obj.root', value:"height"}
+                  },
+                  objectModel:'engine',
+                  method:'processRequest',
+                  arguments:['UtilGetStyle', '$l.args'],
+                  response:'tmp',
+                  callback:{
+                     declare:{args:{str:'$l.tmp'}},
+                     objectModel:'engine',
+                     method:'processRequest',
+                     arguments:['UtilGetPx', '$l.args'],
+                     response:'tmph'
+                  }
+               }
+            ]
+         },
+         {
+            declare:{
+               w:'$l.tmpw',
+               h:'$l.tmph',
+               'can.width':'$l.w',
+               'can.height':'$l.h',
+               'can.style.top':'0px',
+               'can.style.left':'0px'
+            }
+         },
+         {
+            declare:{args:{str:'$l.p1.style.left'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'p1c[0]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.p1.style.top'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'p1c[1]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.p2.style.left'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'p2c[0]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.p2.style.top'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'p2c[1]':'$l.tmp + 5'
+               }
+            }
+         },{
+            declare:{args:{str:'$l.cp1.style.left'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'cp1c[0]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.cp1.style.top'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'cp1c[1]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.cp2.style.left'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'cp2c[0]':'$l.tmp + 5'
+               }
+            }
+         },
+         {
+            declare:{args:{str:'$l.cp2.style.top'}},
+            objectModel:'engine',
+            method:'processRequest',
+            arguments:['UtilGetPx', '$l.args'],
+            response:'tmp',
+            callback:{
+               declare:{
+                  'cp2c[1]':'$l.tmp + 5'
                }
             }
          },
@@ -1637,7 +1850,8 @@ var CADDraggingPoint = { //(event, obj)
          declare:{
             args77:{
                curveId:'$l.obj.curveId',
-               obj:'$l.obj'
+               obj:'$l.obj',
+               updateType:'whole-root'
             }
          },
          objectModel:'engine',
@@ -1648,6 +1862,18 @@ var CADDraggingPoint = { //(event, obj)
 };
 var CADDraggedPoint = {//(event, obj)
    callback:[
+      {
+         declare:{
+            args77:{
+               curveId:'$l.obj.curveId',
+               obj:'$l.obj',
+               updateType:'only-inside'
+            }
+         },
+         objectModel:'engine',
+         method:'processRequest',
+         arguments:['$l.obj.updateCurve', '$l.args77']
+      },
       {
          objectModel:'document', 
          method:'getElementById',
@@ -1828,15 +2054,41 @@ var CADDragging = { //(event, obj)
          }
       },
       {
-         declare:{
-            args77:{
-               pos:'$l.pos',
-               obj:'$l.obj'
+         callback:[
+
+            {
+               objectModel:'$l.obj.keysDown',
+               method:'includes',
+               arguments:'ShiftLeft',
+               response:'sl'
+            },
+            {
+               objectModel:'$l.obj.keysDown',
+               method:'includes',
+               arguments:'ShiftRight',
+               response:'sr'
+            },
+            {
+               objectModel:'console',
+               method:'log',
+               arguments:'$l.obj.keysDown'
+            },
+            {
+               condition:'$! (l.sl || l.sr)',
+               exit:'true'
+            },
+            {
+               declare:{
+                  args77:{
+                     pos:'$l.pos',
+                     obj:'$l.obj'
+                  }
+               },
+               objectModel:'engine',
+               method:'processRequest',
+               arguments:['$l.obj.snap', '$l.args77']
             }
-         },
-         objectModel:'engine',
-         method:'processRequest',
-         arguments:['$l.obj.snap', '$l.args77']
+         ]
       }
    ]
 }
