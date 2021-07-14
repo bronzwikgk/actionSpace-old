@@ -1565,7 +1565,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'p1c[0]':'$l.tmp + 5'
+                  'p1c[0]':'$l.tmp + 3'
                }
             }
          },
@@ -1577,7 +1577,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'p1c[1]':'$l.tmp + 5'
+                  'p1c[1]':'$l.tmp + 3'
                }
             }
          },
@@ -1589,7 +1589,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'p2c[0]':'$l.tmp + 5'
+                  'p2c[0]':'$l.tmp + 3'
                }
             }
          },
@@ -1601,7 +1601,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'p2c[1]':'$l.tmp + 5'
+                  'p2c[1]':'$l.tmp + 3'
                }
             }
          },{
@@ -1612,7 +1612,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'cp1c[0]':'$l.tmp + 5'
+                  'cp1c[0]':'$l.tmp + 3'
                }
             }
          },
@@ -1624,7 +1624,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'cp1c[1]':'$l.tmp + 5'
+                  'cp1c[1]':'$l.tmp + 3'
                }
             }
          },
@@ -1636,7 +1636,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'cp2c[0]':'$l.tmp + 5'
+                  'cp2c[0]':'$l.tmp + 3'
                }
             }
          },
@@ -1648,7 +1648,7 @@ var CADUpdateCurve = [ //(curveId, obj, updateType)
             response:'tmp',
             callback:{
                declare:{
-                  'cp2c[1]':'$l.tmp + 5'
+                  'cp2c[1]':'$l.tmp + 3'
                }
             }
          },
