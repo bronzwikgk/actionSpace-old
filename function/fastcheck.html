@@ -9,9 +9,31 @@
    <input id="username" value="username" />
    <input id="password" value="secret" />
    
-	<script src="operate.js"></script>
+   <script src="operate.js"></script>
    <script src="actionEntity.js"></script>
-	<script src="actionEvent.js"></script>
-	<script src="actionEngine.js"></script>
-   <script src="testRequestModel.js"></script>
+   <script src="actionEvent.js"></script>
+   <script src="actionEngine.js"></script>
+   <script src="importexport/css2json.js"></script>
+   <script src="importexport/json2css.js"></script>
+   <script>
+var css = `
+   .box > tag{
+      color:white;
+   }
+   @media only screen and (orientation:portrait){
+      x.pop {
+         color:blue;
+      }
+      hello{
+         color:#fff;
+      }
+   }
+`;
+var query = "\"@media only screen and (orientation:portrait)\" > \"x.pop\" > color";
+console.log("Converting css",css, "to json with query", query);
+var result = css2json(css, query);
+console.log("Query Result = ", result.result)
+console.log("Converting json",result.json, "to css ");
+console.log(json2css(result.json));
+   </script>
 </body>
