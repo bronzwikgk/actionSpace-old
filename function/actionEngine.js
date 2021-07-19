@@ -1,4 +1,4 @@
-class ActionEngine{
+window.ActionEngine = class{
    
    static maxDebugDepth = 100;
    static async processRequest(flowRequest, l = {}){
@@ -76,6 +76,7 @@ class ActionEngine{
    //COPYL TO BE REMOVED
    static async action(requestF, l, copyl = false){
 
+      window.mrequest = requestF;
    	if(operate.isString(requestF)){
    		requestF = Entity.get(requestF, window);
    	}
@@ -150,8 +151,8 @@ class ActionEngine{
 		               }
 		               var method = objectModel[request.method];
 		               if(!operate.isFunction(method))
-                        console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method);
-
+                        console.error("UNDEFINED METHOD CALL", objectModel, method, request.objectModel, request.method, "while executing", window.mrequest);
+                     // console.log(request.arguments);
                      var response = await method.apply(objectModel, request.arguments);
 
 		               if(request.hasOwnProperty('response')){

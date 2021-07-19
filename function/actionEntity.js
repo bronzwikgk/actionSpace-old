@@ -3,7 +3,12 @@ var counter = 0;
 class Entity {
     
     static get(key,parent) {
-        var keys = Entity.stringToPath(key);
+        var keys;
+
+        if(operate.isArray(key))
+            keys = key;
+        else
+            keys = Entity.stringToPath(key);
         var hold = parent;
 
         var l = {keys: keys, hold: hold};
@@ -192,7 +197,6 @@ class Entity {
             });
 
         });
-
         return output;
 
     }
