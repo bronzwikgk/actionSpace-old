@@ -1,7 +1,29 @@
 <html>
 
 <head>
-    
+    <style>
+       @namespace url(http://www.w3.org/1999/xhtml);
+      .box > tag{
+         color:white;
+      }
+      @media only screen and (orientation:portrait){
+         x.pop {
+            color:blue;
+         }
+         hello{
+            color:#fff;
+         }
+      }
+      @-webkit-keyframes i{
+         0%{color:#000;}
+         100%{color:#fff;}
+      }
+      @supports (display: grid) {
+        body {
+          color: blue;
+        }
+      }
+    </style>
 </head>
 <body>
    <button id="addDiv">Add DIV</button>
@@ -13,27 +35,18 @@
    <script src="actionEntity.js"></script>
    <script src="actionEvent.js"></script>
    <script src="actionEngine.js"></script>
+   <script src="importexport/copyAs.js"></script>
    <script src="importexport/css2json.js"></script>
    <script src="importexport/json2css.js"></script>
    <script>
-var css = `
-   .box > tag{
-      color:white;
-   }
-   @media only screen and (orientation:portrait){
-      x.pop {
-         color:blue;
+      var s, x;
+      window.onload = async function(){
+         s = document.styleSheets[0];
+         console.log("StyleSheet:", s);
+         x = await css2json(s);
+         console.log("JSON:", x);
+         x = json2css(x);
+         console.log("GeneratedStylesheet:", x);
       }
-      hello{
-         color:#fff;
-      }
-   }
-`;
-var query = "\"@media only screen and (orientation:portrait)\" > \"x.pop\" > color";
-console.log("Converting css",css, "to json with query", query);
-var result = css2json(css, query);
-console.log("Query Result = ", result.result)
-console.log("Converting json",result.json, "to css ");
-console.log(json2css(result.json));
    </script>
 </body>

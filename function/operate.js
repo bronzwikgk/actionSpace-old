@@ -107,7 +107,7 @@ class operate {
     // Returns if a value is a static
     static isstatic(value) { return typeof value === 'static'; }
     // Returns if a value is an object
-    static isObject(value) { return value && typeof value === 'object' && value.constructor === Object; }
+    static isObject(value) { return value && (typeof value === 'object' && value.constructor === Object); }
     static isHTML(argA) { return operate.is(argA).includes("HTML") }
     //Retuns if a values is either of null or undefined
     static isUseless(value) { return value === null || typeof value === 'undefined'; }
