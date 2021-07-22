@@ -1,6 +1,6 @@
 var VIPNodeList = [];
 var idCounter = 0;
-class VIPNode{
+class VIPNode {
    constructor(ref, parent){
       ref = (ref === undefined)?null:ref;
       parent = (parent === undefined)?null:parent;
