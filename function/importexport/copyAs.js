@@ -27,8 +27,8 @@ async function copyAs(input, model){
          func:async function(obj, key, input){
             
             var x = await matchObject(input, obj[key]);
-            // console.log(obj[key]);
-            if(x) obj[key] = x;
+            // console.log(obj[key], x);
+            if(x !== undefined) obj[key] = x;
             else delete obj[key];
          },
          args:[input],
@@ -38,7 +38,6 @@ async function copyAs(input, model){
    return model;
 }
 async function matchObject(obj, path, result, specific){
-   if(!obj) return;
    if(!result) result = [];
    if(!specific) specific = {"specific":true};
 
@@ -79,7 +78,7 @@ async function matchObject(obj, path, result, specific){
          }
       }
       else if(key == '$only-object'){
-
+         // console.log("here", obj);
          if(obj instanceof Object && (!operate.isFunction(obj))){
             // console.log(obj, key);
             await matchObject(obj, [...keys], result, specific);
@@ -109,5 +108,8 @@ async function matchObject(obj, path, result, specific){
       
       return result[0];
    } 
+   if(result.length === 0){
+      return undefined;
+   }
    return result;
 }

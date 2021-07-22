@@ -2,7 +2,7 @@
 
 <head>
     <style>
-       
+       @namespace url(http://www.w3.org/1999/xhtml);
       .box > tag{
          color:white;
       }
@@ -13,6 +13,15 @@
          hello{
             color:#fff;
          }
+      }
+      @-webkit-keyframes i{
+         0%{color:#000;}
+         100%{color:#fff;}
+      }
+      @supports (display: grid) {
+        body {
+          color: blue;
+        }
       }
     </style>
 </head>
@@ -28,12 +37,16 @@
    <script src="actionEngine.js"></script>
    <script src="importexport/copyAs.js"></script>
    <script src="importexport/css2json.js"></script>
+   <script src="importexport/json2css.js"></script>
    <script>
+      var s, x;
       window.onload = async function(){
-         var s = document.styleSheets[0];
+         s = document.styleSheets[0];
          console.log("StyleSheet:", s);
-         var x = await copyAs(s, StyleSheetSchema);
+         x = await css2json(s);
          console.log("JSON:", x);
+         x = json2css(x);
+         console.log("GeneratedStylesheet:", x);
       }
    </script>
 </body>

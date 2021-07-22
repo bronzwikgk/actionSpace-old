@@ -1,16 +1,28 @@
-var StyleSheetSchema = {
+var CSSStyleSheetSchema = {
    rules: "cssRules.$all.$only-object.$follow-CSSRuleSchema",
    title: "title",
-   type: "type"
+   type: "type",
+   disabled:'disabled',
+   href:'href',
+   ownerRule:'ownerRule'
 }
 var CSSRuleSchema = {
+   "cssText":'cssText',
    
-   //CSSStyleRule
    "selectorText" : 'selectorText',
    "style": 'style',
    
-   //CSSMediaRule
    "conditionText": 'conditionText',
    "rules":'cssRules.$all.$only-object.$follow-CSSRuleSchema',
 
+   "name": 'name',
+   "keyText": 'keyText',
+
+   "namespaceURI":'namespaceURI',
+   "prefix":'prefix',
+
+}
+function css2json(stylesheet, model){
+   if(!model) model = CSSStyleSheetSchema;
+   return copyAs(stylesheet, model);
 }
