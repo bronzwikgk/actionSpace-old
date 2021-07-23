@@ -38,15 +38,17 @@
    <script src="importexport/copyAs.js"></script>
    <script src="importexport/css2json.js"></script>
    <script src="importexport/json2css.js"></script>
+   <script src="importexport/html2json.js"></script>
+   <script src="importexport/json2html.js"></script>
    <script>
       var s, x;
       window.onload = async function(){
-         s = document.styleSheets[0];
-         console.log("StyleSheet:", s);
-         x = await css2json(s);
-         console.log("JSON:", x);
-         x = json2css(x);
-         console.log("GeneratedStylesheet:", x);
+         s = document.body;
+         x = await html2json(s);
+         console.log("HTML", s); 
+         console.log("HTML2JSON", x);
+         var y = await json2html(JSON.parse(JSON.stringify(x)));
+         console.log("JSON2HTML", y);
       }
    </script>
 </body>
