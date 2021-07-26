@@ -28,9 +28,9 @@
 <body>
    <button id="addDiv">Add DIV</button>
 
-   <input id="username" value="username" />
-   <input id="password" value="secret" />
-   
+   <input type="file" id="docxfile"></input>
+
+
    <script src="operate.js"></script>
    <script src="actionEntity.js"></script>
    <script src="actionEvent.js"></script>
@@ -40,15 +40,8 @@
    <script src="importexport/json2css.js"></script>
    <script src="importexport/html2json.js"></script>
    <script src="importexport/json2html.js"></script>
-   <script>
-      var s, x;
-      window.onload = async function(){
-         s = document.body;
-         x = await html2json(s);
-         console.log("HTML", s); 
-         console.log("HTML2JSON", x);
-         var y = await json2html(JSON.parse(JSON.stringify(x)));
-         console.log("JSON2HTML", y);
-      }
-   </script>
+   <script src="importexport/json2zip.js"></script>
+   <script src="importexport/zip2json.js"></script>
+   <script src="importexport/docx2json.js"></script>
+   <script src="dependencies/jszip/jszip.min.js"></script>
 </body>

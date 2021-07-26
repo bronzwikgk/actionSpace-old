@@ -10,7 +10,7 @@ var CSSRuleSchema = {
    "cssText":'cssText',
    
    "selectorText" : 'selectorText',
-   "style": 'style',
+   "style": 'style.$all-with-keys.$non-empty.$only-string',
    
    "conditionText": 'conditionText',
    "rules":'cssRules.$all.$only-object.$follow-CSSRuleSchema',

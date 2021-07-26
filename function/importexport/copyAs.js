@@ -47,7 +47,7 @@ async function copyAs(input, model){
    // console.log(JSON.parse(JSON.stringify(model.items))) ;
    return model;
 }
-async function matchObject(obj, path, result, specific, pkey){
+async function matchObject(obj, path, result, specific, pkey, lkey){
    if(!result) result = {"length":0};
    if(!specific) specific = {"specific":true};
 
@@ -64,7 +64,12 @@ async function matchObject(obj, path, result, specific, pkey){
 
    if(keys.length == 0){
       // console.log(obj);
-      result[result.length++] = (obj);
+      if(lkey !== undefined) {
+         result[lkey] = obj;
+         delete result['length'];
+      } 
+      else result[result.length++] = (obj);
+
       return;
    }
 
@@ -72,27 +77,36 @@ async function matchObject(obj, path, result, specific, pkey){
 
    if(key.charAt(0) == '$'){
       specific.specific = false;
-      if(key == '$empty-keys'){
-         await matchObject(obj[''], [...keys], result, specific, pkey);
-      }
-      else if(key == '$non-empty-keys'){
-         for(var key in obj){
-            if(key != ''){
-               await matchObject(obj[key], [...keys], result, specific, pkey);
-            }
-         }
+      if(key == '$empty'){
+            
+         if((operate.isArray(obj) && obj.length == 0) || (obj instanceof Object && (!operate.isFunction(obj)) && Object.keys(obj).length === 0) || obj === '')
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
       } 
+      else if(key == '$non-empty'){
+         if(!((operate.isArray(obj) && obj.length == 0) || (obj instanceof Object && (!operate.isFunction(obj)) && Object.keys(obj).length === 0) || obj === '')){
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
+            console.log(obj);
+         }
+
+      }
       else if(key == '$all'){
          for(var key in obj){
 
-            await matchObject(obj[key], [...keys], result, specific, pkey);
+            await matchObject(obj[key], [...keys], result, specific, pkey, lkey);
+         }
+      }
+      else if(key == '$all-with-keys'){
+         // console.log(obj);
+         for(var key in obj){
+            var x = await matchObject(obj[key], [...keys], result, specific, pkey, key);
+            
          }
       }
       else if(key == '$all-into-parent'){
          // console.log(obj);
          for(var key in obj){
 
-            var x = await matchObject(obj[key], [...keys], result, specific, true);
+            var x = await matchObject(obj[key], [...keys], result, specific, true, lkey);
             
          }
       }
@@ -100,28 +114,32 @@ async function matchObject(obj, path, result, specific, pkey){
          // console.log("here", obj);
          if(obj instanceof Object && (!operate.isFunction(obj))){
             // console.log(obj, key);
-            await matchObject(obj, [...keys], result, specific, pkey);
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
          }
       }
       else if(key == '$only-array'){
          if(operate.isArray(obj)){
-            await matchObject(obj, [...keys], result, specific, pkey);
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
          }
       }
       else if(key == '$only-string'){
+            // console.log('here', obj)
          if(operate.isString(obj)){
-            await matchObject(obj, [...keys], result, specific, pkey);
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
          }
       } 
       else if(key == '$only-html'){
          if(operate.isHTML(obj)){
-            await matchObject(obj, [...keys], result, specific, pkey);
+            await matchObject(obj, [...keys], result, specific, pkey, lkey);
          }
       }
       else if(key.substr(0, "$follow-".length) == '$follow-'){
          var x = await copyAs(obj, window[key.substr("$follow-".length)]);
-
-         if(pkey === undefined) result[result.length++] = (x);
+         if(lkey !== undefined) {
+            result[lkey] = x;
+            delete result['length'];
+         }
+         else if(pkey === undefined) result[result.length++] = (x);
          else {
             await Entity.updateProps(x, result);
             delete result['length'];
@@ -129,9 +147,12 @@ async function matchObject(obj, path, result, specific, pkey){
          }
             // console.log("pkeycheck", pkey, x, result, result[0]);
       }
+      
    } else {
-      await matchObject(obj[key], [...keys], result, specific, pkey);
+      await matchObject(obj[key], [...keys], result, specific, pkey, lkey);
    }
+
+
    if(specific.specific === true){
       
       return result[0];

@@ -1,0 +1,52 @@
+async function zip2json(zip, json){
+  var json;
+  var total_files = 0, done_files = 0;
+  async function makeJSON(zipFolder, json){
+    var rpaths = {};
+    var array = await zipFolder.filter(function(relativePath, file){
+      rpaths[file.name] = relativePath;
+      return true;
+    });
+    await Entity.walk(
+      array,
+      {
+        value:{
+          func: async function(object, key, rpaths){
+            var file = object[key];
+            var relativePath = rpaths[file.name];
+            if(relativePath.indexOf("/") >= 0) {
+              var folderName = relativePath.substr(0, relativePath.indexOf('/'));
+              if(!json[folderName]) json[folderName] = await makeJSON(zipFolder.folder(folderName), {});
+            } else {
+              total_files++;
+              var data = await zipFolder.file(relativePath).async("string");
+              var fileExt = file.name.substr(file.name.lastIndexOf("."));
+              json[relativePath] = data;
+              done_files++;
+            }
+          },
+          args:[rpaths],
+          wait:true
+        }
+      });
+    // zipFolder.forEach(function(relativePath, file){
+      // if(relativePath.indexOf("/") >= 0) {
+      //   var folderName = relativePath.substr(0, relativePath.indexOf('/'));
+      //   if(!json[folderName]) json[folderName] = await makeJSON(zipFolder.folder(folderName), {});
+      // } else {
+      //   total_files++;
+      //   console.log("Increasing total_files");
+      //   var data = await zipFolder.file(relativePath).async("string");
+      //   var fileExt = file.name.substr(file.name.lastIndexOf("."));
+      //   json[relativePath] = data;
+      //   done_files++;
+      //   console.log("Increasing done_files");
+      // }
+    // });
+    return json;
+  }
+
+  zip = await JSZip.loadAsync(zip);
+  json = await makeJSON(zip, {});
+  return json;
+}
