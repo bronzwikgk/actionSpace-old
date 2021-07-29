@@ -10,5 +10,6 @@ var HTMLAttributeSchema = {
 }
 function html2json(elem, model){
    if(!model) model = HTMLSchema;
-   return copyAs(elem, model);
+   var x = copyAs(elem, model);
+   return x;
 }

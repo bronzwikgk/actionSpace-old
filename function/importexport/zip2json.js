@@ -29,20 +29,6 @@ async function zip2json(zip, json){
           wait:true
         }
       });
-    // zipFolder.forEach(function(relativePath, file){
-      // if(relativePath.indexOf("/") >= 0) {
-      //   var folderName = relativePath.substr(0, relativePath.indexOf('/'));
-      //   if(!json[folderName]) json[folderName] = await makeJSON(zipFolder.folder(folderName), {});
-      // } else {
-      //   total_files++;
-      //   console.log("Increasing total_files");
-      //   var data = await zipFolder.file(relativePath).async("string");
-      //   var fileExt = file.name.substr(file.name.lastIndexOf("."));
-      //   json[relativePath] = data;
-      //   done_files++;
-      //   console.log("Increasing done_files");
-      // }
-    // });
     return json;
   }
 

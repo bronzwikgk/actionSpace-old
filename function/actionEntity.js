@@ -1,7 +1,7 @@
 var counter = 0;
 
 class Entity {
-    
+
     static get(key,parent) {
         var keys;
 
@@ -20,7 +20,7 @@ class Entity {
                     if(!l.hold) return false;
                     l.hold = l.hold[key];
                     return false;
-                }, 
+                },
                 args: [l]
             }
         });
@@ -52,7 +52,7 @@ class Entity {
     }
     static requestExpander(request){
         if(request == null) return;
-        
+
         if(operate.isString(request)){
             request = window[request];
         }
@@ -60,18 +60,18 @@ class Entity {
         if(! operate.isObject(request)){
             console.error(request, " is not a valid Object");
             throw Error("Terminate Called");
-        } 
-        
+        }
+
         var rclone = {...request};
         var parent = null;
-        
+
         if(request.hasOwnProperty('extends')){
 
             var parent = Entity.requestExpander(window[request['extends']]); // parent is a JSON request
-            
+
             request = {...parent};
             delete request['extends'];
-            
+
             var del = rclone.delete;
             delete rclone.delete;
 
@@ -80,11 +80,11 @@ class Entity {
             delete request['extends'];
         }
         return request;
-        
+
     }
     static complexRequestExpander(requestArr, maxDebugDepth = 10, depth = 0){
         if(requestArr == null) return;
-        
+
         if(operate.isString(requestArr)){
             requestArr = window[requestArr];
         }
@@ -104,23 +104,23 @@ class Entity {
         var resultArr = [];
 
         Entity.walk(
-            {rngstart:0, rngend:requestArr.length}, 
+            {rngstart:0, rngend:requestArr.length},
             {
                 value: {
                     func : function(i, requestArr, resultArr) {
                         var request = requestArr[i];
-            
+
                         //single request
                         // console.log(request);
                         var rclone = Entity.copy(request);
                         var parent = null;
 
                         if(request.hasOwnProperty('extends')){
-                            
+
                             var parent = Entity.complexRequestExpander(window[request['extends']], depth); // parent is a JSON request
-                            
+
                             request = Entity.copy(parent);
-                        
+
                             var del = rclone.delete;
                             delete rclone.delete;
 
@@ -128,7 +128,7 @@ class Entity {
 
                             delete request['extends'];
                         }
-                        
+
                         if(request.hasOwnProperty('callback')){
                             request.callback = Entity.complexRequestExpander(request.callback, depth + 1);
                         }
@@ -141,7 +141,7 @@ class Entity {
         );
         if(resultArr.length == 1){
             return resultArr[0];
-        } 
+        }
         return resultArr;
     }
     // static get2(path, l) {
@@ -168,12 +168,12 @@ class Entity {
     //             inside = true;
     //             parent = parent[get2(key)];
     //             key='';
-    //         } else 
+    //         } else
     //             key += ch;
     //         if(key != ''){
     //             parent = parent[key];
     //         }
-    //     }   
+    //     }
     //     return parent;
     // }
     static stringToPath (path) {
@@ -221,13 +221,13 @@ class Entity {
                         del[key].push(null);
                     }
                     var clone = l.req;
-                    
+
                     l.req = l.req[key];
                     Entity.walk(del[key], l.callback);
                     l.req = clone;
 
                     return false;
-                }, 
+                },
                 args: [l]
             }
         }
@@ -236,7 +236,7 @@ class Entity {
 
         return del;
     }
-    static deleteProps(req, del){ 
+    static deleteProps(req, del){
         // console.log(del);
         del = Entity.equalizeArraysInDelete(req, del);
         // console.log(del);
@@ -259,7 +259,7 @@ class Entity {
 
                 },
                 args: [l]
-            }, 
+            },
             array: {
                 func: function(obj, key, l){
 
@@ -276,7 +276,7 @@ class Entity {
 
                     if(clonetmp)
                         clonetmp.push(anstmp);
-                    else 
+                    else
                         l.req[key] = anstmp;
 
                     l.tmp = clonetmp;
@@ -284,7 +284,7 @@ class Entity {
                     return false;
                 },
                 args: [l]
-            }, 
+            },
             object: {
                 func: function(obj, key, l){
                     var clone = l.req;
@@ -298,7 +298,7 @@ class Entity {
 
                     if(clonetmp)
                         clonetmp.push(l.req[key]);
-                    // else 
+                    // else
                     //     l.req[key] = l.req[key]; //lol
 
                     l.tmp = clonetmp;
@@ -312,7 +312,7 @@ class Entity {
         l.callback = callback;
 
         Entity.walk(del, callback);
-        
+
         return l.req;
     }
     static setProps(req, model, ALLSTATES = {}){
@@ -330,7 +330,7 @@ class Entity {
         }
     }
     static updateProps(req,model, ALLSTATES = {}, parse = true){
-        
+
 
         if((operate.trueTypeOf(req) != operate.trueTypeOf(model)) || (!req)){
             if(operate.isArray(req) && (!operate.isArray(model))) model = [];
@@ -343,7 +343,7 @@ class Entity {
         var callback = {
             array: {
                 func: function(obj, key, l){
-                    
+
                     l.model[key] = l.model[key] || [];
                     var clone = l.model;
 
@@ -357,7 +357,7 @@ class Entity {
             },
             object: {
                 func: function(obj, key, l){
-                    
+
 
                     l.model[key] = l.model[key] || {};
                     var clone = l.model;
@@ -369,16 +369,16 @@ class Entity {
                     return false;
                 },
                 args: [l]
-            }, 
+            },
             value:{
                 func: function(obj,  key, l, ALLSTATES, parse){
-                    
+
                     if(parse) l.model[key] = Entity.getValue(obj[key], ALLSTATES);
                     else l.model[key] = obj[key];
 
                     // console.log(l.model, key, l.model[key], obj[key]);
                     return false;
-                }, 
+                },
                 args: [l, ALLSTATES, parse]
             }
         };
@@ -395,7 +395,7 @@ class Entity {
 
         return model;
     }
-    static async walk(req, callback, ALLSTATES = {}, maxdepth = 0, depth = 0){ // it goes for depth first 
+    static async walk(req, callback, ALLSTATES = {}, maxdepth = Infinity, depth = 0){ // it goes for depth first
 
         if(depth > maxdepth) return;
 
@@ -408,7 +408,7 @@ class Entity {
         if(! callback.l ) callback.l = {};
 
         var rtype = operate.trueTypeOf(req);
-        
+
         if(rtype === 'object' && req.hasOwnProperty('rngstart')){
             if(!req.delta){
                 req.delta = 1;
@@ -420,69 +420,69 @@ class Entity {
                 if(operate.isFunction(callback['value'].func)){
                     if(callback['value'].wait){
                         if(await callback['value'].func(...callback.l.args))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
 
                     }
                     else if(callback['value'].func(...callback.l.args))
-                        Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                    
+                        await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+
                 }
                 else{
                     if(callback['value'].wait){
                         if(await engine.processRequest(callback['value'].func, callback.l))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                    } 
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                    }
                     else if(engine.processRequest(callback['value'].func, callback.l))
-                        Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                        await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
                 }
             }
         } else if(rtype === 'array'){
 
-            for(var i in req){
+            for(var i = 0;i < req.length; i++){
 
                 var type = operate.trueTypeOf(req[i]);
                 if(callback.hasOwnProperty(type)){
-                    
+
                     callback.l.args = [req, i, ...callback[type].args];
 
                     if(operate.isFunction(callback[type].func)){
                         if(callback[type].wait){
                             if(await callback[type].func(...callback.l.args))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
 
                         }
                         else if(callback[type].func(...callback.l.args))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+
                     }
                     else{
                         if(callback[type].wait){
                             if(await engine.processRequest(callback[type].func, callback.l))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        } 
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                        }
                         else if(engine.processRequest(callback[type].func, callback.l))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                    }   
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                    }
                 } else {
                     callback.l.args = [req, i, ...callback['value'].args];
 
                     if(operate.isFunction(callback['value'].func)){
                         if(callback['value'].wait){
                             if(await callback['value'].func(...callback.l.args))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
 
                         }
                         else if(callback['value'].func(...callback.l.args))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+
                     }
                     else{
                         if(callback['value'].wait){
                             if(await engine.processRequest(callback['value'].func, callback.l))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        } 
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                        }
                         else if(engine.processRequest(callback['value'].func, callback.l))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
                     }
                 }
             }
@@ -490,52 +490,53 @@ class Entity {
             for(var i in req){
                 // var x = i;
                 // i = Entity.getValue(i, ALLSTATES);
-                
+
                 // if(x!=i)console.log("x, i:", x, i, ALLSTATES);
 
                 var type = operate.trueTypeOf(req[i]);
                 if(callback.hasOwnProperty(type)){
-                    
+
                     callback.l.args = [req, i, ...callback[type].args];
 
                     if(operate.isFunction(callback[type].func)){
                         if(callback[type].wait){
                             if(await callback[type].func(...callback.l.args))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
 
                         }
-                        else if(callback[type].func(...callback.l.args))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        
+                        else if(callback[type].func(...callback.l.args)){
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                          }
+
                     }
                     else{
                         if(callback[type].wait){
                             if(await engine.processRequest(callback[type].func, callback.l))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        } 
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                        }
                         else if(engine.processRequest(callback[type].func, callback.l))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                    }   
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                    }
                 } else {
                     callback.l.args = [req, i, ...callback['value'].args];
 
                     if(operate.isFunction(callback['value'].func)){
                         if(callback['value'].wait){
                             if(await callback['value'].func(...callback.l.args))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
 
                         }
                         else if(callback['value'].func(...callback.l.args))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+
                     }
                     else{
                         if(callback['value'].wait){
                             if(await engine.processRequest(callback['value'].func, callback.l))
-                                Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
-                        } 
+                                await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                        }
                         else if(engine.processRequest(callback['value'].func, callback.l))
-                            Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
+                            await Entity.walk(req[i], callback, ALLSTATES, maxdepth, depth+1);
                     }
                 }
             }

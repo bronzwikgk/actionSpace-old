@@ -6,11 +6,11 @@ function json2html(query, parent){
       query = [query];
    }
    for(var i = 0;i<query.length;i++){
-      if(query[i].name === undefined){
+      if(query[i].text !== undefined){
          parent.innerHTML += query[i].text;
          continue;
       }
-      var el = document.createElement(query[i].name);
+      var el = document.createElement(query[i].name || 'div');
       for(var key in query[i].attributes){
          el.setAttribute(key, query[i].attributes[key])
       }

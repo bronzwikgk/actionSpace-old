@@ -19,17 +19,28 @@
          100%{color:#fff;}
       }
       @supports (display: grid) {
-        body {
+        x pop {
           color: blue;
         }
+      }
+      table{
+        border:1px solid black;
+        border-collapse:collapse;
+        margin:3px;
+      }
+      td{
+        border:1px solid black;
+        min-width:50px;
+      }
+      #viewer{
+        width:800px;
       }
     </style>
 </head>
 <body>
-   <button id="addDiv">Add DIV</button>
 
-   <input type="file" id="docxfile"></input>
-
+   <input type="file" id="docxfile"></input></br>
+   <div id="viewer"></div>
 
    <script src="operate.js"></script>
    <script src="actionEntity.js"></script>
@@ -42,6 +53,6 @@
    <script src="importexport/json2html.js"></script>
    <script src="importexport/json2zip.js"></script>
    <script src="importexport/zip2json.js"></script>
+   <script src="dependencies/mammoth/mammoth.js"></script>
    <script src="importexport/docx2json.js"></script>
-   <script src="dependencies/jszip/jszip.min.js"></script>
 </body>
