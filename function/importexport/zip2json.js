@@ -1,6 +1,5 @@
 async function zip2json(zip, json){
   var json;
-  var total_files = 0, done_files = 0;
   async function makeJSON(zipFolder, json){
     var rpaths = {};
     var array = await zipFolder.filter(function(relativePath, file){
@@ -18,11 +17,9 @@ async function zip2json(zip, json){
               var folderName = relativePath.substr(0, relativePath.indexOf('/'));
               if(!json[folderName]) json[folderName] = await makeJSON(zipFolder.folder(folderName), {});
             } else {
-              total_files++;
               var data = await zipFolder.file(relativePath).async("string");
               var fileExt = file.name.substr(file.name.lastIndexOf("."));
               json[relativePath] = data;
-              done_files++;
             }
           },
           args:[rpaths],

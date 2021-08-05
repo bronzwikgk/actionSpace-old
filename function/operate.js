@@ -4,11 +4,11 @@ class operate {
     //It takes options paramerte like
     // Recurse: Boolean, true makes an isInside Search Recursive.
     //LookAt:Key/Values/All. Where should it look at .Key only looks at keys, values only looks at values. All looks at all
-    //Strict. looks for Exact Match/ 
+    //Strict. looks for Exact Match/
     static isInside(entity2SearchIn, string2Search, options) {
         console.log(Object.values(entity2SearchIn), string2Search)
     }
-     static validate(value, rules) { 
+     static validate(value, rules) {
         var self = this;
         return rules.every(function (rule) {
             return self[rule](value);
@@ -34,7 +34,7 @@ class operate {
      * returns if the input is a key/value in the object options.argB
      * @param {*} argA
      * @param {*} argB  is required to be not empty
-     * 
+     *
      */
     static isInsideArray(argA, argB) {
         // console.log("IsInside", argA, argB);
@@ -56,7 +56,7 @@ class operate {
 
 
     static findMatchingInArrayOfObject(entity,keyTofind,value2Match, lookat) {
-      
+
      //   console.log("matching Values for keyword", keyTofind, "in", entity, lookat);
 
         var result = Object[lookat](entity).filter(function (key, index, self) {
@@ -66,7 +66,7 @@ class operate {
                // console.log("found", key[keyTofind], key)
                 return key;
             }
-            
+
         });
         return result;
     }
@@ -95,7 +95,7 @@ class operate {
     }
        // checks for null and undefined
        static isIterable(obj) {
-     
+
         if (obj == null) {
             return false;
         }
@@ -113,9 +113,9 @@ class operate {
     static isUseless(value) { return value === null || typeof value === 'undefined'; }
     // Returns if a value is null
     static isNull(value) { return value === null; }
-    // Returns if a value is undefined 
+    // Returns if a value is undefined
     static isUndefined(value) { return typeof value === 'undefined'; }
-    // Returns if a value is a boolean 
+    // Returns if a value is a boolean
     static isBoolean(value) { return typeof value === 'boolean'; }
     //Returns if a value is a regexp
     static isRegExp(value) { return value && typeof value === 'object' && value.constructor === RegExp; }
@@ -141,20 +141,49 @@ class operate {
         }
         return false;
     }
+    static isAlphaNumeric(str) {
+      var code, i, len;
+
+      for (i = 0, len = str.length; i < len; i++) {
+        code = str.charCodeAt(i);
+        if (!(code > 47 && code < 58) && // numeric (0-9)
+            !(code > 64 && code < 91) && // upper alpha (A-Z)
+            !(code > 96 && code < 123)) { // lower alpha (a-z)
+          return false;
+        }
+      }
+      return true;
+    }
+    static escapeString(str){
+      var es = [
+        ['\\', '\\\\'],
+        ['\"', '\\\"'],
+        ['\'', '\\\''],
+        ["\b", '\\b'],
+        ["\f", '\\f'],
+        ["\n", '\\n'],
+        ["\r", '\\r'],
+        ["\t", '\\t'],
+        ["\v", '\\v'],
+      ];
+      for(var i=0;i<es.length;i++)
+        str = str.replaceAll(es[i][0], es[i][1]);
+      return str;
+    }
     static isNegative(x) { return x < 0; }
     static isChild(argA, argB) { }
     static isParent(argA, argB) { }
     static isEven(argA) { return numbers.every(function (e) { return e % 2 == 0; }); }
     static isOdd(argA) { return numbers.every(function (e) { return Math.abs(e % 2) == 1; }); }
     /**
-     * 
+     *
      * @param {*} argA This is the input argument, it has to be a string operate.enforce(operate.isString(value), true)
      * @param {*} Object The Object to search this string in .
      * @param {*} options Currently there are 3 optional Parameters.
      *  options.Recurse : true [true,false] Work In progress
      * optoins.filter()
      * options.Lookin : keys [keys, values, all]
-     * 
+     *
      */
 
     static isActionRequest(obj){

@@ -6,6 +6,7 @@ function json2html(query, parent){
       query = [query];
    }
    for(var i = 0;i<query.length;i++){
+
       if(query[i].text !== undefined){
          parent.innerHTML += query[i].text;
          continue;

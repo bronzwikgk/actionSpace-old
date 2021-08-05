@@ -1,58 +1,66 @@
 <html>
 
 <head>
-    <style>
-       @namespace url(http://www.w3.org/1999/xhtml);
-      .box > tag{
-         color:white;
+  <style>
+    @namespace url(http://www.w3.org/1999/xhtml);
+    .box > tag{
+       color:white;
+    }
+    @media only screen and (orientation:portrait){
+       x.pop {
+          color:blue;
+       }
+       hello{
+          color:#fff;
+       }
+    }
+    @-webkit-keyframes i{
+       0%{color:#000;}
+       100%{color:#fff;}
+    }
+    @supports (display: grid) {
+      x pop {
+        color: blue;
       }
-      @media only screen and (orientation:portrait){
-         x.pop {
-            color:blue;
-         }
-         hello{
-            color:#fff;
-         }
-      }
-      @-webkit-keyframes i{
-         0%{color:#000;}
-         100%{color:#fff;}
-      }
-      @supports (display: grid) {
-        x pop {
-          color: blue;
-        }
-      }
-      table{
-        border:1px solid black;
-        border-collapse:collapse;
-        margin:3px;
-      }
-      td{
-        border:1px solid black;
-        min-width:50px;
-      }
-      #viewer{
-        width:800px;
-      }
-    </style>
+    }
+    table{
+      border:1px solid black;
+      border-collapse:collapse;
+      margin:3px;
+    }
+    td{
+      border:1px solid black;
+      min-width:50px;
+    }
+    #viewer{
+      width:800px;
+    }
+  </style>
 </head>
 <body>
 
-   <input type="file" id="docxfile"></input></br>
-   <div id="viewer"></div>
-
-   <script src="operate.js"></script>
-   <script src="actionEntity.js"></script>
-   <script src="actionEvent.js"></script>
-   <script src="actionEngine.js"></script>
-   <script src="importexport/copyAs.js"></script>
-   <script src="importexport/css2json.js"></script>
-   <script src="importexport/json2css.js"></script>
-   <script src="importexport/html2json.js"></script>
-   <script src="importexport/json2html.js"></script>
-   <script src="importexport/json2zip.js"></script>
-   <script src="importexport/zip2json.js"></script>
-   <script src="dependencies/mammoth/mammoth.js"></script>
-   <script src="importexport/docx2json.js"></script>
+  <input type="file" id="docxfile"></input></br>
+  <div id="viewer"></div>
+  <!-- comment -->
+  <script src="operate.js"></script>
+  <script src="actionEntity.js"></script>
+  <script src="actionEvent.js"></script>
+  <script src="actionEngine.js"></script>
+  <script src="importexport/copyAs.js"></script>
+  <script src="importexport/css2json.js"></script>
+  <script src="importexport/json2css.js"></script>
+  <script src="importexport/html2json.js"></script>
+  <script src="importexport/json2html.js"></script>
+  <script src="importexport/json2zip.js"></script>
+  <script src="importexport/zip2json.js"></script>
+  <!-- <script src="importexport/docx2json.js"></script> -->
+  <script src="dependencies/jszip/jszip.min.js"></script>
+  <script>
+    document.getElementById('docxfile').onchange = async function(e){
+      var el = e.target;
+      var v = document.getElementById('viewer');
+      if(v.children.length > 0) v.removeChild(v.children[0]);
+      v.appendChild(await docx2html(el.files[0]));
+    }
+  </script>
 </body>
