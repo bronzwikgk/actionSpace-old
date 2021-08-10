@@ -1,0 +1,48 @@
+<html>
+	<head>
+	    <title>Documentation - ActionEvent</title>
+			<link rel="stylesheet" href = "css/style.css">
+	</head>
+	<body>
+		<a href = "index.html">back</a>
+		<h1>actionEvent</h1>
+		Event Manager for actionSpace.
+		<ul>
+			<li>
+				<h4>constructor(bubble = true)</h4>
+				<span class="pft">bubble</span>, if true will bubble the created events upto the ancestors.
+			</li>
+			<li>
+				<h4>addListener(domElement, events, func, ...args)</h4>
+				<span class="pft">domElement</span> - target element
+				<br><span class="pft">events</span> - target events (seperated by spaces)
+				<br><span class="pft">func</span> - the actual function
+				<br><span class="pft">args</span> - optional arguments to func (as an array)
+				<div class="note">
+					First argument to the function should be event.
+				</div>
+			</li>
+			<li>
+				<h4>addRequestListener(domElement, events, func, args = {})</h4>
+				<span class="pft">domElement</span> - target element
+				<br><span class="pft">events</span> - target events (seperated by spaces)
+				<br><span class="pft">func</span> - requestModel/name of requestModel
+				<br><span class="pft">args</span> - optional arguments to func (as an object)
+				<div class="note">
+					The event can be accessed in the requestModel <span class+'event'>func</span> by <span class='pft'>l.event</span>
+				</div>
+			</li>
+			<li>
+				<h4>removeListener(events)</h4>
+				Removes all <span class="pft">events</span>(seperated by space) listeners in this event manager object.
+				<div class="note">
+					removeListener applies to all elements.
+				</div>
+			</li>
+			<li>
+				<h4>removeElemListener(domElement, events)</h4>
+				Removes all <span class="pft">events</span>(seperated by space) listeners in this event manager object on a specified <span class="pft">domElement</span>.
+			</li>
+		</ul>
+	</body>
+</html>

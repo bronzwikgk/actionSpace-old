@@ -1,0 +1,132 @@
+<html>
+	<head>
+	    <title>Documentation - ActionEntity</title>
+			<link rel="stylesheet" href = "css/style.css">
+	</head>
+	<body>
+		<a href = "index.html">back</a>
+		<h1>actionEntity</h1>
+		<ul>
+			<li>
+				<h4>Entity.stringToPath(str)</h4>
+				<div class="desc">converts a string with keys(seperated by only <span class="pft">.</span> or <span class="pft">square brackets</span>) to an array of keys</div>
+<pre>
+Entity.stringToPath("fruits.apple.color")
+// evaluates to ['fruits', 'apple', 'color'].
+</pre>
+			</li>
+			<li>
+				<h4>Entity.get(key, parent)</h4>
+				<div class="desc"> resolves a path query inside the parent</div>
+<pre>
+Entity.get("fruits.apple.color", {
+	fruits:{
+		apple:{
+			color:red
+		},
+		mango:{
+			color:orange
+		}
+	}
+})
+// evaluates to red.
+</pre>
+			</li>
+			<li>
+				<h4>Entity.deleteProps(req, del)</h4>
+				deletes properties from req specified in del.<br>
+				Works for arrays and objects.
+<pre>
+Entity.deleteProps({
+	x:5,
+	y:{x:7, z:5}
+},
+{
+	x:true,
+	y:{z:true}
+})
+//evaluates to {y:{x:7}}
+</pre>
+			</li>
+			<li>
+				<h4>Entity.setProps(req, model)</h4>
+				sets properties in model specified in req.<br>
+				Works for objects.
+<pre>
+Entity.setProps({
+	x:5,
+	y:{x:7, z:5}
+},
+{
+	x:1,
+	y:{z:2}
+})
+/*
+evaluates to
+{
+	x:1,
+	y:{z:2}
+}
+*/
+</pre>
+			</li>
+			<li>
+				<h4>Entity.updateProps(req, model)</h4>
+				updates properties in model specified in req.<br>
+				Works for objects.
+<pre>
+Entity.updateProps({
+	x:5,
+	y:{x:7, z:5}
+},
+{
+	x:1,
+	y:{z:2}
+})
+/*
+evaluates to
+{
+	x:1,
+	y:{x:7, z:2}
+}
+*/
+</pre>
+			<div class="note">Notice the difference between the example in setProps and updateProps</div>
+			</li>
+			<li>
+				<h4>Entity.walk(req, callback)</h4>
+				Walks through an array or objec0t recursively.<br>
+				callback should be an object, which specifies callbacks for different datatypes of variables present in <span class="pft">req</span>.<br>
+				Callback model can be found in the below example.<br>
+				When no key matches the datatype in the callback, a default value callback function is called.<br>
+				If the callback function returns true, the walk method will try to walk through the keys of the current object
+<pre>
+var obj = {
+	x:5,
+	y:{x:'Hello', z:2}
+}
+var callback = {
+	object:{
+		func:function(obj, key){
+			return true; //walk on obj[key]
+		}
+		args:[] //no additional arguments
+	},
+	string:{
+		func:function(obj, key, name){ //additional argument
+			console.log(obj[key] + " " + name)
+		},
+		args:['saras']	//the value
+	},
+	value:{
+		func:function(obj, key){
+			console.log("unrecognized type.", obj[key]);
+		}
+	}
+};
+Entity.walk(obj, callback);
+</pre>
+			</li>
+		</ul>
+  </body>
+</html>
