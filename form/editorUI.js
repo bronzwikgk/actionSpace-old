@@ -1064,7 +1064,7 @@ var bottomNavBar = {
 var editorUI = [
     topNavBar,
     mainSection,
-    bottomNavBar
+    // bottomNavBar
 ];
 
 // CreateEntity.create(editorUI, document.getElementById('root'));
