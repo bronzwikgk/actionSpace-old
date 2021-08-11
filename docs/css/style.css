@@ -48,17 +48,26 @@ pre > .type{
   text-align:center;
 }
 .pft{
-  font-size:smaller;
+  font-style:normal;
   background:#ff8;
   padding-left:5px;
   padding-right:5px;
   color:#f50;
+  font-size:14px;
 }
 .note{
   padding:10px;
-  font-size:smaller;
+  font-size:14px;
   background:#eef;
   color:#00f;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.warning{
+  padding:10px;
+  font-size:14px;
+  background:#ffd;
+  color:#f88;
   margin-top:20px;
   margin-bottom:20px;
 }

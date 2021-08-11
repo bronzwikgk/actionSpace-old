@@ -1,42 +1,36 @@
 async function copyAs(input, model){
   input = await copyAsUtil(input, model);
-  var index = 0;
-  var cb = {};
-  var pass = {
-     func: async function(obj, key, cb, index){
-       var nk = key;
-
-       if(operate.isString(key))
-         nk = key.replaceAll("__INDEX", index);
-
-       obj[nk] = obj[key];
-       if(nk!=key) delete obj[key];
-       await Entity.walk(obj[nk], cb);
-       return false;
-     },
-     args:[cb, index],
-     wait:true
-  };
-  cb.object = pass;
-  cb.array = pass;
-  cb.value = {
-    func:function(obj, key, index){
-      var nk = key;
-      if(operate.isString(obj[key])){
-        obj[key] = obj[key].replaceAll("__INDEX", index);
-
-      }
-      if(operate.isString(key)){
-        nk = key.replaceAll("\"__INDEX\"", index);
-      }
-      obj[nk] = obj[key];
-      if(nk!=key)delete obj[key];
-    },
-    args:[index],
-    wait:true
-  };
-
-  await Entity.walk(input , cb);
+  // var index = 0;
+  // var cb = {};
+  // //okay, so there are no arrays
+  // var pass = {
+  //    func: async function(obj, key, cb, index){
+  //      var nk = key;
+  //
+  //      if(operate.isString(key)){
+  //        nk = key.replaceAll("\"__INDEX\"", index);
+  //      }
+  //      obj[nk] = obj[key];
+  //      if(nk!=key) delete obj[key];
+  //      await Entity.walk(obj[nk], cb);
+  //      return false;
+  //    },
+  //    args:[cb, index],
+  //    wait:true
+  // };
+  // cb.object = pass;
+  // cb.array = pass;
+  // cb.value = {
+  //   func:function(obj, key, index){
+  //     var nk = key;
+  //
+  //     obj[nk] = obj[key];
+  //     if(nk!=key)delete obj[key];
+  //   },
+  //   args:[index],
+  //   wait:true
+  // };
+  // await Entity.walk(input, cb);
   return input;
 }
 async function copyAsUtil(input, model){
@@ -85,9 +79,14 @@ async function copyAsUtil(input, model){
         // if(x) console.log(input, obj, key, nk, x);
         delete obj[key];
         if(x!==undefined){
+
            obj[nk] = x;
-           // console.log("inside", obj[key], x, x[0]);
-           // console.log(obj[nk][0]);
+           // if(operate.hasOwnProperty('length')){
+           //   for(var xk in x){
+           //     obj[key+"#"+xk] = x[xk];
+           //   }
+           //   delete obj[key];
+           // }
         }
 
      },
@@ -154,7 +153,6 @@ async function matchObject(obj, path, result, specific, pkey, lkey){
          // console.log(obj);
          for(var key in obj){
             var x = await matchObject(obj[key], [...keys], result, specific, pkey, key);
-
          }
       }
       else if(key == '$into-parent'){
@@ -190,46 +188,47 @@ async function matchObject(obj, path, result, specific, pkey, lkey){
       }
       else if(key.substr(0, "$follow-".length) == '$follow-'){
          //provides index property
+
          var x = await copyAsUtil(obj, window[key.substr("$follow-".length)]);
-         var delta  = 0;
-         if(result.hasOwnProperty("length")) delta = -1;
-         var index = Object.keys(result).length+delta;
-         var cb = {};
-         var pass = {
-            func: async function(obj, key, cb, index){
-              var nk = key;
+         // var delta  = 0;
+         // if(result.hasOwnProperty("length")) del1ta = -1;
+         // var index = Object.keys(result).length+delta;
+         // var cb = {};
+         // var pass = {
+         //    func: async function(obj, key, cb, index){
+         //      var nk = key;
+         //
+         //      if(operate.isString(key))
+         //        nk = key.replaceAll("\"__INDEX\"", index);
+         //
+         //      obj[nk] = obj[key];
+         //      if(nk!=key) delete obj[key];
+         //      await Entity.walk(obj[nk], cb);
+         //      return false;
+         //    },
+         //    args:[cb, index],
+         //    wait:true
+         // };
+         // cb.object = pass;
+         // cb.array = pass;
+         // cb.value = {
+         //   func:function(obj, key, index){
+         //     var nk = key;
+         //     if(operate.isString(obj[key])){
+         //       obj[key] = obj[key].replaceAll("\"__INDEX\"", index);
+         //
+         //     }
+         //     if(operate.isString(key)){
+         //       nk = key.replaceAll("\"__INDEX\"", index);
+         //     }
+         //     obj[nk] = obj[key];
+         //     if(nk!=key)delete obj[key];
+         //   },
+         //   args:[index],
+         //   wait:true
+         // };
 
-              if(operate.isString(key))
-                nk = key.replaceAll("\"__INDEX\"", index);
-
-              obj[nk] = obj[key];
-              if(nk!=key) delete obj[key];
-              await Entity.walk(obj[nk], cb);
-              return false;
-            },
-            args:[cb, index],
-            wait:true
-         };
-         cb.object = pass;
-         cb.array = pass;
-         cb.value = {
-           func:function(obj, key, index){
-             var nk = key;
-             if(operate.isString(obj[key])){
-               obj[key] = obj[key].replaceAll("\"__INDEX\"", index);
-
-             }
-             if(operate.isString(key)){
-               nk = key.replaceAll("\"__INDEX\"", index);
-             }
-             obj[nk] = obj[key];
-             if(nk!=key)delete obj[key];
-           },
-           args:[index],
-           wait:true
-         };
-
-         await Entity.walk(x , cb);
+         // await Entity.walk(x , cb);
 
          if(lkey !== undefined) {
             result[lkey] = x;
