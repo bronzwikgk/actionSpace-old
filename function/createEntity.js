@@ -61,6 +61,7 @@ window.CreateEntity = class {
                     }
                 }
                 this.append(output, result);
+                return result;
             } else if (Array.isArray(output)) {
                 this.append(output, Object.values(input));
             } else if (operate.isObject(output)) {
@@ -331,11 +332,27 @@ window.CreateEntity = class {
     }
 
     static uniqueId(length) {
-        if (operate.isUseless(length) || !operate.isInt(length)) length = 12;
-        let randy = Math.floor(Math.random() * Math.pow(10, 4) * 36),
-            timmy = Date.now();
-        length = Math.min(12, length);
-        return (timmy.toString(36).slice(-8) + randy.toString(36).padStart(4, '0'));
+        const MAX_LEN = 20;
+        length = parseInt(length);
+
+        if (operate.isUseless(length) || length !== NaN) length = MAX_LEN;
+
+        let uid = '',
+            timmy = Date.now().toString(36),
+            randy = Math.floor(Math.random() * Math.pow(36, 12)).toString(36).padStart(12, '0');
+        if (length < timmy.length) {
+            uid = randy.slice(-length)
+        } else{
+            length = length - timmy.length;
+            while(length >= 4){
+                uid += `-${randy.slice(-4)}`;
+                randy = randy.slice(0, -4);
+                length = length - 4;
+            }
+            if (length > 0) uid = `-${randy.slice(-length)}${uid}`;
+            uid = `${timmy}${uid}`;
+        }
+        return uid;
     }
 
 }

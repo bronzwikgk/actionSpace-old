@@ -1,5 +1,5 @@
 
-class operate {
+window.operate = class {
     //This method takes a string input, and makes a search in an object, irrelevent weder object or Array.
     //It takes options paramerte like
     // Recurse: Boolean, true makes an isInside Search Recursive.

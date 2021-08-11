@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
-*{
-    font-family: 'Quicksand', sans-serif;
-}
-.container.loader{
+.container.loader {
     position: absolute;
     top: 0;
     left: 0;
@@ -11,38 +7,48 @@
     background-color: #fff;
     z-index: 99;
 }
-.box{
+
+.box {
     position: absolute;
-    top: 50%;  left: 50%;
-    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-.box h1{
+
+.box h1 {
     position: relative;
     display: inline-block;
     padding: 20px 40px;
     letter-spacing: 20px;
-    text-transform: uppercase;  
+    text-transform: uppercase;
     font-size: 70px;
-    color: #000;  background: #fff;
+    color: #000;
+    background: #fff;
     mix-blend-mode: difference;
     user-select: none;
 }
-.box::before{
+
+.box::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 130px;  height: 100%;
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 100%;
     background: #fff;
     animation: animate 5s infinite linear;
 }
-@keyframes animate{
-    0%{
+
+@keyframes animate {
+    0% {
         left: 0;
     }
-    50%{
+
+    50% {
         left: calc(100% - 130px);
     }
-    100%{
+
+    100% {
         left: 0;
     }
 }

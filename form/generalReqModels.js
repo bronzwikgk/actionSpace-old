@@ -1,3 +1,15 @@
+var generalUI = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'root',
+    response: 'root',
+    callback: {
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$editorUI', '$l.root']
+    }
+}
+
 var requiredScripts = {
     "code": [
         "./form/editorReqModels.js",
@@ -73,18 +85,6 @@ var switchEditorMode = [{
     // }
 ]
 
-var generalUI = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'root',
-    response: 'root',
-    callback: {
-        objectModel: 'CreateEntity',
-        method: 'create',
-        arguments: ['$editor_main', '$l.root']
-    }
-}
-
 var hideSideNavBar = {
     objectModel: "document",
     method: "getElementById",
@@ -130,11 +130,15 @@ var xplorerReqModel = {
     response: "leftSide",
     callback: {
         declare: {
-            'leftSide.innerHTML': ""
+            'leftSide.innerHTML': "",
+            'elemsToAppend': [
+                "$leftNavBarTitle",
+                "$xplorerTools"
+            ]
         },
         objectModel: "CreateEntity",
         method: "create",
-        arguments: ["$leftNavBarTitle", "$l.leftSide"],
+        arguments: ["$l.elemsToAppend", "$l.leftSide"],
         callback: {
             declare: {
                 "leftSide.children[0].children[0].innerHTML": "Xplorer"
@@ -154,7 +158,10 @@ var editorConfigReqModel = {
     callback: {
         declare: {
             'leftSide.innerHTML': "",
-            'elemsToAppend': ["$leftNavBarTitle", "$editorModesUI"]
+            'elemsToAppend': [
+                "$leftNavBarTitle",
+                "$editorModesUI"
+            ]
         },
         objectModel: "CreateEntity",
         method: "create",

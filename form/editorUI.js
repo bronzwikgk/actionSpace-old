@@ -1,266 +1,75 @@
-var titleBar = {
-    "name": "div",
+var sharedLabels = {
+    "name": "span",
     "attributes": {
-        "class": "titleBar"
+        "class": "sharedLabels"
     },
     "items": {
         "element##0": {
-            "name": "img",
+            "name": "label",
             "attributes": {
-                "id": "brandLogo",
-                "class": "logo",
-                "src": "./assets/download.jpg",
-                "alt": "EveryThing Happens Here"
-            },
-        },
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "class": "docIdentifier"
+                "class": "title"
             },
             "items": {
-                "element##0": {
-                    "name": "input",
-                    "attributes": {
-                        "type": "text",
-                        "id": "fileName",
-                        "class": "dName",
-                        "value": "Document Name"
-                    },
-                    "items": {}
-                },
-                "element##1": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dLabel"
-                    },
-                    "items": {
-                        "text##0": "anyTag"
-                    }
-                }
+                "text##0": "Shared"
+            }
+        },
+        "element##1": {
+            "name": "label",
+            "attributes": {
+                "class": "description"
+            },
+            "items": {
+                "text##0": "working"
             }
         },
         "element##2": {
-            "name": "div",
-            "attributes": {
-                "class": "menuBar"
-            },
-            "items": {
-                "element##0": {
-                    "name": "span",
-                    "attributes": {
-                        "id": "fileMenu",
-                        "class": "menuitem file"
-                    },
-                    "items": {
-                        "text##0": "File"
-                    }
-                },
-                "element##1": {
-                    "name": "span",
-                    "attributes": {
-                        "id": "fileMenu",
-                        "class": "menuitem file"
-                    },
-                    "items": {
-                        "text##0": "Edit"
-                    }
-                },
-                "element##2": {
-                    "name": "span",
-                    "attributes": {
-                        "id": "fileMenu",
-                        "class": "menuitem file"
-                    },
-                    "items": {
-                        "text##0": "Insert"
-                    }
-                },
-                "element##3": {
-                    "name": "span",
-                    "attributes": {
-                        "id": "fileMenu",
-                        "class": "menuitem file"
-                    },
-                    "items": {
-                        "text##0": "View"
-                    }
-                }
-            }
-        },
-        "element##4": {
             "name": "span",
             "attributes": {
-                "class": "sharedLabels"
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "title"
-                    },
-                    "items": {
-                        "text##0": "Shared"
-                    }
-                },
-                "element##1": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "description"
-                    },
-                    "items": {
-                        "text##0": "working"
-                    }
-                },
-                "element##2": {
-                    "name": "span",
-                    "attributes": {
-                        "class": "userIcons"
-                    },
-                    "items": {
-                        "element##0": {
-                            "name": "label",
-                            "attributes": {},
-                            "items": {
-                                "text##0": "AA"
-                            }
-                        },
-                        "element##1": {
-                            "name": "label",
-                            "attributes": {},
-                            "items": {
-                                "text##0": "BB"
-                            }
-                        },
-                        "element##2": {
-                            "name": "label",
-                            "attributes": {},
-                            "items": {
-                                "text##0": "CC"
-                            }
-                        },
-                        "element##3": {
-                            "name": "label",
-                            "attributes": {},
-                            "items": {
-                                "text##0": "+"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "element##5": {
-            "name": "span",
-            "attributes": {
-                "class": "shareBtn"
-            },
-            "items": {
-                "text##0": "Share ",
-                "element##1": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-share"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##6": {
-            "name": "span",
-            "attributes": {
-                "class": "notification"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-bell"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##7": {
-            "name": "span",
-            "attributes": {
-                "class": "userIcon dropdown",
-                "data-action-type": "anchorLink",
-                "data-action-Value": "/signInView"
+                "class": "userIcons"
             },
             "items": {
                 "element##0": {
                     "name": "img",
                     "attributes": {
-                        "id": "userImg",
-                        "class": "userImg dropbtn",
+                        "id": "",
+                        "class": "",
                         "src": "./assets/user_img.jpg",
-                        "alt": "User Name"
+                        "alt": "User A",
                     },
                     "items": {}
                 },
                 "element##1": {
-                    "name": "span",
+                    "name": "img",
                     "attributes": {
-                        "class": "dropdown-content"
+                        "id": "",
+                        "class": "",
+                        "src": "./assets/user_img.jpg",
+                        "alt": "User B",
                     },
-                    "items": {
-                        "element##0": {
-                            "name": "a",
-                            "attributes": {},
-                            "items": {
-                                "text##0": "Profile"
-                            }
-                        }
-                    }
+                    "items": {}
+                },
+                "element##2": {
+                    "name": "img",
+                    "attributes": {
+                        "id": "",
+                        "class": "",
+                        "src": "./assets/user_img.jpg",
+                        "alt": "User C",
+                    },
+                    "items": {}
+                },
+                "element##3": {
+                    "name": "img",
+                    "attributes": {
+                        "id": "",
+                        "class": "",
+                        "src": "",
+                        "alt": "",
+                    },
+                    "items": {}
                 }
             }
         }
-    }
-}
-
-var editorModesUI = {
-    "name": "div",
-    "attributes": {
-        "id": "editorModes",
-        "data-action-type": "chngEditorMode",
-        // "data-action-value": ""
-    },
-    "items": {
-        "element##0": {
-            "name": "input",
-            "attributes": {
-                "id": "",
-                "type": "radio",
-                "name": "editorMode",
-                "value": "code",
-                "checked": ""
-            },
-            "items": {}
-        },
-        "html##1": "Code<br>",
-        "element##2": {
-            "name": "input",
-            "attributes": {
-                "id": "",
-                "type": "radio",
-                "name": "editorMode",
-                "value": "canvas"
-            },
-            "items": {}
-        },
-        "html##3": "Canvas<br>",
-        "element##4": {
-            "name": "input",
-            "attributes": {
-                "id": "",
-                "type": "radio",
-                "name": "editorMode",
-                "value": "richtext"
-            },
-            "items": {}
-        },
-        "html##5": "Rich Text<br>",
     }
 }
 
@@ -696,129 +505,74 @@ var actionBar = {
                     }
                 }
             }
-        },
-        // "element##1": {
-        //     "name": "div",
-        //     "attributes": {
-        //         "class": "documentTools"
-        //     },
-        //     "items": {
-        //         "element##0": {
-        //             "name": "span",
-        //             "attributes": {},
-        //             "items": {
-        //                 "element##0": {
-        //                     "name": "i",
-        //                     "attributes": {
-        //                         "class": "far fa-star"
-        //                     },
-        //                     "items": {}
-        //                 },
-        //                 "element##1": {
-        //                     "name": "i",
-        //                     "attributes": {
-        //                         "class": "fas fa-save"
-        //                     },
-        //                     "items": {}
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        }
     }
 }
 
-
-var leftSideNav = {
+var xplorerTools = {
     "name": "div",
     "attributes": {
-        "id": "leftSideNav",
-        "class": "leftSideNav"
+        "id": "xplorerTools",
     },
     "items": {
         "element##0": {
-            "name": "span",
+            "name": "div",
             "attributes": {
-                "id": "leftNavBar",
-                "class": "recents",
-                "data-tooltip": "recents",
-                "data-action-type": "toggleNavBar",
-                "data-action-value": "recentsReqModel",
-                "data-action-target-element-id": "leftSide"
+                "id": "tools"
             },
             "items": {
                 "element##0": {
-                    "name": "i",
+                    "name": "span",
                     "attributes": {
-                        "class": "fas fa-history"
+                        "id": "newFile",
+                        "class": "fas fa-plus",
+                        "data-action-type": "processFileOrDir",
+                        "data-action-value": "newFileReqFlow"
+                    },
+                    "items": {}
+                },
+                "element##1": {
+                    "name": "span",
+                    "attributes": {
+                        "id": "openFile",
+                        "class": "fas fa-external-link-alt",
+                        "data-action-type": "processFileOrDir",
+                        "data-action-value": "getUserInputFile"
+                    },
+                    "items": {}
+                },
+                "element##2": {
+                    "name": "span",
+                    "attributes": {
+                        "id": "dir",
+                        "class": "fas fa-folder-plus",
+                        "data-action-type": "processFileOrDir",
+                        "data-action-value": "getUserInputDir"
                     },
                     "items": {}
                 }
             }
         },
         "element##1": {
-            "name": "span",
+            "name": "div",
             "attributes": {
-                "id": "newDoc",
-                "data-action-type": "toggleNavBar",
-                "data-action-value": "xplorerReqModel",
-                "data-action-target-element-id": "leftSide"
+                "id": "fileSysNavigation",
+                "class": "navigator"
             },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-file-alt"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##2": {
-            "name": "span",
-            "attributes": {
-                "id": "openDoc",
-                "data-action-type": "file",
-                "data-action-value": "export"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-file-export"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##4": {
-            "name": "span",
-            "attributes": {
-                "id": "exportDoc",
-                "data-action-type": "toggleNavBar",
-                "data-action-value": "editorConfigReqModel",
-                "data-action-target-element-id": "leftSide"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fas fa-tools"
-                    },
-                    "items": {}
-                }
-            }
+            "items": {}
         }
     }
 }
 
+
+
+
 var navigatorFileTemp = {
     "name": "span",
     "attributes": {
-        "class": "item file activeFileTemp",
-        "data-action-type": "openFromNavigation",
-        "data-action-value": "file",
-        "data-fileid": ""
+        "class": "file",
+        "data-action-type": "openFileFromNavigator",
+        "data-attached-file-id": ""
     },
     "items": {
         "text##0": " Lorem ipsum ..."
@@ -826,92 +580,33 @@ var navigatorFileTemp = {
 }
 
 var navigatorCollTemp = {
-    "name": "span",
-    "attributes": {
-        "id": "collection_uid",
-        "class": "item collection activeCollTemp"
-    },
-    "items": {
-        "element##0": {
-            "name": "label",
-            "attributes": {
-                "class": "collectionLabel",
-                "data-action-type": "toggleClass",
-                "data-action-value": "active",
-                "data-action-target-element-id": "collection_uid"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "arrow gt fas fa-angle-right"
-                    },
-                    "items": {}
-                },
-                "text##1": "collection Template"
-            }
-        }
-    }
-}
-
-var leftNavBarTitle = {
     "name": "div",
     "attributes": {
-        "class": "title"
+        "id": "collection_uid",
+        "class": "collection"
     },
     "items": {
         "element##0": {
             "name": "span",
-            "attributes": {},
+            "attributes": {
+                "class": "title",
+                "data-action-type": "toggleClass",
+                "data-action-value": "active",
+            },
             "items": {
-                "text##0": "Title"
+                "text##0": "collection Template"
             }
         },
         "element##1": {
-            "name": "i",
-            "attributes": {
-                "class": "fas fa-ellipsis-h"
-            },
-            "items": {}
-        }
-
-    }
-}
-
-var leftSideFileSysNav = {
-    "name": "div",
-    "attributes": {
-        "id": "leftSide",
-        "class": "leftSide"
-    },
-    "items": {
-        // "element##1": {
-        //     "name": "div",
-        //     "attributes": {
-        //         "id": "fileSysNavigation",
-        //         "class": "navigator"
-        //     },
-        //     "items": {}
-        // }
-    }
-}
-
-var centerArea = {
-    "name": "div",
-    "attributes": {
-        "class": "centerArea"
-    },
-    "items": {
-        "element##0": {
             "name": "div",
             "attributes": {
-                "id": "workSpaceContainer",
-                "class": "editorContainer scroll--simple"
+                "class": "content"
             },
             "items": {}
         }
     }
 }
+
 
 var canvasUI = {
     "name": "div",
@@ -938,23 +633,10 @@ var canvasUI = {
 
 }
 
-var richtextUI = {
-    "name": "div",
-    "attributes": {
-        "id": "workSpace",
-        "class": "editor",
-        "contenteditable": "true",
-        "data-open-fileid": "",
-        "data-filename": "",
-        "data-is-unsaved": "false"
-    },
-    "items": {}
-}
-
 var codeUI = {
     "name": "textarea",
     "attributes": {
-        "id": "workSpace",
+        "id": "editor",
         "class": "editor",
         "data-open-fileid": "",
         "data-filename": "",
@@ -963,27 +645,409 @@ var codeUI = {
     "items": {}
 }
 
-var rightSideInfoNav = {
+var richtextUI = {
     "name": "div",
     "attributes": {
-        "class": "rightSide"
+        "id": "editor",
+        "class": "editor",
+        "contenteditable": "true"
+    },
+    "items": {}
+}
+
+var breadNavItemTemp = {
+    "name": "li",
+    "attributes": {},
+    "items": {
+        "element##0": {
+            "name": "a",
+            "attributes": {
+                "href": ""
+            },
+            "items": {
+                "text##0": "Text"
+            }
+        }
+    }
+}
+
+var breadNav = {
+    "name": "nav",
+    "attributes": {
+        "id": "breadNav",
+        "class": "breadcrumb",
+        "aria-label": "Breadcrumb",
+        // "style": "background-color: #fff;"
     },
     "items": {
         "element##0": {
-            "name": "div",
+            "name": "ul",
             "attributes": {
-                "id": "InfoNav",
-                "class": "infoBlock"
+                "class": "breadcrumb-list"
+            },
+            "items": {
+                "element##0": breadNavItemTemp,
+                "element##1": breadNavItemTemp,
+                "element##2": breadNavItemTemp
+            }
+        }
+    }
+}
+
+var navtabLinkTemp = {
+    "name": "span",
+    "attributes": {
+        "class": "tab-link",
+        "data-action-type": "switchFileNavTab",
+        "data-attached-file-id": "0"
+    },
+    "items": {
+        "element##0": {
+            "name": "label",
+            "attributes": {
+                "class": "tab-title"
+            },
+            "items": {
+                "text##0": "fileName"
+            }
+        },
+        "element##1": {
+            "name": "span",
+            "attributes": {
+                "class": "close-btn",
+                "data-action-type": "closeNavTab"
             },
             "items": {}
         }
     }
 }
 
-var footer = {
+var navTabs = {
     "name": "div",
     "attributes": {
-        "class": "footer"
+        "class": "nav-tabs"
+    },
+    "items": {
+        "element##0": {
+            "name": "div",
+            "attributes": {
+                "id": "tabLinks",
+                "class": "tab-links"
+            },
+            "items": {
+                "element##0": {
+                    "name": "div",
+                    "attributes": {
+                        "min-width": "100%",
+                        "width": "max-content",
+                        "height": "100%"
+                    },
+                    "items": {}
+                }
+            }
+        },
+        "element##1": {
+            "name": "div",
+            "attributes": {
+                "class": "tab-contents"
+            },
+            "items": {
+                "element##0": breadNav,
+                "element##1": {
+                    "name": "div",
+                    "attributes": {
+                        "id": "workspace",
+                        "class": "tab-content"
+                    },
+                    "items": {
+                        "element##0": richtextUI
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+var menuBar = {
+    "name": "div",
+    "attributes": {
+        "id": "menuBar",
+        "class": "menu-bar"
+    },
+    "items": {
+        "element##0": {
+            "name": "span",
+            "attributes": {
+                "id": "fileMenu",
+                "class": "menu-item"
+            },
+            "items": {
+                "text##0": "File"
+                // "element##0": {
+                //     "name": "span",
+                //     "attributes": {
+                //         "class": "dropbtn",
+                //         "data-action-type": "toggleDropdown",
+                //         "data-action-value": "active"
+                //     },
+                //     "items": {
+                //         "text##0": "File"
+                //     }
+                // },
+                // "element##1": {
+                //     "name": "span",
+                //     "attributes": {
+                //         "class": "dropdown-content"
+                //     },
+                //     "items": {
+                //         "element##0": {
+                //             "name": "span",
+                //             "attributes": {
+                //                 // "class": ""
+                //             },
+                //             "items": {
+                //                 "text##0": "New"
+                //             }
+                //         },
+                //         "element##1": {
+                //             "name": "span",
+                //             "attributes": {
+                //                 // "class": "dropbtn"
+                //             },
+                //             "items": {
+                //                 "text##0": "Open"
+                //             }
+                //         }
+                //     }
+                // }
+            }
+        },
+        "element##1": {
+            "name": "span",
+            "attributes": {
+                "id": "editMenu",
+                "class": "menu-item"
+            },
+            "items": {
+                "text##0": "Edit"
+            }
+        },
+        "element##2": {
+            "name": "span",
+            "attributes": {
+                "id": "insertMenu",
+                "class": "menu-item"
+            },
+            "items": {
+                "text##0": "Insert"
+            }
+        },
+        "element##3": {
+            "name": "span",
+            "attributes": {
+                "id": "viewMenu",
+                "class": "menu-item"
+            },
+            "items": {
+                "text##0": "View"
+            }
+        }
+    }
+}
+
+var topNavBar = {
+    "name": "div",
+    "attributes": {
+        "id": "navbarTop",
+        "class": "navbar-top"
+    },
+    "items": {
+        "element##0": {
+            "name": "img",
+            "attributes": {
+                "id": "logoImg",
+                "class": "logo-img",
+                "src": "./assets/download.jpg",
+                "alt": "Ehh",
+                // "width": "80",
+                // "height": "60"
+            },
+        },
+        "element##1": {
+            "name": "span",
+            "attributes": {
+                "id": "docInfo",
+                "class": "doc-info"
+            },
+            "items": {
+                "element##0": {
+                    "name": "input",
+                    "attributes": {
+                        "type": "text",
+                        "id": "docName",
+                        "class": "doc-name",
+                        "value": "Document Name"
+                    },
+                    "items": {}
+                },
+                "element##1": {
+                    "name": "label",
+                    "attributes": {
+                        "id": "docTag",
+                        "class": "doc-tag"
+                    },
+                    "items": {
+                        "text##0": "anyTag"
+                    }
+                }
+            }
+        },
+        "element##2": menuBar,
+        // "element##3": sharedLabels,
+        "element##4": {
+            "name": "button",
+            "attributes": {
+                "class": "share-btn"
+            },
+            "items": {
+                "text##0": "Share ",
+                "element##1": {
+                    "name": "i",
+                    "attributes": {
+                        "class": "fas fa-share"
+                    },
+                    "items": {}
+                }
+            }
+        },
+        "element##5": {
+            "name": "span",
+            "attributes": {
+                "class": "user-info dropdown",
+                "data-dropdown-position": "bottom",
+                // "data-action-type": "anchorLink",
+                // "data-action-value": "/signInView"
+            },
+            "items": {
+                "element##0": {
+                    "name": "img",
+                    "attributes": {
+                        "id": "userImg",
+                        "class": "user-img dropbtn",
+                        "src": "./assets/user_img.jpg",
+                        "alt": "User Name",
+                        "data-action-type": "toggleClass",
+                        "data-action-value": "active"
+                    },
+                    "items": {}
+                },
+                "element##1": {
+                    "name": "span",
+                    "attributes": {
+                        "class": "dropdown-content"
+                    },
+                    "items": {
+                        "element##0": {
+                            "name": "a",
+                            "attributes": {},
+                            "items": {
+                                "text##0": "Profile"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+var leftNavBar = {
+    "name": "div",
+    "attributes": {
+        "id": "navbarSideLeft",
+        "class": "navbar-side-left"
+    },
+    "items": {
+        "element##0": {
+            "name": "span",
+            "attributes": {
+                "id": "",
+                "class": "fas fa-file-alt",
+                "data-action-type": "toggleLeftSideNav",
+                "data-action-value": "addXplorerTools"
+            },
+            "items": {}
+        },
+        "element##1": {
+            "name": "span",
+            "attributes": {
+                "id": "newDoc",
+                "class": "fas fa-file-export",
+                "data-action-type": "toggleLeftSideNav",
+                "data-action-value": "addXportTools"
+            },
+            "items": {}
+        }
+    }
+}
+
+var addtnlLeftNavBar = {
+    "name": "div",
+    "attributes": {
+        "id": "navbarSideLeftAddtnl",
+        "class": "navbar-side-left-addtnl"
+    },
+    "items": {}
+}
+
+var centralArea = {
+    "name": "div",
+    "attributes": {
+        "id": "centralArea",
+        "class": "central-area"
+    },
+    "items": {
+        "element##0": {
+            "name": "div",
+            "attributes": {
+                "class": "workspace-container"
+            },
+            "items": {
+                "element##0": navTabs
+            }
+        }
+    }
+}
+
+var rightNavBar = {
+    "name": "div",
+    "attributes": {
+        "id": "navbarSideRight",
+        "class": "navbar-side-right"
+    },
+    "items": {}
+}
+
+var mainSection = {
+    "name": "div",
+    "attributes": {
+        "class": "main-section"
+    },
+    "items": {
+        "element##0": leftNavBar,
+        "element##1": addtnlLeftNavBar,
+        "element##2": centralArea,
+        "element##3": rightNavBar
+    }
+}
+
+var bottomNavBar = {
+    "name": "div",
+    "attributes": {
+        "id": "navbarBottom",
+        "class": "navbar-bottom"
     },
     "items": {
         "element##0": {
@@ -997,130 +1061,16 @@ var footer = {
     }
 }
 
-var editor_main = [
-    titleBar,
-    actionBar,
-    leftSideFileSysNav,
-    leftSideNav,
-    centerArea,
-    rightSideInfoNav,
-    footer
+var editorUI = [
+    topNavBar,
+    mainSection,
+    // bottomNavBar
 ];
+
+// CreateEntity.create(editorUI, document.getElementById('root'));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* 
-
-<div class="topNavBar">
-      <div class="titleBar">
-        <span class="backIcon"><i class="fas fa-angle-left"></i></span>
-        <input type="text" class="dName" value="Document Name">
-        <label class="dLabel">anyTag</label>
-        <span class="sharedLabels">
-          <label class="title">Shared</label>
-          <label class="description">working</label>
-          <span class="userIcons">
-            <label>AA</label>
-            <label>BB</label>
-            <label>CC</label>
-            <label>+</label>
-          </span>
-        </span>
-        <span class="searchBar">
-          <input type="text" placeholder="Search">
-          <i class="fas fa-search"></i>
-        </span>
-        <span class="notification">
-          <i class="fas fa-bell"></i>
-        </span>
-        <span class="userIcon dropdown">
-          <span class="dropbtn fas fa-user"></span>
-          <span class="dropdown-content">
-            <a>Profile</a>
-          </span>
-        </span>
-      </div>
-      <div class="actionBar">
-        <div class="editorTools">
-          <span data-action="bold"><i class="fas fa-bold"></i></span>
-          <span data-action="italic"><i class="fas fa-italic"></i></span>
-          <span data-action="underline"><i class="fas fa-underline"></i></span>
-          <span data-action="strikeThrough"><i class="fas fa-strikethrough"></i></span>
-          <span data-action="subscript"><i class="fas fa-subscript"></i></span>
-          <span data-action="superscript"><i class="fas fa-superscript"></i></span>
-          <a class="toolSeparator">|</a>
-
-          <span class="dropdown">
-            <span class="dropbtn fas fa-align-center"><i class="fas fa-caret-up"></i></span>
-            <span class="dropdown-content">
-              <span data-action="justifyCenter"><i class="fas fa-align-center"></i></span>
-              <span data-action="justifyFull"><i class="fas fa-align-justify"></i></span>
-              <span data-action="justifyLeft"><i class="fas fa-align-left"></i></span>
-              <span data-action="justifyRight"><i class="fas fa-align-right"></i></span>
-            </span>
-          </span>
-          <a class="toolSeparator">|</a>
-          <span data-action="insertUnorderedList"><i class="fas fa-list-ul"></i></span>
-          <span data-action="insertOrderedList"><i class="fas fa-list-ol"></i></span>
-          <span data-action=""><i class="far fa-laugh"></i></span>
-
-          <span data-action="createLink" data-value="href"><i class="fas fa-link"></i></span>
-          <input type="text" id="link_addr" placeholder="Type or Paste your link here" hidden>
-          <span class="dropdown">
-            <span class="dropbtn fas fa-code"><i class="fas fa-caret-up"></i></span>
-            <span class="dropdown-content">
-              <h1 data-action="insertBlock" data-value="h1">Title 1</h1>
-              <h2 data-action="insertBlock" data-value="h2">Title 2</h2>
-              <h3 data-action="insertBlock" data-value="h3">Subheading 1</h3>
-              <h4 data-action="insertBlock" data-value="h4">Subheading 2</h4>
-              <h5 data-action="insertBlock" data-value="h5">Subheading 3</h5>
-              <p data-action="insertBlock" data-value="p">paragraph</p>
-              <pre data-action="insertBlock" data-value="pre">Code Block</pre>
-              <blockquote data-action="insertBlock" data-value="blockquote">Quote</blockquote>
-            </span>
-          </span>
-
-          <span data-action="insertImage" data-value="image"><i class="far fa-image"></i></span>
-          <input id="filePicker" type="file" accept="image/*" hidden>
-
-
-        </div>
-        <div class="documentTools">
-          <span><i class="far fa-star"></i></span>
-          <span><i class="fas fa-download"></i></span>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="leftSideNav">
-      <span id="leftNavBar" class="barsIcon"><i class="fas fa-bars"></i></span>
-      <span id="newDoc"><i class="fas fa-plus"></i><label>New Document</label></span>
-      <span id="newColl"><i class="fas fa-folder-plus"></i><label>New Collection</label></span>
-      <span id="saveDoc"><i class="fas fa-save"></i><label>Save Document</label></span>
-      <span id="exportDoc"><i class="fas fa-external-link-alt"></i><label>Export</label></span>
-    </div>
-
-    <div class="rightSide" data-__uniqueid="3">
-        <div class="navigator" data-__uniqueid="2">
-            <span id="collection_uid" class="collection active">
-                <label class="collectionLabel">
-                    <i class="arrow gt fas fa-angle-right"></i>&nbsp;collection
-                </label>
-                <span class="item collection" data-__uniqueid="1">
-                <label class="collectionLabel" data-__uniqueid="0">
-                    <i class="arrow gt fas fa-angle-right"></i>&nbsp;collection
-                </label>
-                <span class="item file">Lorem ipsum ...</span>
-            </span>
-            </span>
-            
-        </div>
-    </div>
-
-      <div class="textEditorContainer scroll--simple">
-        <div id="editor" class="editor" contenteditable="true"></div>
-      </div>
-    </div>
 
 */
