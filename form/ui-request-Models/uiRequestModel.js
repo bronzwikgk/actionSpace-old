@@ -292,4 +292,19 @@ var editorUI = [
     bottomNavBar
 ];
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+var generalUI = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'root',
+    response: 'root',
+    callback: {
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$editorUI', '$l.root']
+    }
+}
+
 // CreateEntity.create(editorUI, document.getElementById('root'));

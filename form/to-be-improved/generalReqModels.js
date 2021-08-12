@@ -1,15 +1,3 @@
-var generalUI = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'root',
-    response: 'root',
-    callback: {
-        objectModel: 'CreateEntity',
-        method: 'create',
-        arguments: ['$editorUI', '$l.root']
-    }
-}
-
 var requiredScripts = {
     "code": [
         "./form/editorReqModels.js",

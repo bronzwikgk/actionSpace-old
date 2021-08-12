@@ -90,11 +90,11 @@ var makeFileRecord = {
     objectModel: "Entity",
     method: "setObjKeyVal",
     arguments: ["$dataContObj", "$l.key", "$l.value"],
-    callback: {
-        objectModel: "console",
-        method: "log",
-        arguments: "$dataContObj"
-    }
+    // callback: {
+    //     objectModel: "console",
+    //     method: "log",
+    //     arguments: "$dataContObj"
+    // }
 }
 
 /*
