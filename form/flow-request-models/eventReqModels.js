@@ -253,23 +253,6 @@ function resizeElement(elem) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var tryEvent = {
-    declare: {
-        "args": {
-            "event": "$l.event"
-        }
-    },
-    objectModel: "ActionEngine",
-    method: "processRequest",
-    arguments: ["getTrueTarget", "$l.args"],
-    response: "resp",
-    callback: {
-        objectModel: "console",
-        method: "log",
-        arguments: ["$l.resp", "$l.event"]
-    }
-}
-
 var evtClick = {
     objectModel: 'eventManager',
     method: 'addRequestListener',
@@ -299,8 +282,7 @@ var handleLoadEventFunc = async function (event) {
         'generalUI',
         'newFileReqFlow',
         'newFileReqFlow',
-        'evtClick',
-        'tryReq'
+        'evtClick'
         // 'evtHover'
         // 'evtPopState'
     ])
