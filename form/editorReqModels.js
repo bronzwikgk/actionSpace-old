@@ -4,15 +4,17 @@ var log = {
     arguments: ['Hello Handsome!']
 };
 
-var tryModel = [{
+var tryReq = {
     objectModel: "ActionEngine",
     method: "processRequest",
-    arguments: "log"
-}, {
-    objectModel: 'console',
-    method: 'log',
-    arguments: '$l'
-}]
+    arguments: "getEditorElementSet",
+    response: "resp",
+    callback: {
+        objectModel: "console",
+        method: "log",
+        arguments: "$l.resp"
+    }
+}
 
 const dataContObj = {}
 
@@ -102,25 +104,19 @@ var getEditorElementSet = [{
     response: 'editor'
 }, {
     objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'docName',
-    response: 'docName'
-}, {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'tabLinks',
+    method: 'querySelector',
+    arguments: '.workspace-container .tab-links',
     response: 'tabLinks'
 }, {
     objectModel: 'document',
     method: 'querySelector',
-    arguments: '#tabLinks .tab-link.active',
+    arguments: '.workspace-container .tab-link.active',
     response: 'activeTabLink'
 }, {
     declare: {
         "resp": {
             "workspace": "$l.workspace",
             "editor": "$l.editor",
-            "docName": "$l.docName",
             "tabLinks": "$l.tabLinks",
             "activeTabLink": "$l.activeTabLink"
         }
@@ -130,19 +126,23 @@ var getEditorElementSet = [{
 
 var makeFileRecord = {
     declare: {
-        "uid": "$l.workspace.getAttribute('data-open-fileid')",
-        "file": {
-            "name": "$l.workspace.getAttribute('data-filename')",
-            "ext": "$l.workspace.getAttribute('data-fileext')",
-            "mimeType": "$l.workspace.getAttribute('data-filetype')"
+        "key": "$l.workspace.getAttribute('data-open-fileid')",
+        "value": {
+            "file": {
+                "name": "$l.workspace.getAttribute('data-filename')",
+                "ext": "$l.workspace.getAttribute('data-fileext')",
+                "mimeType": "$l.workspace.getAttribute('data-filetype')"
+            },
+            "content": "$l.editor.innerHTML"
         }
     },
+    objectModel: "Entity",
+    method: "setObjKeyVal",
+    arguments: ["$dataContObj", "$l.key", "$l.value"],
     callback: {
-        declare: {
-            "temp": "$dataContObj[l.uid] ? dataContObj[l.uid] : dataContObj[l.uid] = {}",
-            "temp.file": "$l.file",
-            "temp.content": "$l.editor.innerHTML"
-        }
+        objectModel: "console",
+        method: "log",
+        arguments: "$dataContObj"
     }
 }
 
@@ -154,7 +154,8 @@ var newTabLink = {
     callback: {
         declare: {
             "props": {
-                "data-attached-file-id": "$l.uid"
+                "data-action-type": "switchFileNavTab",
+                "data-attached-fileid": "$l.uid"
             },
             "tabLink.children[0].innerText": "$l.file.name + l.file.ext"
         },
@@ -182,7 +183,7 @@ var switchToTab = [{
     }
 }, {
     declare: {
-        "resp.docName.value": "$l.file.name + l.file.ext",
+        // "resp.docName.value": "$l.file.name + l.file.ext",
         "props": {
             'data-open-fileid': '$l.uid',
             'data-filename': '$l.file.name',
@@ -228,7 +229,7 @@ var openTab = [{
     arguments: ["switchToTab", "$l.args"],
     callback: {
         declare: {
-            "resp.editor.innerHTML": "$dataContObj[l.uid].content"
+            "resp.editor.innerText": "$dataContObj[l.uid].content"
         }
     }
 }]
@@ -335,16 +336,19 @@ var openFileInEditor = [{
 
 // Open File Request Flow Model
 var getUserInputFile = {
+    declare: {
+        "args": {
+            types: [{
+                description: 'Text file',
+                accept: {
+                    'text/plain': ['.txt']
+                },
+            }],
+        }
+    },
     objectModel: 'HandleFileSys',
     method: 'getFileHandle',
-    arguments: [{
-        types: [{
-            description: 'Text file',
-            accept: {
-                'text/plain': ['.txt']
-            },
-        }],
-    }],
+    arguments: ["$l.args"],
     response: 'fH',
     callback: {
         objectModel: 'CreateEntity',
@@ -430,7 +434,7 @@ var closeTab = {
     }]
 }
 
-var toggleLeftSideNav = {
+/* var toggleLeftSideNav = {
     objectModel: "document",
     method: "querySelector",
     arguments: ".navbar-side-left .active",
@@ -479,7 +483,7 @@ var toggleLeftSideNav = {
             }
         ]
     }]
-}
+} */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -659,7 +663,7 @@ var setUserInputDir = [{
                 'activeTemp.innerText': '$l.currHandle.name',
                 'props': {
                     'id': '$"file_" + l.uid',
-                    'data-attached-file-id': '$l.uid'
+                    'data-attached-fileid': '$l.uid'
                 }
             },
             objectModel: 'CreateEntity',

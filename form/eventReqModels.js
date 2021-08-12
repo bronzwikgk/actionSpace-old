@@ -1,30 +1,40 @@
-var handleClickEvent = [{
+var getTrueTarget = {
+    declare: {
+        "trueTarget": "$l.event.target",
+        "n": "$l.event.path.length - 2",
+        "x": -1,
+        "flag": true
+    },
+    return: "$l.trueTarget",
+    callback: {
+        condition: "$l.flag",
         declare: {
-            "trueTarget": "$l.event.target",
-            "n": "$l.event.path.length - 2",
-            "x": -1,
-            "flag": true
+            "x": "$l.x + 1",
+            "element": "$l.event.path[l.x]"
         },
+        loop: "$l.n",
         callback: {
-            condition: "$l.flag",
+            condition: "$l.element.hasAttribute('data-action-type')",
             declare: {
-                "x": "$l.x + 1",
-                "element": "$l.event.path[l.x]"
+                "trueTarget": "$l.element",
+                "flag": false
             },
-            loop: "$l.n",
-            callback: {
-                condition: "$l.element.hasAttribute('data-action-type')",
-                declare: {
-                    "trueTarget": "$l.element",
-                    "flag": false
-                },
-                objectModel: "console",
-            method: "log",
-            arguments: ["$l.trueTarget", "$l.flag"],
-            }
+            return: "$l.trueTarget",
+        }
+    }
+}
+
+var handleClickEvent = [{
+    declare: {
+        "args": {
+          "event": "$l.event"  
         }
     },
-    {
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: ["getTrueTarget", "$l.args"],
+    response: "trueTarget",
+}, {
         objectModel: "$l.trueTarget",
         method: "getAttribute",
         arguments: "data-action-type",
@@ -74,7 +84,7 @@ var handleClickEvent = [{
     [{
         objectModel: "$l.trueTarget",
         method: "getAttribute",
-        arguments: "data-attached-file-id",
+        arguments: "data-attached-fileid",
         response: "attachedFileId"
     }, {
         condition: "$l.actionType == 'switchFileNavTab'",
@@ -115,7 +125,25 @@ var handleClickEvent = [{
 ]
 
 
+var handleHoverEvent = {
+    declare: {
+        "args": {
+          "event": "$l.event"  
+        }
+    },
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: ["getTrueTarget", "$l.args"],
+    response: "trueTarget",
+    callback: [{
+        objectModel: "$l.trueTarget",
+        objectModel: "$l.trueTarget",
+        method: "getAttribute",
+        arguments: "data-action-type",
+        response: "actionType"
+    }]
 
+}
 var handleClickEventFunc = async function (event) {
     // ActionEngine.processRequest('log');
     // console.log(event);
@@ -158,11 +186,99 @@ var handleClickEventFunc = async function (event) {
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function resizeElement(elem) {
+
+    var activeSide = null,
+        activeElem = null,
+        w = 0,
+        h = 0,
+        x = 0,
+        y = 0;
+
+    // Handle the mousedown event
+    // that's triggered when user drags the resizer
+    const mouseDownHandler = function (e) {
+        activeSide = this;
+        activeElem = activeSide.parentElement;
+        // Get the current mouse position
+        x = e.clientX;
+        y = e.clientY;
+
+        // Calculate the dimension of element
+        const styles = window.getComputedStyle(activeElem);
+        w = parseInt(styles.width, 10);
+        h = parseInt(styles.height, 10);
+
+        // Attach the listeners to `document`
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+
+    const mouseMoveHandler = function (e) {
+        var dx = e.clientX - x,
+            dy = e.clientY - y,
+            side = "xy";
+
+        if (activeSide !== null) side = activeSide.getAttribute('data-side');
+
+        if (side.indexOf('x') > -1) {
+            activeElem.style.width = `${w + dx}px`;
+        }
+        if (side.indexOf('y') > -1) {
+            activeElem.style.height = `${h + dy}px`;
+        }
+    };
+
+    const mouseUpHandler = function () {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    // to add resizers
+    (function () {
+        [
+            ["r", "x"]
+        ].forEach(resizer => {
+            let resizerElem = document.createElement('span');
+            resizerElem.className = `resizer resizer-${resizer[0]}`;
+            resizerElem.setAttribute('data-side', `${resizer[1]}`);
+            resizerElem.addEventListener('mousedown', mouseDownHandler);
+            elem.append(resizerElem);
+        });
+    })();
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var tryEvent = {
+    declare: {
+        "args": {
+            "event": "$l.event"
+        }
+    },
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: ["getTrueTarget", "$l.args"],
+    response: "resp",
+    callback: {
+        objectModel: "console",
+        method: "log",
+        arguments: ["$l.resp", "$l.event"]
+    }
+}
 
 var evtClick = {
     objectModel: 'eventManager',
     method: 'addRequestListener',
     arguments: ['$window', 'click', '$handleClickEvent']
+}
+var evtHover = {
+    objectModel: 'eventManager',
+    method: 'addRequestListener',
+    arguments: ['$window', 'mouseover', '$handleHoverEvent']
 }
 
 var handlePopStateEventFunc = function (event) {
@@ -182,7 +298,10 @@ var handleLoadEventFunc = async function (event) {
     await ActionEngine.processRequest([
         'generalUI',
         'newFileReqFlow',
+        'newFileReqFlow',
         'evtClick',
+        'tryReq'
+        // 'evtHover'
         // 'evtPopState'
     ])
     document.getElementById('loaderPage').remove();
