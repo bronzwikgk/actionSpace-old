@@ -1,0 +1,204 @@
+<html>
+	<head>
+	    <title>Documentation - importexport/copyAs.js</title>
+			<link rel="stylesheet" href = "css/style.css">
+	</head>
+	<body>
+		<a href = "index.html">back</a>
+    <ul>
+
+    </ul>
+    <ul>
+      <li>
+				<h4>matchObject(obj, path)</h4>
+        Fetches a result to a single <span class="pft">path</span> query on <span class="pft">obj</span>.
+				<pre>
+matchObject({
+  x:{
+		y:'6',
+		z:'7'
+	}
+}, "x.y")
+
+// will return '6'
+				</pre>
+				<h5>Keywords that can be put in the <span class="pft">path</span></h5>
+        <ul>
+          <li>
+            <h5>$all</h5>
+            Gets all the values in the current level
+            <pre>
+matchObject({
+  x:5,
+  y:6,
+  z:7
+}, "$all")
+
+/*
+will return with array-like indices
+{
+  0:5,
+  1:6,
+  2:7,
+  length:3
+}
+*/
+            </pre>
+          </li>
+          <li>
+            <h5>$all-with-keys</h5>
+            Gets all the values in the current level and stores them with the keys in the result Object
+            <pre>
+matchObject({
+  x:5,
+  y:6,
+  z:7
+}, "$all-with-keys")
+/*
+will return
+{
+  x:5,
+  y:6,
+  z:7
+}
+*/
+            </pre>
+          </li>
+          <li>
+            <h5>$empty</h5>
+            Filters empty values
+						<pre>
+matchObject({
+  x:{},
+  y:'',
+  z:7
+}, "$all-with-keys.$empty")
+
+/*
+will return
+{
+	x:{},
+	y:''
+}
+*/
+            </pre>
+
+						<div class="note">See how we can combine two or more keywords to have the desired result</div>
+          </li>
+					<li>
+            <h5>$non-empty</h5>
+            Filters non-empty values
+						<pre>
+matchObject({
+  x:{},
+  y:'',
+  z:7
+}, "$all-with-keys.$non-empty")
+
+/*
+will return
+{
+	z:7
+}
+*/
+            </pre>
+					</li>
+					<li>
+            <h5>$only-object</h5>
+            Filters object values
+					</li>
+					<li>
+            <h5>$only-array</h5>
+            Filters array values
+					</li>
+					<li>
+            <h5>$only-string</h5>
+            Filters string values
+					</li>
+					<li>
+            <h5>$only-html</h5>
+            Filters HTML elements
+					</li>
+
+					<li>
+            <h5>$follow-&lt;SchemaModelName&gt;</h5>
+            We can follow a different model schema, for a specific level
+						<pre>
+var HTMLAttributeSchema = {
+	'~name':'nodeValue'
+}
+matchObject(document.body, "attributes.$all.$follow-HTMLAttributeSchema")
+
+/*
+returns the HTMLAttributes of body like
+{
+	0:{color:"green"},
+	1:{width:"100vw"}
+}
+*/
+            </pre>
+					</li>
+					<li>
+            <h5>$into-parent</h5>
+            Tries to move the hierarchy of the current thing a level up. Best used with <span class="pft">$follow-</span>
+						<div class="warning">Should be used only once in a path</div>
+						<pre>
+var HTMLAttributeSchema = {
+	'~name':'nodeValue'
+}
+matchObject(document.body, "attributes.$all.$follow-HTMLAttributeSchema.$into-parent")
+
+/*
+returns the HTMLAttributes of body like
+{
+	color:"green",
+	width:"100vw"
+}
+*/
+            </pre>
+						<div class="note"> If you want to access keywords in a key, put a <span class="pft">~</span> before the key.
+
+					</li>
+					<li>
+            <h5>$condition-&lt;condition&gt;</h5>
+            Conditions should be put with the help of ternary operators
+						The token without quotes will be treated as another path query, and with quotes will be just treated as a simple string.
+						<pre>
+matchObject(document.body,
+	"$condition-(wholeText && tagName != 'SCRIPT')?'text':((data)?'comment' : 'element')")
+
+/*
+returns the type of HTMLElement
+i.e, element
+*/
+            </pre>
+
+					</li>
+        </ul>
+      </li>
+      <li>
+				<h4>copyAsUtil(input, model)</h4>
+				Fills the actual values in the <span class="pft">model</span> instead of the path queries with the help of <span class="pft">matchObject</span>.
+			</li>
+			<li>
+				<h4>copyAs(input, model)</h4>
+        Wrapper function for <span class="pft">copyAsUtil</span>
+        <br>Copies the <span class="pft">input</span> as per the schema <span class="pft">model</span>
+				<br><span class="pft">model</span> contains keys and values as a path query.
+				<pre>
+//Examples
+var HTMLSchema = {
+  name:'tagName',
+  type:"$condition-(wholeText && tagName != 'SCRIPT')?'text':((data)?'comment' : 'element')",
+  attributes:'attributes.$all.$into-parent.$only-object.$follow-HTMLAttributeSchema',
+  items:'childNodes.$all.$only-object.$follow-HTMLSchema',
+  text:"$condition-(wholeText)?wholeText:((data)?data:text)",
+}
+var HTMLAttributeSchema = {
+   '~name':'nodeValue'
+}
+				</pre>
+			</li>
+    </ul>
+  </body>
+</html>

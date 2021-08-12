@@ -32,11 +32,15 @@ class Entity {
         }
     }
     static getValue(str, l, x){
+      try{
         if(operate.isString(str) && str.charAt(0) == '$'){
                 // console.log(str, l, x);
             return eval(str.substr(1));
         }
-        return (x !== undefined) ? x : str;
+      }
+      catch(e) {console.error(e);}
+
+      return (x !== undefined) ? x : str;
     }
     static setObjKeyVal(obj, key, val){
         obj[key] = val;
