@@ -1,3 +1,79 @@
+/* 
+        "element##1": {
+            "name": "span",
+            "attributes": {
+                "id": "docInfo",
+                "class": "doc-info"
+            },
+            "items": {
+                "element##0": {
+                    "name": "input",
+                    "attributes": {
+                        "type": "text",
+                        "id": "docName",
+                        "class": "doc-name",
+                        "value": "Document Name"
+                    },
+                    "items": {}
+                },
+                "element##1": {
+                    "name": "label",
+                    "attributes": {
+                        "id": "docTag",
+                        "class": "doc-tag"
+                    },
+                    "items": {
+                        "text##0": "anyTag"
+                    }
+                }
+            }
+        },
+        "element##2": menuBar,
+        // "element##3": sharedLabels,
+        "element##4": 
+        }
+
+*/
+
+var canvasUI = {
+    "name": "div",
+    "attributes": {
+        "id": "workSpace"
+    },
+    "items": {
+        "element##0": {
+            "name": "canvas",
+            "attributes": {
+                "id": "drawlines",
+            },
+            "items": {}
+        },
+        "element##1": {
+            "name": "div",
+            "attributes": {
+                "class": "fc",
+                "data-tag": "editable"
+            },
+            "items": {}
+        }
+    }
+
+}
+
+var codeUI = {
+    "name": "textarea",
+    "attributes": {
+        "id": "editor",
+        "class": "editor",
+        "data-open-fileid": "",
+        "data-filename": "",
+        "data-is-unsaved": "false",
+    },
+    "items": {}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var sharedLabels = {
     "name": "span",
     "attributes": {
@@ -547,670 +623,3 @@ var xplorerTools = {
         }
     }
 }
-
-
-var canvasUI = {
-    "name": "div",
-    "attributes": {
-        "id": "workSpace"
-    },
-    "items": {
-        "element##0": {
-            "name": "canvas",
-            "attributes": {
-                "id": "drawlines",
-            },
-            "items": {}
-        },
-        "element##1": {
-            "name": "div",
-            "attributes": {
-                "class": "fc",
-                "data-tag": "editable"
-            },
-            "items": {}
-        }
-    }
-
-}
-
-var codeUI = {
-    "name": "textarea",
-    "attributes": {
-        "id": "editor",
-        "class": "editor",
-        "data-open-fileid": "",
-        "data-filename": "",
-        "data-is-unsaved": "false",
-    },
-    "items": {}
-}
-
-var richtextUI = {
-    "name": "div",
-    "attributes": {
-        "id": "editor",
-        "class": "editor",
-        "contenteditable": "true"
-    },
-    "items": {}
-}
-
-var breadNavItemTemp = {
-    "name": "li",
-    "attributes": {},
-    "items": {
-        "element##0": {
-            "name": "a",
-            "attributes": {
-                "href": ""
-            },
-            "items": {
-                "text##0": "Text"
-            }
-        }
-    }
-}
-
-var breadNav = {
-    "name": "nav",
-    "attributes": {
-        "id": "breadNav",
-        "class": "breadcrumb",
-        "aria-label": "Breadcrumb",
-        // "style": "background-color: #fff;"
-    },
-    "items": {
-        "element##0": {
-            "name": "ul",
-            "attributes": {
-                "class": "breadcrumb-list"
-            },
-            "items": {
-                "element##0": breadNavItemTemp,
-                "element##1": breadNavItemTemp,
-                "element##2": breadNavItemTemp,
-            }
-        }
-    }
-}
-
-var navtabLinkTemp = {
-    "name": "span",
-    "attributes": {
-        "class": "tab-link",
-        "data-title-icon": "true",
-    },
-    "items": {
-        "element##0": {
-            "name": "label",
-            "attributes": {
-                "class": "tab-title"
-            },
-            "items": {
-                "text##0": "title"
-            }
-        },
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "class": "close-btn",
-                "data-action-type": "closeNavTab"
-            },
-            "items": {}
-        }
-    }
-}
-
-var navTabs = {
-    "name": "div",
-    "attributes": {
-        "class": "nav-tabs"
-    },
-    "items": {
-        "element##0": {
-            "name": "div",
-            "attributes": {
-                "id": "tabLinks",
-                "class": "tab-links"
-            },
-            "items": {
-                "element##0": {
-                    "name": "div",
-                    "attributes": {},
-                    "items": {}
-                }
-            }
-        },
-        "element##1": {
-            "name": "div",
-            "attributes": {
-                "class": "tab-contents"
-            },
-            "items": {
-                "element##0": breadNav,
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "id": "workspace",
-                        "class": "tab-content"
-                    },
-                    "items": {
-                        "element##0": richtextUI
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-/* 
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "id": "docInfo",
-                "class": "doc-info"
-            },
-            "items": {
-                "element##0": {
-                    "name": "input",
-                    "attributes": {
-                        "type": "text",
-                        "id": "docName",
-                        "class": "doc-name",
-                        "value": "Document Name"
-                    },
-                    "items": {}
-                },
-                "element##1": {
-                    "name": "label",
-                    "attributes": {
-                        "id": "docTag",
-                        "class": "doc-tag"
-                    },
-                    "items": {
-                        "text##0": "anyTag"
-                    }
-                }
-            }
-        },
-        "element##2": menuBar,
-        // "element##3": sharedLabels,
-        "element##4": 
-        }
-
-*/
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//  Action Bar UI
-
-var logoImg = {
-    "name": "img",
-    "attributes": {
-        "id": "logoImg",
-        "class": "logo-img",
-        "src": "./assets/download.jpg",
-        "alt": "Ehh",
-        // "width": "80",
-        // "height": "60"
-    },
-}
-
-var menuBar = {
-    "name": "div",
-    "attributes": {
-        "id": "menuBar",
-        "class": "menu-bar"
-    },
-    "items": {
-        "element##0": {
-            "name": "span",
-            "attributes": {
-                "id": "fileMenu",
-                "class": "menu-item dropdown",
-                "data-dropdown-position": "bottom",
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dropbtn",
-                        "title": "File",
-                        "data-action-type": "toggleClass",
-                        "data-action-value": "active"
-                    },
-                    "items": {
-                        "text##0": "File"
-                    }
-                },
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "class": "dropdown-content"
-                    },
-                    "items": {
-                        "element##0": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "newFile",
-                                "title": "New",
-                                // "class": "fas fa-plus",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "newFileReqFlow"
-                            },
-                            "items": {
-                                "text##0": "New"
-                            }
-                        },
-                        "element##1": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "openFile",
-                                "title": "Open File",
-                                // "class": "fas fa-external-link-alt",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "getUserInputFile"
-                            },
-                            "items": {
-                                "text##0": "Open File"
-                            }
-                        },
-                        "element##2": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "dir",
-                                "title": "Open Directory",
-                                // "class": "fas fa-folder-plus",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "getUserInputDir"
-                            },
-                            "items": {
-                                "text##0": "Open Directory"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "id": "editMenu",
-                "class": "menu-item dropdown"
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dropbtn",
-                        "title": "Edit"
-                    },
-                    "items": {
-                        "text##0": "Edit"
-                    }
-                },
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "class": "dropdown-content"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##2": {
-            "name": "span",
-            "attributes": {
-                "id": "insertMenu",
-                "class": "menu-item dropdown"
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dropbtn",
-                        "title": "Insert"
-                    },
-                    "items": {
-                        "text##0": "Insert"
-                    }
-                },
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "class": "dropdown-content"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##3": {
-            "name": "span",
-            "attributes": {
-                "id": "viewMenu",
-                "class": "menu-item dropdown"
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dropbtn",
-                        "title": "View"
-                    },
-                    "items": {
-                        "text##0": "View"
-                    }
-                },
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "class": "dropdown-content"
-                    },
-                    "items": {}
-                }
-            }
-        }
-    }
-}
-
-var share = {
-    "name": "button",
-    "attributes": {
-        "class": "share-btn fas fa-share",
-        "title": "share"
-    },
-    "items": {}
-}
-
-var explore = {
-    "name": "span",
-    "attributes": {
-        "class": "explore",
-        "title": "explore"
-    },
-    "items": {
-        "text##0": "explore",
-    }
-}
-
-var settings = {
-    "name": "span",
-    "attributes": {
-        "class": "settings fas fa-cog",
-        "title": "settings"
-    },
-    "items": {}
-}
-
-var userInfo = {
-    "name": "span",
-    "attributes": {
-        "class": "user-info dropdown",
-        "data-dropdown-position": "bottom",
-        // "data-action-type": "anchorLink",
-        // "data-action-value": "/signInView"
-    },
-    "items": {
-        "element##0": {
-            "name": "img",
-            "attributes": {
-                "id": "userImg",
-                "class": "user-img dropbtn",
-                "src": "./assets/user_img.jpg",
-                "alt": "User Name",
-                "title": "UserName",
-                "data-action-type": "toggleClass",
-                "data-action-value": "active"
-            },
-            "items": {}
-        },
-        "element##1": {
-            "name": "span",
-            "attributes": {
-                "class": "dropdown-content"
-            },
-            "items": {
-                "element##0": {
-                    "name": "a",
-                    "attributes": {},
-                    "items": {
-                        "text##0": "Profile"
-                    }
-                }
-            }
-        }
-    }
-}
-
-var actionBar = {
-    "name": "div",
-    "attributes": {
-        "id": "actionBar",
-        "class": "action-bar"
-    },
-    "items": {
-        "element##0": logoImg,
-        "element##1": menuBar,
-        "element##2": share,
-        "element##3": explore,
-        "element##4": settings,
-        "element##5": userInfo
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// ToolBar UI
-
-var toolBar = {
-    "name": "div",
-    "attributes": {
-        "id": "toolBar",
-        "class": "tool-bar"
-    },
-    "items": {
-        // "element##0": tools
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-var topNavBar = {
-    "name": "div",
-    "attributes": {
-        "id": "navbarTop",
-        "class": "navbar-top"
-    },
-    "items": {
-        "element##0": actionBar,
-        "element##1": toolBar
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Left NavBar UI
-
-var navigatorFileTemp = {
-    "name": "span",
-    "attributes": {
-        "class": "file",
-        "data-action-type": "openFileFromNavigator",
-        "data-attached-file-id": ""
-    },
-    "items": {
-        "text##0": " Lorem ipsum ..."
-    }
-}
-
-var navigatorCollTemp = {
-    "name": "div",
-    "attributes": {
-        "id": "collection_uid",
-        "class": "collection"
-    },
-    "items": {
-        "element##0": {
-            "name": "span",
-            "attributes": {
-                "class": "title",
-                "data-action-type": "toggleClass",
-                "data-action-value": "active",
-            },
-            "items": {
-                "text##0": "collection Template"
-            }
-        },
-        "element##1": {
-            "name": "div",
-            "attributes": {
-                "class": "content"
-            },
-            "items": {}
-        }
-    }
-}
-
-var leftNavBar = {
-    "name": "div",
-    "attributes": {
-        "id": "navbarSideLeft",
-        "class": "navbar-side-left"
-    },
-    "items": {
-        "element##0": {
-            "name": "div",
-            "attributes": {
-                "id": "fileSysNavigation",
-                "class": "navigator"
-            },
-            "items": {}
-        }
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Central Area UI
-
-var centralArea = {
-    "name": "div",
-    "attributes": {
-        "id": "centralArea",
-        "class": "central-area"
-    },
-    "items": {
-        "element##0": {
-            "name": "div",
-            "attributes": {
-                "class": "workspace-container"
-            },
-            "items": {
-                "element##0": navTabs
-            }
-        }
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Right NavBar UI
-
-var rightTabsLinkTemp = {
-    "name": "span",
-    "attributes": {
-        "class": "tab-link",
-        "data-action-type": ""
-    },
-    "items": {
-        "text##0": "title"
-    }
-}
-
-var rightTabs = {
-    "name": "div",
-    "attributes": {
-        "id": "rightNavTabs",
-        "class": "nav-tabs"
-    },
-    "items": {
-        "element##0": {
-            "name": "div",
-            "attributes": {
-                "id": "tabLinks",
-                "class": "tab-links"
-            },
-            "items": {
-                "element##0": {
-                    "name": "div",
-                    "attributes": {},
-                    "items": {
-                        "element##0": rightTabsLinkTemp,
-                        "element##1": rightTabsLinkTemp,
-                        // "element##2": rightTabsLinkTemp
-                    }
-                }
-            }
-        },
-        "element##1": {
-            "name": "div",
-            "attributes": {
-                "class": "tab-contents"
-            },
-            "items": {}
-        }
-    }
-}
-
-var rightNavBar = {
-    "name": "div",
-    "attributes": {
-        "id": "navbarSideRight",
-        "class": "navbar-side-right resizable-left"
-    },
-    "items": {
-        "element##0": rightTabs,
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-var mainSection = {
-    "name": "div",
-    "attributes": {
-        "class": "main-section"
-    },
-    "items": {
-        "element##0": leftNavBar,
-        "element##1": centralArea,
-        "element##2": rightNavBar
-    }
-}
-
-var bottomNavBar = {
-    "name": "div",
-    "attributes": {
-        "id": "navbarBottom",
-        "class": "navbar-bottom"
-    },
-    "items": {}
-}
-
-var editorUI = [
-    topNavBar,
-    mainSection,
-    bottomNavBar
-];
-
-// CreateEntity.create(editorUI, document.getElementById('root'));
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* 
-
-*/
