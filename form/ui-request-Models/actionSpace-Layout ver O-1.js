@@ -4,8 +4,17 @@ header:{
 
     },
     search:{
+        input:{
 
     },
+    searchOutput:{
+        search_Rollover:{},
+        search_filters:{},
+     search_Result :{},
+      pagination :{},
+
+    },
+},
     nav_menu: {
         action:{},
         people:{},
