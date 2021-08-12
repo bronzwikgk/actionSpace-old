@@ -1,7 +1,7 @@
 /* Main.css */
 
 body {
-    background-color: rgb(235, 235, 235);
+    background-color: var(--default-bg-color);
     overflow: hidden;
 }
 
@@ -11,7 +11,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 90px);
 }
 
 .main-section>* {
@@ -22,13 +22,15 @@ body {
 }
 
 .navbar-side-left {
-    width: 3.5vw;
-    min-width: 40px;
+    width: 18vw;
+    min-width: 0;
+    max-width: 18vw;
+    /* min-width: 40px; */
     border-right: 1px solid var(--alt-border-color);
     z-index: 1;
 }
 
-.navbar-side-left>* {
+/* .navbar-side-left>* {
     display: block;
     width: 100%;
     text-align: center;
@@ -51,7 +53,6 @@ body {
     left: -1vw;
     width: 0;
     min-width: 0;
-    border-right: 1px solid var(--alt-border-color);
     transition: ease 0.2s;
     overflow: hidden;
 }
@@ -60,28 +61,31 @@ body {
     left: 0;
     width: 16vw;
     min-width: 200px;
-}
+    border-right: 1px solid var(--alt-border-color);
+} */
 
 .central-area {
-    width: 78.35vw;
+    width: 64vw;
     max-width: calc(100vw - 270px);
     transition: ease 0.2s;
 }
 
-.navbar-side-left-addtnl.active + .central-area{
+/* .navbar-side-left-addtnl.active + .central-area{
     width: 62.35vw;
     max-width: calc(100vw - 470px);
-}
+} */
 
-.central-area .workspace-container{
+.central-area .workspace-container {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.tab-content{
-    border: 1px solid #000;
-    height: calc(100% - 1.35em) !important;
+/* .central-area .nav-tabs{
+} */
+
+.central-area .tab-content {
+    height: calc(100% - 1.35em);
     padding: 5%;
     overflow: auto;
 }
@@ -99,6 +103,26 @@ body {
     border-left: 1px solid var(--alt-border-color);
 }
 
+.navbar-side-right .nav-tabs{
+    height: calc(100% - 45px);
+}
+
+.navbar-side-right .tab-links{
+    height: 1.8em;
+}
+
+.navbar-side-right .tab-link{
+    padding: 0.65em;
+    margin-left: -1px;
+    font-size: smaller;
+    line-height: 0.8;
+    border: 1px solid var(--alt-border-color);
+}
+
+.navbar-side-right .tab-contents{
+    height: calc(100% - 1.2em);
+}
+
 /* .workspace {
     position: absolute;
     padding: 2%;
@@ -110,9 +134,9 @@ body {
     background-color: rgba(255, 255, 255, 0.75);
     overflow: scroll;
     -ms-overflow-style: none; */
-    /* IE and Edge */
-    /* scrollbar-width: none; */
-    /* Firefox */
+/* IE and Edge */
+/* scrollbar-width: none; */
+/* Firefox */
 /* } */
 
 /* Hide scrollbar for Chrome, Safari and Opera */
