@@ -2,15 +2,14 @@ var getTrueTarget = {
     declare: {
         "trueTarget": "$l.event.target",
         "n": "$l.event.path.length - 2",
-        "x": -1,
+        "x": 0,
         "flag": true
     },
     return: "$l.trueTarget",
     callback: {
         condition: "$l.flag",
         declare: {
-            "x": "$l.x + 1",
-            "element": "$l.event.path[l.x]"
+            "element": "$l.event.path[l.x++]"
         },
         loop: "$l.n",
         callback: {
@@ -18,8 +17,7 @@ var getTrueTarget = {
             declare: {
                 "trueTarget": "$l.element",
                 "flag": false
-            },
-            return: "$l.trueTarget",
+            }
         }
     }
 }
@@ -27,7 +25,7 @@ var getTrueTarget = {
 var handleClickEvent = [{
     declare: {
         "args": {
-          "event": "$l.event"  
+            "event": "$l.event"
         }
     },
     objectModel: "ActionEngine",
@@ -35,100 +33,77 @@ var handleClickEvent = [{
     arguments: ["getTrueTarget", "$l.args"],
     response: "trueTarget",
 }, {
-        objectModel: "$l.trueTarget",
-        method: "getAttribute",
-        arguments: "data-action-type",
-        response: "actionType"
-    }, {
+    condition: "$l.trueTarget",
+    declare: {
+        "actionType": "$l.trueTarget.dataset.actionType",
+        "actionValue": "$l.trueTarget.dataset.actionValue"
+    },
+    callback: [{
         condition: "$l.actionType == 'closeNavTab'",
         declare: {
             "args": {
-                "trueTarget": "$l.trueTarget"
+                "trueTarget": "$l.trueTarget",
             }
         },
         objectModel: "ActionEngine",
         method: "processRequest",
         arguments: ["closeTab", "$l.args"]
-    },
-    [{
-            objectModel: "$l.trueTarget",
-            method: "getAttribute",
-            arguments: "data-action-value",
-            response: "actionValue"
-        },
-        {
-            condition: "$l.actionType == 'toggleClass'",
-            objectModel: "$l.trueTarget.parentElement.classList",
-            method: "toggle",
-            arguments: "$l.actionValue"
-        },
-        {
-            condition: "$l.actionType == 'processFileOrDir'",
-            objectModel: "ActionEngine",
-            method: "processRequest",
-            arguments: "$l.actionValue"
-        },
-        {
-            condition: "$l.actionType == 'toggleLeftSideNav'",
-            declare: {
-                "args": {
-                    "trueTarget": "$l.trueTarget",
-                    "actionValue": "$l.actionValue"
-                }
-            },
-            objectModel: "ActionEngine",
-            method: "processRequest",
-            arguments: ["toggleLeftSideNav", "$l.args"]
-        }
-    ],
-    [{
-        objectModel: "$l.trueTarget",
-        method: "getAttribute",
-        arguments: "data-attached-fileid",
-        response: "attachedFileId"
+    }, {
+        condition: "$l.actionType == 'toggleClass'",
+        objectModel: "$l.trueTarget.parentElement.classList",
+        method: "toggle",
+        arguments: "$l.actionValue"
+    }, {
+        condition: "$l.actionType == 'processFileOrDir'",
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: "$l.actionValue"
     }, {
         condition: "$l.actionType == 'switchFileNavTab'",
         declare: {
-            "props": {
-                "uid": "$l.attachedFileId",
+            "args": {
                 "tabLink": "$l.trueTarget"
             }
         },
         objectModel: "ActionEngine",
         method: "processRequest",
-        arguments: ["openTab", "$l.props"]
+        arguments: ["openTab", "$l.args"]
     }, {
         condition: "$l.actionType == 'openFileFromNavigator'",
         declare: {
-            "props": {
-                'DBName': 'ActionSpaceDefaultDB',
-                'storeName': 'fileOrDirHandles',
-                'key': '$l.attachedFileId',
+            "uid": "$l.trueTarget.dataset.fileUid",
+            "fileName": "$l.trueTarget.dataset.fileName",
+            "args": {
+                "uid": "$l.uid",
+                "rootUid": "$l.trueTarget.dataset.rootUid",
+                "pathFromRoot": "$l.trueTarget.dataset.pathFromRoot",
+                "fileName": "$l.fileName"
             }
         },
         objectModel: "ActionEngine",
         method: "processRequest",
-        arguments: ["getFromIDB", "$l.props"],
-        response: "fH",
+        arguments: ["getFileContent", "$l.args"],
+        response: "fileContent",
         callback: {
             declare: {
-                "props": {
-                    "uid": "$l.attachedFileId",
-                    "fH": "$l.fH"
+                "args": {
+                    "uid": "$l.uid",
+                    "name": "$l.fileName",
+                    "content": "$l.fileContent"
                 }
             },
-            objectModel: "ActionEngine",
-            method: "processRequest",
-            arguments: ["openFileInEditor", "$l.props"]
+            objectModel: 'ActionEngine',
+            method: 'processRequest',
+            arguments: ['openFileInEditor', '$l.args']
         }
     }]
-]
+}]
 
 
 var handleHoverEvent = {
     declare: {
         "args": {
-          "event": "$l.event"  
+            "event": "$l.event"
         }
     },
     objectModel: "ActionEngine",
@@ -136,7 +111,6 @@ var handleHoverEvent = {
     arguments: ["getTrueTarget", "$l.args"],
     response: "trueTarget",
     callback: [{
-        objectModel: "$l.trueTarget",
         objectModel: "$l.trueTarget",
         method: "getAttribute",
         arguments: "data-action-type",
@@ -256,12 +230,12 @@ function resizeElement(elem) {
 var evtClick = {
     objectModel: 'eventManager',
     method: 'addRequestListener',
-    arguments: ['$window', 'click', '$handleClickEvent']
+    arguments: ['$window', 'click', 'handleClickEvent']
 }
 var evtHover = {
     objectModel: 'eventManager',
     method: 'addRequestListener',
-    arguments: ['$window', 'mouseover', '$handleHoverEvent']
+    arguments: ['$window', 'mouseover', 'handleHoverEvent']
 }
 
 var handlePopStateEventFunc = function (event) {
@@ -280,8 +254,7 @@ var evtPopState = {
 var handleLoadEventFunc = async function (event) {
     await ActionEngine.processRequest([
         'generalUI',
-        'newFileReqFlow',
-        'newFileReqFlow',
+        'initFS',
         'evtClick'
         // 'evtHover'
         // 'evtPopState'

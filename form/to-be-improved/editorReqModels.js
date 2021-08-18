@@ -102,28 +102,6 @@ var getOpenFileID = {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var saveFileToLS = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'editor',
-    response: 'editor',
-    callback: {
-        condition: '$l.editor.getAttribute("data-is-unsaved") === "true"', // 
-        objectModel: "CreateEntity",
-        method: 'getProps',
-        arguments: ['$l.editor', ['data-open-fileid']],
-        response: 'respArr',
-        callback: {
-            declare: {
-                'fileID': '$l.respArr[0]'
-            },
-            objectModel: "StorageHelper",
-            method: 'set',
-            arguments: ['$l.fileID', '$l.editor.innerHTML']
-        }
-    }
-}
-
 var exportFile = {
     objectModel: 'document',
     method: 'getElementById',

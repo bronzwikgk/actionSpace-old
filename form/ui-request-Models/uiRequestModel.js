@@ -6,8 +6,7 @@ var navigatorFileTemp = {
     "name": "span",
     "attributes": {
         "class": "file",
-        "data-action-type": "openFileFromNavigator",
-        "data-attached-file-id": ""
+        "data-action-type": "openFileFromNavigator"
     },
     "items": {
         "text##0": " Lorem ipsum ..."
@@ -50,6 +49,14 @@ var leftNavBar = {
     },
     "items": {
         "element##0": {
+            "name": "div",
+            "attributes": {
+                "id": "openFilesNavigation",
+                "class": "navigator"
+            },
+            "items": {}
+        },
+        "element##1": {
             "name": "div",
             "attributes": {
                 "id": "fileSysNavigation",

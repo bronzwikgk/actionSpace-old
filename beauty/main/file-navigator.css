@@ -12,6 +12,7 @@
 
 .navigator .collection>.title{
     position: relative;
+    display: block;
     cursor: pointer;
     background-color: rgb(226, 226, 226);
     width: 100%;

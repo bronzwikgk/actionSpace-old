@@ -1,11 +1,9 @@
-const dataContObj = {}
-
 /*
-ActionEngine.processRequest('getFromIDB', {
+{
     'DBName': <Name of the DataBase>,
     'storeName': <Name of the Store>,
     'key': <key>
-})
+}
 */
 var getFromIDB = {
     objectModel: 'IndexedDataBase',
@@ -23,12 +21,12 @@ var getFromIDB = {
 }
 
 /*
-ActionEngine.processRequest('setToIDB', {
+{
     'DBName': <Name of the DataBase>,
     'storeName': <Name of the Store>,
     'key': <key>,
     'value': <value>
-})
+}
 */
 var setToIDB = {
     objectModel: 'IndexedDataBase',
@@ -43,69 +41,39 @@ var setToIDB = {
     }
 }
 
-var getEditorElementSet = [{
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'workspace',
-    response: 'workspace'
-}, {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'editor',
-    response: 'editor'
-}, {
-    objectModel: 'document',
-    method: 'querySelector',
-    arguments: '.workspace-container .tab-links',
-    response: 'tabLinks'
-}, {
-    objectModel: 'document',
-    method: 'querySelector',
-    arguments: '.workspace-container .tab-link.active',
-    response: 'activeTabLink'
-}, {
-    declare: {
-        "resp": {
-            "workspace": "$l.workspace",
-            "editor": "$l.editor",
-            "tabLinks": "$l.tabLinks",
-            "activeTabLink": "$l.activeTabLink"
-        }
-    },
-    return: "$l.resp"
-}]
-
-var makeFileRecord = {
-    declare: {
-        "key": "$l.workspace.getAttribute('data-open-fileid')",
-        "value": {
-            "file": {
-                "name": "$l.workspace.getAttribute('data-filename')",
-                "ext": "$l.workspace.getAttribute('data-fileext')",
-                "mimeType": "$l.workspace.getAttribute('data-filetype')"
-            },
-            "content": "$l.editor.innerHTML"
-        }
-    },
-    objectModel: "Entity",
-    method: "setObjKeyVal",
-    arguments: ["$dataContObj", "$l.key", "$l.value"],
-    // callback: {
-    //     objectModel: "console",
-    //     method: "log",
-    //     arguments: "$dataContObj"
-    // }
+/*  */
+var getEditorElementSet = {
+    return: "$l",
+    callback: [{
+        objectModel: 'document',
+        method: 'getElementById',
+        arguments: 'workspace',
+        response: 'workspace'
+    }, {
+        objectModel: 'document',
+        method: 'getElementById',
+        arguments: 'editor',
+        response: 'editor'
+    }, {
+        objectModel: 'document',
+        method: 'querySelector',
+        arguments: '.workspace-container .tab-links',
+        response: 'tabLinks'
+    }, {
+        objectModel: 'document',
+        method: 'querySelector',
+        arguments: '.workspace-container .tab-link.active',
+        response: 'activeTabLink'
+    }]
 }
 
 /*
-ActionEngine.processRequest('newTabLink', {
+{
     'resp': <set of Editor Elements>,
     'uid': <uid of file>,
-    'file': {
-        'name': <file Name>,
-        'ext': <file Extension>
-    }
-})
+    'fileName': <file Name>,
+    'fileExt': <file Extension>
+}
 */
 var newTabLink = {
     objectModel: "CreateEntity",
@@ -116,9 +84,10 @@ var newTabLink = {
         declare: {
             "props": {
                 "data-action-type": "switchFileNavTab",
-                "data-attached-fileid": "$l.uid"
+                "data-attached-fileid": "$l.uid",
+                "data-attached-filename": "$l.fileName + l.fileExt"
             },
-            "tabLink.children[0].innerText": "$l.file.name + l.file.ext"
+            "tabLink.children[0].innerText": "$l.fileName + l.fileExt"
         },
         objectModel: 'CreateEntity',
         method: 'setProps',
@@ -127,16 +96,15 @@ var newTabLink = {
 }
 
 /*
-ActionEngine.processRequest('switchToTab', {
+{
     'resp': <set of Editor Elements>,
     'uid': <uid of file>,
-    'file': {
-        'name': <file Name>,
-        'ext': <file Extension>,
-        'mimeType': <mime Type of file>
-    },
+    'fileName': <file Name>,
+    'fileExt': <file Extension>,
+    'fileType': <mime Type of file>,
+    'fileContent': <content of file>
     'tabLink': <HTML element .tab-link which we want to go to / click target tablink element>
-})
+}
 */
 var switchToTab = [{
     condition: "$l.resp.activeTabLink",
@@ -145,23 +113,22 @@ var switchToTab = [{
     arguments: "active",
     callback: {
         declare: {
-            "args": {
-                "workspace": "$l.resp.workspace",
-                "editor": "$l.resp.editor"
-            }
+            "openUid": "$l.resp.workspace.dataset.openFileid",
+            "openFileContent": "$l.resp.editor.innerText"
         },
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: ["makeFileRecord", "$l.args"]
+        objectModel: "Entity",
+        method: "setObjKeyVal",
+        arguments: ["$editorDataSet['fileContents']", "$l.openUid", "$l.openFileContent"],
     }
 }, {
     declare: {
+        "resp.editor.innerText": "$l.fileContent",
         "props": {
             'data-open-fileid': '$l.uid',
-            'data-filename': '$l.file.name',
-            'data-fileext': '$l.file.ext',
-            'data-filetype': '$l.file.mimeType'
-        }
+            'data-filename': '$l.fileName',
+            'data-fileext': '$l.fileExt',
+            'data-filetype': '$l.fileType'
+        },
     },
     objectModel: 'CreateEntity',
     method: 'setProps',
@@ -173,207 +140,191 @@ var switchToTab = [{
 }]
 
 /*
-ActionEngine.processRequest('openTab', {
-    'uid': <uid of file>,
+{
     'tabLink': <HTML element .tab-link which we want to go to / click target tablink element>
-})
+}
 */
-
 var openTab = [{
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: "getEditorElementSet",
     response: "resp",
-    callback: {
-        declare: {
-            "resp": "$l.resp[l.resp.length - 1]"
-        }
-    }
 }, {
     condition: "$l.tabLink !== l.resp.activeTabLink",
     declare: {
+        "uid": "$l.tabLink.dataset.attachedFileid",
+        "name": "$l.tabLink.dataset.attachedFilename",
         "args": {
-            "uid": "$l.uid",
-            "resp": "$l.resp",
-            "tabLink": "$l.tabLink",
-            "file": {
-                "name": "$dataContObj[l.uid].file.name",
-                "ext": "$dataContObj[l.uid].file.ext",
-                "mimeType": "$dataContObj[l.uid].file.mimeType"
-            }
+            "uid": "$l.uid"
         }
     },
     objectModel: "ActionEngine",
     method: "processRequest",
-    arguments: ["switchToTab", "$l.args"],
+    arguments: ["getFileContent", "$l.args"],
+    response: "fileContent",
     callback: {
         declare: {
-            "resp.editor.innerText": "$dataContObj[l.uid].content"
-        }
+            "fileName": "$l.name.slice(0,l.name.lastIndexOf('.'))",
+            "fileExt": "$l.name.slice(l.name.lastIndexOf('.'))",
+            "args": {
+                "uid": "$l.uid",
+                "resp": "$l.resp",
+                "tabLink": "$l.tabLink",
+                "fileName": "$l.fileName",
+                "fileExt": "$l.fileExt",
+                "fileType": "$extMap[l.fileExt]?.['mimeType'] || 'xxxxx'",
+                "fileContent": "$l.fileContent"
+            }
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["switchToTab", "$l.args"]
     }
 }]
 
 // New File Request Model Flow
+/*  */
 var newFileReqFlow = [{
     objectModel: 'CreateEntity',
     method: 'uniqueId',
     arguments: 20,
     response: 'uid'
 }, {
-    objectModel: "ActionEngine",
-    method: "processRequest",
-    arguments: "getEditorElementSet",
-    response: "resp",
-    callback: {
-        declare: {
-            "resp": "$l.resp[l.resp.length - 1]"
-        }
-    }
-}, {
     declare: {
-        "args": {
-            "uid": "$l.uid",
-            "resp": "$l.resp",
-            "file": {
-                "name": "Untitled",
-                "ext": ".txt",
-                "mimeType": "text/plain"
-            }
-        }
+        "args": "$newFileParams",
+        "args.uid": "$l.uid"
     },
     objectModel: "ActionEngine",
     method: "processRequest",
-    arguments: [
-        ["newTabLink", "switchToTab"], "$l.args"
-    ],
-    callback: {
-        declare: {
-            "resp.editor.innerHTML": "$initialStory"
-        }
-    }
+    arguments: ["openFileInEditor", "$l.args"]
 }]
+// objectModel: "console",
+// method: "log",
+// arguments: ["$l.fileName"]
 
 /*
-ActionEngine.processRequest('openFileInEditor', {
-    'fH': <fileHandle>,
-    'uid': <uid of fileHandle in IDB>
-})
+{
+    'uid': <uid of fileHandle in IDB>,
+    'name': <full name of file (with ext)>
+    'content': <content of file>
+}
 */
 var openFileInEditor = [{
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: "getEditorElementSet",
     response: "resp",
-    callback: {
-        declare: {
-            "resp": "$l.resp[l.resp.length - 1]"
-        }
-    }
-}, {
-    condition: '$HandleFileSys.verifyPermission(l.fH, true)',
-    objectModel: 'HandleFileSys',
-    method: 'getFile',
-    arguments: ['$l.fH'],
-    response: 'file',
-    callback: {
-        objectModel: 'HandleFileSys',
-        method: 'readFile',
-        arguments: ['$l.file'],
-        response: 'fileText',
-    }
 }, {
     declare: {
-        'fileName': '',
-        'fileExt': '',
-    },
-    objectModel: 'CreateEntity',
-    method: 'setProps',
-    arguments: ['$l.resp.workspace', '$l.props']
-}, {
-    declare: {
+        "fileName": "$l.name.slice(0,l.name.lastIndexOf('.'))",
+        "fileExt": "$l.name.slice(l.name.lastIndexOf('.'))",
         "args": {
             "uid": "$l.uid",
             "resp": "$l.resp",
-            "file": {
-                "name": "$l.fH.name.slice(0,l.fH.name.lastIndexOf('.'))",
-                "ext": "$l.fH.name.slice(l.fH.name.lastIndexOf('.'))",
-                "mimeType": "text/plain"
-            }
+            "fileName": "$l.fileName",
+            "fileExt": "$l.fileExt",
+            "fileType": "$extMap[l.fileExt]?.['mimeType'] || 'xxxxx'",
+            "fileContent": "$l.content"
         }
     },
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: [
         ["newTabLink", "switchToTab"], "$l.args"
-    ],
-    callback: {
-        declare: {
-            "resp.editor.innerText": "$l.fileText"
-        }
-    }
+    ]
 }]
 
-// Open File Request Flow Model
-var getUserInputFile = {
-    declare: {
-        "args": {
-            types: [{
-                description: 'Text file',
-                accept: {
-                    'text/plain': ['.txt']
-                },
-            }],
-        }
-    },
-    objectModel: 'HandleFileSys',
-    method: 'getFileHandle',
-    arguments: ["$l.args"],
-    response: 'fH',
-    callback: {
+/*
+{
+    'handle': <file/directory handle>
+}
+*/
+var storeHandleToIDB = {
+    return: "$[l.uid, l.handle]",
+    callback: [{
         objectModel: 'CreateEntity',
         method: 'uniqueId',
         arguments: 20,
         response: 'uid',
+    }, {
+        declare: {
+            'IDBSetReqArgs': {
+                'DBName': 'ActionSpaceDefaultDB',
+                'storeName': 'fileOrDirHandles',
+                'key': '$l.uid',
+                'value': '$l.handle'
+            }
+        },
+        objectModel: 'ActionEngine',
+        method: 'processRequest',
+        arguments: ['setToIDB', '$l.IDBSetReqArgs'],
         callback: {
             declare: {
-                'IDBSetReqArgs': {
+                'IDBGetReqArgs': {
                     'DBName': 'ActionSpaceDefaultDB',
                     'storeName': 'fileOrDirHandles',
                     'key': '$l.uid',
-                    'value': '$l.fH'
                 }
             },
             objectModel: 'ActionEngine',
             method: 'processRequest',
-            arguments: ['$setToIDB', '$l.IDBSetReqArgs'],
-            callback: {
-                declare: {
-                    'IDBGetReqArgs': {
-                        'DBName': 'ActionSpaceDefaultDB',
-                        'storeName': 'fileOrDirHandles',
-                        'key': '$l.uid',
-                    }
-                },
-                objectModel: 'ActionEngine',
-                method: 'processRequest',
-                arguments: ['$getFromIDB', '$l.IDBGetReqArgs'],
-                response: 'retrivedfH',
-                callback: {
-                    declare: {
-                        'args': {
-                            'fH': '$l.retrivedfH',
-                            'uid': '$l.uid'
-                        }
-                    },
-                    objectModel: 'ActionEngine',
-                    method: 'processRequest',
-                    arguments: ['openFileInEditor', '$l.args']
-                }
-            }
+            arguments: ['getFromIDB', '$l.IDBGetReqArgs'],
+            response: 'handle',
         }
-    }
+    }]
 }
 
+// Open File Request Flow Model
+/*  */
+var getUserInputFile = [{
+    objectModel: 'HandleFileSys',
+    method: 'getFileHandle',
+    response: 'fH',
+}, {
+    declare: {
+        "args": {
+            "handle": "$l.fH"
+        }
+    },
+    objectModel: 'ActionEngine',
+    method: 'processRequest',
+    arguments: ['storeHandleToIDB', '$l.args'],
+    response: "respArr",
+    callback: {
+        declare: {
+            "uid": " $l.respArr[0]",
+            "handle": "$l.respArr[1]",
+        }
+    }
+}, {
+    declare: {
+        "args": {
+            "uid": "$l.uid",
+            "handle": "$l.handle"
+        }
+    },
+    objectModel: 'ActionEngine',
+    method: 'processRequest',
+    arguments: ['getFileContent', '$l.args'],
+    response: "content",
+}, {
+    declare: {
+        "args": {
+            "uid": "$l.uid",
+            "name": "$l.handle.name",
+            "content": "$l.content"
+        }
+    },
+    objectModel: 'ActionEngine',
+    method: 'processRequest',
+    arguments: ['openFileInEditor', '$l.args']
+}]
+
+/*
+{
+    'trueTarget': <close element in .tab-link which is clicked>
+}
+*/
 var closeTab = {
     declare: {
         "prevSib": "$l.trueTarget.parentElement.previousElementSibling",
@@ -392,14 +343,8 @@ var closeTab = {
                 "tabLink": "$l.nextSib"
             }
         }, {
-            objectModel: "$l.tabLink",
-            method: "getAttribute",
-            arguments: "data-attached-file-id",
-            response: "uid",
-        }, {
             declare: {
                 "props": {
-                    "uid": "$l.uid",
                     "tabLink": "$l.tabLink"
                 }
             },
@@ -414,41 +359,25 @@ var closeTab = {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// open Directory Request Flow Model
+/*  */
 var getUserInputDir = [{
     objectModel: "HandleFileSys",
     method: "getDirHandle",
     response: "dH"
 }, {
-    objectModel: "document",
-    method: "getElementById",
-    arguments: "fileSysNavigation",
-    response: "fileNavigator"
-}, {
-    objectModel: "$l.fileNavigator",
-    method: "querySelector",
-    arguments: ".collection",
-    response: "coll",
-    callback: {
-        condition: "$l.coll",
-        objectModel: "$l.coll",
-        method: "remove"
-    }
-}, {
     declare: {
         "args": {
-            "currHandle": "$l.dH",
-            "activeColl": "$l.fileNavigator",
-            "isDone": false
+            "handle": "$l.dH"
         }
     },
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: ["setUserInputDir", "$l.args"]
 }, {
-    objectModel: "$l.fileNavigator",
+    objectModel: "document",
     method: "querySelector",
-    arguments: ".collection",
+    arguments: '.collection[data-collection-type="userCollection"]',
     response: "coll",
     callback: {
         condition: "$!l.coll.classList.contains('active')",
@@ -458,93 +387,457 @@ var getUserInputDir = [{
     }
 }]
 
-
+/*
+{
+    'handle': <directory handle>
+}
+*/
 var setUserInputDir = [{
+    declare: {
+        "args": {
+            "handle": "$l.handle"
+        }
+    },
+    objectModel: 'ActionEngine',
+    method: 'processRequest',
+    arguments: ['storeHandleToIDB', '$l.args'],
+    response: "respArr",
+    callback: {
+        declare: {
+            "uid": "$l.respArr[0]",
+            "handle": "$l.respArr[1]",
+        }
+    }
+}, {
+    objectModel: "document",
+    method: "getElementById",
+    arguments: 'fileSysNavigation',
+    response: "fileSysNavigation",
+}, {
+    objectModel: "$l.fileSysNavigation",
+    method: "querySelector",
+    arguments: '.collection[data-collection-type="userCollection"]',
+    response: "coll",
+    callback: [{
+        condition: "$!l.coll",
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$navigatorCollTemp', '$l.fileSysNavigation'],
+        response: "coll",
+    }, {
+        declare: {
+            "coll.children[0].innerText": "$l.handle.name",
+            "coll.children[1].innerHTML": "",
+            'props': {
+                "id": "$'collection_' + l.uid",
+                "data-coll-uid": "$l.uid",
+                "data-root-uid": "$l.uid",
+                "data-path-from-root": "",
+                "data-collection-type": "userCollection"
+            }
+        },
+        objectModel: "CreateEntity",
+        method: "setProps",
+        arguments: ["$l.coll", "$l.props"]
+    }]
+}, {
+    declare: {
+        "args": {
+            "handle": "$l.handle",
+            "callbackReq": "enumContents",
+            "callbackReqParams": {
+                "nav": "$l.coll.children[1]",
+                "rootUid": "$l.uid",
+                "pathFromRoot": "/"
+            }
+        }
+    },
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: ["itrDirItems", "$l.args"],
+}]
+
+/*
+{
+    'handle': <directory handle>,
+    'callbackReq': <reqest model name, which is to be called for each item in directory>,
+    'callbackReqParams': <parameters of callback request>
+}
+*/
+var itrDirItems = {
+    condition: "$l.handle.kind === 'directory'",
+    objectModel: '$l.handle',
+    method: 'values',
+    response: 'dirValuesItr',
+    callback: {
+        objectModel: '$l.dirValuesItr',
+        method: 'next',
+        response: 'nextResult',
+        loop: Math.pow(10, 2),
+        callback: {
+            condition: '$!l.nextResult.done',
+            declare: {
+                "args": "$l.callbackReqParams",
+                "args.handle": "$l.nextResult.value"
+            },
+            objectModel: 'ActionEngine',
+            method: 'processRequest',
+            arguments: ['$l.callbackReq', '$l.args']
+        }
+    }
+}
+
+/*
+{
+    'uid': <uid of file/directry>,
+    'handle': <file/directory handle>,
+    'rootUid': <uid of root directory>,
+    'pathFromRoot': <path of file/directory from root directory>,
+    'nav': <element to whom the new entry is to be appended>
+}
+*/
+var enumContents = [{
+        objectModel: 'CreateEntity',
+        method: 'uniqueId',
+        arguments: 20,
+        response: 'uid',
+    },
+    {
+        condition: '$l.handle.kind === "file"',
+        declare: {
+            "args": {
+                'uid': "$l.uid",
+                'fileName': "$l.handle.name",
+                "rootUid": "$l.rootUid",
+                "pathFromRoot": "$l.pathFromRoot",
+                'nav': "$l.nav"
+            }
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["addFileToFilesNavigation", "$l.args"],
+        response: "activeFile"
+    }, {
+        condition: '$l.handle.kind === "directory"',
+        declare: {
+            "args": {
+                'uid': "$l.uid",
+                "rootUid": "$l.rootUid",
+                'dirName': "$l.handle.name",
+                "pathFromRoot": "$l.pathFromRoot",
+                'nav': "$l.nav"
+            }
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["addDirToFilesNavigation", "$l.args"],
+        response: "activeColl",
+        callback: [{
+            declare: {
+                "args": {
+                    "handle": "$l.handle",
+                    "callbackReq": "enumContents",
+                    "callbackReqParams": {
+                        "rootUid": "$l.rootUid",
+                        "nav": "$l.activeColl.children[1]",
+                        "pathFromRoot": "$l.pathFromRoot + l.handle.name + '/'"
+                    }
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["itrDirItems", "$l.args"],
+        }]
+    }
+]
+
+/*
+{
+    'uid': <uid of file>,
+    'rootUid': <uid of root directory>,
+    'fileName': <name of file>,
+    'pathFromRoot': <path of directory from root directory>,
+    'nav': <element to whom the new entry is to be appended>
+}
+*/
+var addFileToFilesNavigation = {
+    objectModel: "CreateEntity",
+    method: "create",
+    arguments: ["$navigatorFileTemp", "$l.nav"],
+    response: "fileTemp",
+    return: "$l.fileTemp",
+    callback: {
+        declare: {
+            'fileTemp.innerText': '$l.fileName',
+            // 'mimeType': "$mimeMap[l.file.ext]",
+            'props': {
+                'id': '$"file_" + l.uid',
+                'data-file-uid': '$l.uid',
+                "data-root-uid": "$l.rootUid",
+                "data-file-name": "$l.fileName.trim()",
+                "data-path-from-root": "$l.pathFromRoot"
+            }
+        },
+        objectModel: 'CreateEntity',
+        method: 'setProps',
+        arguments: ['$l.fileTemp', '$l.props']
+    }
+}
+
+/*
+{
+    'uid': <uid of directory>,
+    'rootUid': <uid of root directory>,
+    'dirName': <name of directory>,
+    'pathFromRoot': <path of directory from root directory>,
+    'nav': <element to whom the new entry is to be appended>
+}
+*/
+var addDirToFilesNavigation = {
+    objectModel: 'CreateEntity',
+    method: 'create',
+    arguments: ['$navigatorCollTemp', '$l.nav'],
+    response: "collTemp",
+    return: "$l.collTemp",
+    callback: {
+        declare: {
+            'collTemp.children[0].innerText': '$l.dirName',
+            'props': {
+                "id": "$'collection_' + l.uid",
+                "data-coll-uid": "$l.uid",
+                "data-root-uid": "$l.rootUid",
+                "data-path-from-root": "$l.pathFromRoot"
+            }
+        },
+        objectModel: "CreateEntity",
+        method: "setProps",
+        arguments: ["$l.collTemp", "$l.props"]
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// initFileInEditor
+/*  */
+var initFS = [{
         objectModel: 'CreateEntity',
         method: 'uniqueId',
         arguments: 20,
         response: 'uid',
     }, {
+        objectModel: "document",
+        method: "getElementById",
+        arguments: "fileSysNavigation",
+        response: "fileNavigator"
+    }, {
         declare: {
             "args": {
-                'DBName': 'ActionSpaceDefaultDB',
-                'storeName': 'fileOrDirHandles',
-                'key': '$l.uid',
-                'value': '$l.currHandle'
+                "uid": "$l.uid",
+                "rootUid": "$l.uid",
+                "dirName": "$defaultDir['name']",
+                "nav": "$l.fileNavigator",
+                "pathFromRoot": ""
+            },
+            "children": "$defaultDir['child']",
+            "n": "$l.children.length",
+            "x": 0
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["addDirToFilesNavigation", "$l.args"],
+        response: "activeColl",
+        callback: {
+            declare: {
+                "props": {
+                    "data-collection-type": "userCollection"
+                }
+            },
+            objectModel: 'CreateEntity',
+            method: 'setProps',
+            arguments: ["$l.activeColl", "$l.props"],
+        }
+    },
+    {
+        declare: {
+            "fH": "$l.children[l.x++]",
+            "fileContent": "$l.fH.content",
+            "args": {
+                "handle": "$l.fH",
+                "rootUid": "$l.activeColl.dataset.collUid",
+                "nav": "$l.activeColl.querySelector('.content')",
+                "pathFromRoot": "/"
             }
         },
-        objectModel: 'ActionEngine',
-        method: 'processRequest',
-        arguments: ['setToIDB', '$l.args'],
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["enumContents", "$l.args"],
+        loop: "$l.n",
+        callback: [{
+            objectModel: "$l.activeColl",
+            method: "querySelector",
+            arguments: ".content .file:last-child",
+            response: "activeFile"
+        }, {
+            declare: {
+                "fileUid": "$l.activeFile.dataset.fileUid"
+            },
+            objectModel: "Entity",
+            method: "setObjKeyVal",
+            arguments: ["$editorDataSet['fileContents']", "$l.fileUid", "$l.fileContent"],
+        }]
+    }, {
+        objectModel: "document",
+        method: "querySelector",
+        arguments: '.collection[data-collection-type="userCollection"]',
+        response: "coll",
         callback: {
+            condition: "$!l.coll.classList.contains('active')",
+            objectModel: "$l.coll.classList",
+            method: "add",
+            arguments: "active"
+        }
+    }, {
+        declare: {
+            "args": {
+                "uid": "$l.fileUid",
+                "name": "$l.activeFile.dataset.fileName",
+                "content": "$editorDataSet['fileContents'][l.fileUid]"
+            }
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["openFileInEditor", "$l.args"],
+    }
+]
+
+/*
+{
+    'handle': <handle of root directory>,
+    'pathFromRoot': <path of directory from root directory>,
+    'fileName': <file name whose handle is needed (optional)>
+}
+*/
+var getHandleFromDirHandle = {
+    condition: "$l.handle && l.handle.kind == 'directory'",
+    declare: {
+        "x": 0,
+        "pathFromRoot": "$l.pathFromRoot.trim()",
+        "respHandle": "$l.handle"
+    },
+    objectModel: "$l.pathFromRoot",
+    method: "split",
+    arguments: "/",
+    response: "pathFromRootArr",
+    return: "$l.respHandle",
+    callback: [{
+        declare: {
+            "currName": "$l.pathFromRootArr[l.x++]"
+        },
+        loop: "$l.pathFromRootArr.length",
+        callback: {
+            condition: "$l.currName != '' && l.currName != '.' ",
+            objectModel: "HandleFileSys",
+            method: "getNewDirHandle",
+            arguments: ["$l.respHandle", "$l.currName", "$l.create"],
+            response: "respHandle",
+        }
+    }, {
+        condition: "$l.fileName && l.fileName.indexOf('.') > -1",
+        objectModel: "HandleFileSys",
+        method: "getNewFileHandle",
+        arguments: ["$false", "$l.respHandle", "$l.fileName", "$l.create"],
+        response: "respHandle",
+    }]
+}
+
+/*
+{
+    'uid': <uid of file>,
+    'handle': <handle of file/root directory>,
+    'pathFromRoot': <path of directory from root directory (if root directory is used)>
+}
+*/
+var getFileContent = {
+    condition: "$l.uid",
+    declare: {
+        "fileContent": "$editorDataSet['fileContents'][l.uid]"
+    },
+    return: "$l.fileContent",
+    callback: {
+        condition: "$!l.fileContent && (l.handle || l.rootUid)",
+        callback: [{
+            condition: "$!l.handle",
             declare: {
                 "args": {
                     'DBName': 'ActionSpaceDefaultDB',
                     'storeName': 'fileOrDirHandles',
-                    'key': '$l.uid',
+                    'key': '$l.rootUid ? l.rootUid : l.uid',
                 }
             },
             objectModel: 'ActionEngine',
             method: 'processRequest',
             arguments: ['getFromIDB', '$l.args'],
-            response: "currHandle",
-        }
-    }, {
-        condition: '$l.currHandle.kind === "file"',
-        objectModel: 'CreateEntity',
-        method: 'create',
-        arguments: ['$navigatorFileTemp', '$l.activeColl'],
-        response: "activeTemp",
-        callback: {
+            response: "handle",
+        }, {
+            condition: "$l.handle && l.handle.kind == 'directory'",
             declare: {
-                'activeTemp.innerText': '$l.currHandle.name',
-                'props': {
-                    'id': '$"file_" + l.uid',
-                    'data-attached-fileid': '$l.uid'
+                "args": {
+                    "handle": "$l.handle",
+                    "fileName": "$l.fileName",
+                    "pathFromRoot": "$l.pathFromRoot",
+                    "create": "$false"
                 }
             },
-            objectModel: 'CreateEntity',
-            method: 'setProps',
-            arguments: ['$l.activeTemp', '$l.props']
-        }
-    },
-    {
-        condition: '$l.currHandle.kind === "directory"',
-        objectModel: 'CreateEntity',
-        method: 'create',
-        arguments: ['$navigatorCollTemp', '$l.activeColl'],
-        response: "activeTemp",
-        callback: {
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["getHandleFromDirHandle", "$l.args"],
+            response: "fH",
+        }, {
+            condition: "$l.handle && l.handle.kind == 'file'",
             declare: {
-                'activeTemp.id': '$"collection_" + l.uid',
-                'activeTemp.children[0].innerText': '$l.currHandle.name'
-            },
-            objectModel: '$l.currHandle',
-            method: 'values',
-            response: 'dirValuesItr',
-            callback: {
-                condition: '$!l.isDone',
-                objectModel: '$l.dirValuesItr',
-                method: 'next',
-                response: 'nextResult',
-                loop: Math.pow(10, 2),
-                callback: {
-                    declare: {
-                        "isDone": "$l.nextResult.done",
-                        "args": {
-                            "currHandle": "$l.nextResult.value",
-                            "isDone": "$l.isDone",
-                            "activeColl": "$l.activeTemp.children[1]"
-                        }
-                    },
-                    callback: {
-                        condition: '$!l.isDone',
-                        objectModel: 'ActionEngine',
-                        method: 'processRequest',
-                        arguments: ['$setUserInputDir', '$l.args']
-                    }
-                }
+                "fH": "$l.handle"
             }
+        }, {
+            condition: '$HandleFileSys.verifyPermission(l.fH, true)',
+            objectModel: 'HandleFileSys',
+            method: 'getFile',
+            arguments: ['$l.fH'],
+            response: 'file',
+            callback: {
+                objectModel: 'HandleFileSys',
+                method: 'readFile',
+                arguments: ['$l.file'],
+                response: 'fileContent',
+            }
+        }, {
+            objectModel: "Entity",
+            method: "setObjKeyVal",
+            arguments: ["$editorDataSet['fileContents']", "$l.uid", "$l.fileContent"]
+        }]
+    }
+}
+
+/* 
+
+var saveFileToLS = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'editor',
+    response: 'editor',
+    callback: {
+        condition: '$l.editor.getAttribute("data-is-unsaved") === "true"', // 
+        objectModel: "CreateEntity",
+        method: 'getProps',
+        arguments: ['$l.editor', ['data-open-fileid']],
+        response: 'respArr',
+        callback: {
+            declare: {
+                'fileID': '$l.respArr[0]'
+            },
+            objectModel: "StorageHelper",
+            method: 'set',
+            arguments: ['$l.fileID', '$l.editor.innerHTML']
         }
     }
-]
+}
+
+*/

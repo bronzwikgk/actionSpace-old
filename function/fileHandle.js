@@ -49,7 +49,7 @@ window.HandleFileSys = class {
      * @param {boolean} create - if file does not exists in given directory, whether to create it or not (default true).
      * @return {FileSystemFileHandle} Handle to the new file.
      */
-    static async getNewFileHandle(showPicker, dirHandleOrOpts, fileName = "", create = true) {
+    static async getNewFileHandle(showPicker = true, dirHandleOrOpts, fileName = "", create = true) {
         var fileHandle;
 
         if (showPicker) {
@@ -276,7 +276,7 @@ window.HandleFileSys = class {
         while (fileName.indexOf(':') > -1) {
             fileName = fileName.replace(":", "-");
         }
-        return fileName
+        return fileName;
     }
 
 
