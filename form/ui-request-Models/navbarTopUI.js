@@ -14,6 +14,74 @@ var logoImg = {
     },
 }
 
+var fileMenuItems = {
+    "element##0": {
+        "name": "span",
+        "attributes": {
+            "id": "newFile",
+            "title": "New",
+            // "class": "fas fa-plus",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "newFileReqFlow"
+        },
+        "items": {
+            "text##0": "New"
+        }
+    },
+    "element##1": {
+        "name": "span",
+        "attributes": {
+            "id": "openFile",
+            "title": "Open File",
+            // "class": "fas fa-external-link-alt",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "getUserInputFile"
+        },
+        "items": {
+            "text##0": "Open File"
+        }
+    },
+    "element##2": {
+        "name": "span",
+        "attributes": {
+            "id": "dir",
+            "title": "Open Directory",
+            // "class": "fas fa-folder-plus",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "getUserInputDir"
+        },
+        "items": {
+            "text##0": "Open Directory"
+        }
+    },
+    "element##3": {
+        "name": "span",
+        "attributes": {
+            "id": "dir",
+            "title": "Save File",
+            // "class": "fas fa-folder-plus",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "saveFile"
+        },
+        "items": {
+            "text##0": "Save File"
+        }
+    },
+    "element##4": {
+        "name": "span",
+        "attributes": {
+            "id": "dir",
+            "title": "Export File",
+            // "class": "fas fa-folder-plus",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "exportFile"
+        },
+        "items": {
+            "text##0": "Export File"
+        }
+    }
+}
+
 var menuBar = {
     "name": "div",
     "attributes": {
@@ -46,47 +114,7 @@ var menuBar = {
                     "attributes": {
                         "class": "dropdown-content"
                     },
-                    "items": {
-                        "element##0": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "newFile",
-                                "title": "New",
-                                // "class": "fas fa-plus",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "newFileReqFlow"
-                            },
-                            "items": {
-                                "text##0": "New"
-                            }
-                        },
-                        "element##1": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "openFile",
-                                "title": "Open File",
-                                // "class": "fas fa-external-link-alt",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "getUserInputFile"
-                            },
-                            "items": {
-                                "text##0": "Open File"
-                            }
-                        },
-                        "element##2": {
-                            "name": "span",
-                            "attributes": {
-                                "id": "dir",
-                                "title": "Open Directory",
-                                // "class": "fas fa-folder-plus",
-                                "data-action-type": "processFileOrDir",
-                                "data-action-value": "getUserInputDir"
-                            },
-                            "items": {
-                                "text##0": "Open Directory"
-                            }
-                        }
-                    }
+                    "items": fileMenuItems
                 }
             }
         },
@@ -230,9 +258,11 @@ var userInfo = {
             "items": {
                 "element##0": {
                     "name": "a",
-                    "attributes": {},
+                    "attributes": {
+                        "data-action-type": "loginPrompt"
+                    },
                     "items": {
-                        "text##0": "Profile"
+                        "text##0": "SignIn"
                     }
                 }
             }

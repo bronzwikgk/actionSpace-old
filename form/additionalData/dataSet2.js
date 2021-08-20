@@ -1,4 +1,4 @@
-var newFileParams = {
+var newFileParams = { // pseudo FileSystemFileHandle
     "kind": "file",
     "name": "Untitled.txt",
     "content": "This is Sample VIP Story"
@@ -30,7 +30,7 @@ var extMap = {
         "editorType": "text"
     },
     ".html": {
-        "mimeType": "html/plain",
+        "mimeType": "text/html",
         "editorType": "html"
     }
 }

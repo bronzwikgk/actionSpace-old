@@ -50,9 +50,37 @@ var handleClickEvent = [{
         arguments: ["closeTab", "$l.args"]
     }, {
         condition: "$l.actionType == 'toggleClass'",
-        objectModel: "$l.trueTarget.parentElement.classList",
+        declare: {
+            "pEl": "$l.trueTarget.parentElement"
+        },
+        objectModel: "$l.pEl.classList",
         method: "toggle",
-        arguments: "$l.actionValue"
+        arguments: "$l.actionValue",
+    }, {
+        condition: "$l.trueTarget.parentElement.classList.contains('collection')",
+        declare: {
+            "pEl": "$l.trueTarget.parentElement"
+        },
+        objectModel: "document",
+        method: "querySelector",
+        arguments: ".collection.selected",
+        response: "selectedColl",
+        callback: [{
+            condition: "$!l.selectedColl",
+            objectModel: "$l.pEl.classList",
+            method: "add",
+            arguments: "selected"
+        }, {
+            condition: "$l.selectedColl && (l.selectedColl != l.pEl)",
+            objectModel: "$l.selectedColl.classList",
+            method: "remove",
+            arguments: "selected",
+            callback: {
+                objectModel: "$l.pEl.classList",
+                method: "add",
+                arguments: "selected"
+            }
+        }]
     }, {
         condition: "$l.actionType == 'processFileOrDir'",
         objectModel: "ActionEngine",
