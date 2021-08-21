@@ -5,40 +5,46 @@ var routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView
 
 // Temporary solution
 
-var pageAssociatedReqModels = {
-    '': 'editorUI',
-    'editorView': 'editorUI',
-    'signInView': 'loginUI'
+var pageReqModels = {
+  '': 'editorUI',
+  'editorView': 'editorUI',
+  'signInView': 'loginUI'
 };
 
-var getPage = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'root',
-    response: 'rootElem',
-    callback: {
-        declare: {
-            'rootElem.innerHTML': '',
-            'pageReqModel': '$pageAssociatedReqModels[l.page]'
-        },
-        objectModel: 'ActionEngine',
-        method: 'processRequest',
-        arguments: '$l.pageReqModel',
-        callback: {
-            declare: {
-                'data': {
-                    'content': '$l.rootElem.innerHTML',
-                    'title': '$l.page'
-                },
-                'title': '$l.page + " | EHH"',
-                'url': '$"#"+l.page'
-            },
-            objectModel: 'window.history',
-            method: 'pushState',
-            arguments: ['$l.data', '$l.title', '$l.url']
-        }
+/*
+{
+    'page': <name of page view (should be any one out of 'routes' array items)>
+}
+*/
+
+/* var getPage = [{
+  objectModel: 'document',
+  method: 'getElementById',
+  arguments: 'root',
+  response: 'rootElem',
+}, {
+  declare: {
+    'rootElem.innerHTML': '',
+    'args': {
+      'pageReqModel': '$pageReqModels[l.page]'
     }
-};
+  },
+  objectModel: 'ActionEngine',
+  method: 'processRequest',
+  arguments: ['generalUi', '$l.args'],
+}, {
+  declare: {
+    'data': {
+      'content': '$l.rootElem.innerHTML',
+      'title': '$l.page'
+    },
+    'title': '$l.page + " | EHH"',
+    'url': '$useHash ? "#" + l.page : l.page'
+  },
+  objectModel: 'window.history',
+  method: 'pushState',
+  arguments: ['$l.data', '$l.title', '$l.url']
+}] */
 
 // Solution after Integration of backend
 
@@ -67,6 +73,94 @@ var getPage = {
 //         arguments: ['$l.data', '$l.data.title', '$l.url']
 //     }
 // }
+
+/* var processPage = [{
+  declare: {
+    "separator": "$useHash ? '#' : '/'"
+  },
+  objectModel: "$window.location.hash",
+  method: "split",
+  arguments: "$l.separator",
+  response: "pageArr",
+  callback: {
+    objectModel: "$l.pageArr",
+    method: "pop",
+    response: "pageName"
+  }
+}, {
+  condition: "$operate.isInsideArray(l.pageName, routes)",
+  declare: {
+    "args": {
+      "page": "$l.pageName"
+    }
+  },
+  objectModel: "ActionEngine",
+  method: "processRequest",
+  arguments: ["getPage", "$l.args"]
+}] */
+
+var handlePopStateEvent = [{
+  objectModel: "document",
+  method: "getElementById",
+  arguments: "root",
+  response: "rootElem"
+}, {
+  declare: {
+    "state": "$l.event.state",
+    "rootElem.innerHTML": "$l.state.content"
+  }
+}]
+
+var evtPopState = {
+  objectModel: 'eventManager',
+  method: 'addRequestListener',
+  arguments: ['$window', 'popstate', 'handlePopStateEvent']
+}
+
+/* var loadUi = [{
+  condition: "$document.readyState != 'loading'",
+  objectModel: "ActionEngine",
+  method: "processRequest",
+  arguments: "processPage"
+}, {
+  condition: "$document.readyState == 'loading'",
+  objectModel: 'eventManager',
+  method: 'addRequestListener',
+  arguments: ['$window', 'DOMContentLoaded', 'processPage']
+}] */
+
+var getPage = function (page) {
+
+  const separator = useHash ? "#" : "/";
+
+  page = page[0] == separator ? page.slice(1) : page;
+
+  const rootElem = document.getElementById('root'),
+    title = `${page} | EHH`;
+  rootElem.innerHTML = '';
+
+  ActionEngine.processRequest('generalUi', {
+    'pageReqModel': pageReqModels[page]
+  });
+
+  window.history.pushState({
+    'content': rootElem.innerHTML,
+    'title': title
+  }, title, `${separator}${page}`);
+};
+
+(function (fn = function () {
+  const separator = useHash ? "#" : "/",
+    page = window.location.hash.split(separator).pop();
+
+  window.getPage(routes.indexOf(page) >= 0 ? page : routes[0]);
+}) {
+  if (document.readyState != 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+})();
 
 /* (function(fn = function() {
     const page = useHash ?

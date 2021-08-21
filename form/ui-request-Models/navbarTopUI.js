@@ -259,7 +259,8 @@ var userInfo = {
                 "element##0": {
                     "name": "a",
                     "attributes": {
-                        "data-action-type": "loginPrompt"
+                        "data-action-type": "switchView",
+                        "data-action-value": "#signInView"
                     },
                     "items": {
                         "text##0": "SignIn"

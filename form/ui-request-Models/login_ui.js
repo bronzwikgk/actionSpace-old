@@ -1,6 +1,7 @@
-var login_main = {
+var loginUI = {
     "name": "div",
     "attributes": {
+        "id": "loginContainer",
         "class": "wrapper"
     },
     "items": {
@@ -64,6 +65,8 @@ var login_main = {
                         "element##2": {
                             "name": "label",
                             "attributes": {
+                                "data-action-type": "switchLoginOrSignup",
+                                "data-action-value": "login",
                                 "for": "login",
                                 "class": "slide login"
                             },
@@ -74,6 +77,8 @@ var login_main = {
                         "element##3": {
                             "name": "label",
                             "attributes": {
+                                "data-action-type": "switchLoginOrSignup",
+                                "data-action-value": "signup",
                                 "for": "signup",
                                 "class": "slide signup"
                             },
@@ -187,7 +192,8 @@ var login_main = {
                                         "element##1": {
                                             "name": "a",
                                             "attributes": {
-                                                "href": ""
+                                                "data-action-type": "switchLoginOrSignup",
+                                                "data-action-value": "signup",
                                             },
                                             "items": {
                                                 "text##0": "Signup now"
@@ -281,6 +287,24 @@ var login_main = {
                             }
                         }
                     }
+                }
+            }
+        },
+        "element##2": {
+            "name": "a",
+            "attributes": {
+                "class": "glogin",
+                "href": "https://www.google.com"
+            },
+            "items": {
+                "element##0": {
+                    "name": "img",
+                    "attributes": {
+                        "src": "./assets/gLogo.png",
+                        "title": "login with google",
+                        "alt": "login with google"
+                    },
+                    "items": {}
                 }
             }
         }

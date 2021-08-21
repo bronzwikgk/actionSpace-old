@@ -38,93 +38,115 @@ var handleClickEvent = [{
         "actionType": "$l.trueTarget.dataset.actionType",
         "actionValue": "$l.trueTarget.dataset.actionValue"
     },
-    callback: [{
-        condition: "$l.actionType == 'closeNavTab'",
-        declare: {
-            "args": {
-                "trueTarget": "$l.trueTarget",
-            }
+    callback: [
+        //////////////////////////////////////// common events ////////////////////////////////////////
+        {
+            condition: "$l.actionType == 'switchView'",
+            objectModel: "window",
+            method: "getPage",
+            arguments: "$l.actionValue"
         },
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: ["closeTab", "$l.args"]
-    }, {
-        condition: "$l.actionType == 'toggleClass'",
-        declare: {
-            "pEl": "$l.trueTarget.parentElement"
+        //////////////////////////////////////// loginView events ////////////////////////////////////////
+        {
+            condition: "$l.actionType == 'switchLoginOrSignup'",
+            declare: {
+                "args": {
+                    "value": "$l.actionValue"
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["switchLogInOrSignup", "$l.args"]
         },
-        objectModel: "$l.pEl.classList",
-        method: "toggle",
-        arguments: "$l.actionValue",
-    }, {
-        condition: "$l.trueTarget.parentElement.classList.contains('collection')",
-        declare: {
-            "pEl": "$l.trueTarget.parentElement"
-        },
-        objectModel: "document",
-        method: "querySelector",
-        arguments: ".collection.selected",
-        response: "selectedColl",
-        callback: [{
-            condition: "$!l.selectedColl",
-            objectModel: "$l.pEl.classList",
-            method: "add",
-            arguments: "selected"
+        //////////////////////////////////////// editorView events ////////////////////////////////////////
+        {
+            condition: "$l.actionType == 'closeNavTab'",
+            declare: {
+                "args": {
+                    "trueTarget": "$l.trueTarget",
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["closeTab", "$l.args"]
         }, {
-            condition: "$l.selectedColl && (l.selectedColl != l.pEl)",
-            objectModel: "$l.selectedColl.classList",
-            method: "remove",
-            arguments: "selected",
-            callback: {
+            condition: "$l.actionType == 'toggleClass'",
+            declare: {
+                "pEl": "$l.trueTarget.parentElement"
+            },
+            objectModel: "$l.pEl.classList",
+            method: "toggle",
+            arguments: "$l.actionValue",
+        }, {
+            condition: "$l.trueTarget.parentElement.classList.contains('collection')",
+            declare: {
+                "pEl": "$l.trueTarget.parentElement"
+            },
+            objectModel: "document",
+            method: "querySelector",
+            arguments: ".collection.selected",
+            response: "selectedColl",
+            callback: [{
+                condition: "$!l.selectedColl",
                 objectModel: "$l.pEl.classList",
                 method: "add",
                 arguments: "selected"
-            }
-        }]
-    }, {
-        condition: "$l.actionType == 'processFileOrDir'",
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: "$l.actionValue"
-    }, {
-        condition: "$l.actionType == 'switchFileNavTab'",
-        declare: {
-            "args": {
-                "tabLink": "$l.trueTarget"
-            }
-        },
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: ["openTab", "$l.args"]
-    }, {
-        condition: "$l.actionType == 'openFileFromNavigator'",
-        declare: {
-            "uid": "$l.trueTarget.dataset.fileUid",
-            "fileName": "$l.trueTarget.dataset.fileName",
-            "args": {
-                "uid": "$l.uid",
-                "rootUid": "$l.trueTarget.dataset.rootUid",
-                "pathFromRoot": "$l.trueTarget.dataset.pathFromRoot",
-                "fileName": "$l.fileName"
-            }
-        },
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: ["getFileContent", "$l.args"],
-        response: "fileContent",
-        callback: {
+            }, {
+                condition: "$l.selectedColl && (l.selectedColl != l.pEl)",
+                objectModel: "$l.selectedColl.classList",
+                method: "remove",
+                arguments: "selected",
+                callback: {
+                    objectModel: "$l.pEl.classList",
+                    method: "add",
+                    arguments: "selected"
+                }
+            }]
+        }, {
+            condition: "$l.actionType == 'processFileOrDir'",
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: "$l.actionValue"
+        }, {
+            condition: "$l.actionType == 'switchFileNavTab'",
             declare: {
                 "args": {
-                    "uid": "$l.uid",
-                    "name": "$l.fileName",
-                    "content": "$l.fileContent"
+                    "tabLink": "$l.trueTarget"
                 }
             },
-            objectModel: 'ActionEngine',
-            method: 'processRequest',
-            arguments: ['openFileInEditor', '$l.args']
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["openTab", "$l.args"]
+        }, {
+            condition: "$l.actionType == 'openFileFromNavigator'",
+            declare: {
+                "uid": "$l.trueTarget.dataset.fileUid",
+                "fileName": "$l.trueTarget.dataset.fileName",
+                "args": {
+                    "uid": "$l.uid",
+                    "rootUid": "$l.trueTarget.dataset.rootUid",
+                    "pathFromRoot": "$l.trueTarget.dataset.pathFromRoot",
+                    "fileName": "$l.fileName"
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["getFileContent", "$l.args"],
+            response: "fileContent",
+            callback: {
+                declare: {
+                    "args": {
+                        "uid": "$l.uid",
+                        "name": "$l.fileName",
+                        "content": "$l.fileContent"
+                    }
+                },
+                objectModel: 'ActionEngine',
+                method: 'processRequest',
+                arguments: ['openFileInEditor', '$l.args']
+            }
         }
-    }]
+    ]
 }]
 
 
@@ -266,26 +288,11 @@ var evtHover = {
     arguments: ['$window', 'mouseover', 'handleHoverEvent']
 }
 
-var handlePopStateEventFunc = function (event) {
-    const state = event.state;
-    document.getElementById("root").innerHTML = state.content;
-}
-
-var evtPopState = {
-    objectModel: 'eventManager',
-    method: 'addListener',
-    arguments: ['$window', 'popstate', '$handlePopStateEventFunc']
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var handleLoadEventFunc = async function (event) {
     await ActionEngine.processRequest([
-        'generalUI',
-        'initFS',
-        'evtClick'
-        // 'evtHover'
-        // 'evtPopState'
+        'evtPopState'
     ])
     document.getElementById('loaderPage').remove();
 }

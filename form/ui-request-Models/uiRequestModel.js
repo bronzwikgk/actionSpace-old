@@ -302,7 +302,16 @@ var editorUI = [
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-var generalUI = {
+var pageAssocReq = {
+    'editorUI': ['initFS', 'evtClick'],
+    'loginUI': ['evtClick']
+}
+
+var generalUi = [{
+    objectModel: "console",
+    method: "log",
+    arguments: ["i'm here", "$l.pageReqModel"]
+}, {
     objectModel: 'document',
     method: 'getElementById',
     arguments: 'root',
@@ -310,8 +319,12 @@ var generalUI = {
     callback: {
         objectModel: 'CreateEntity',
         method: 'create',
-        arguments: ['$editorUI', '$l.root']
+        arguments: ['$window[l.pageReqModel]', '$l.root']
     }
-}
+}, {
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "$pageAssocReq[l.pageReqModel]"
+}]
 
 // CreateEntity.create(editorUI, document.getElementById('root'));

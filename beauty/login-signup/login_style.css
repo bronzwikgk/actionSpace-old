@@ -1,12 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
+/* font-family: 'Poppins', sans-serif; */
 /* html,body{
   display: grid;
   height: 100%;
@@ -171,6 +165,7 @@ form .field input:focus::placeholder {
 .form-inner form .signup-link a {
   color: #999999;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .form-inner form .pass-link a:hover,
@@ -212,7 +207,46 @@ form .btn input[type="submit"] {
   color: #fff;
   padding-left: 0;
   border-radius: 5px;
+  text-align: center;
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
+}
+
+.glogin {
+  margin-top: 10px;
+  border-radius: 5px;
+  width: 100%;
+  padding: 7px;
+  background-color: #fff;
+  border: 1px solid lightgrey;
+  /* height: 49px; */
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.glogin img{
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+  height: 35px;
+  filter: saturate(0);
+}
+
+.glogin:hover {
+  background-color: lightgrey;
+  padding: 6px;
+}
+
+.glogin:hover img {
+  height: 37px;
+}
+
+.glogin:active{
+  padding: 8px;
+}
+
+.glogin:active img{
+  height: 33px;
 }
