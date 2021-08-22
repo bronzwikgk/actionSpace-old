@@ -247,7 +247,7 @@
 
     <script>
 
-        const redirect_uri = "http://127.0.0.1:5500/v3/index.html";
+        const redirect_uri = "https://bronzwikgk.github.io/actionSpace/index.html";
 
         (function (params) {
             if (!params || !(params instanceof URL)) {
@@ -265,11 +265,12 @@
 
             if (Object.keys(result).length > 0) {
                 result_str = JSON.stringify(result);
+                localStorage.setItem('loggedIn', true);
                 localStorage.setItem('login_auth', result_str);
                 console.log(result);
             }
 
-            window.location.assign(redirect_uri);
+            window.location.href = redirect_uri;
         })(new URL(window.location.href));
     </script>
 </body>

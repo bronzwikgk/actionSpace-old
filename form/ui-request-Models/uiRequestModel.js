@@ -303,8 +303,21 @@ var editorUI = [
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 var pageAssocReq = {
-    'editorUI': ['initFS', 'setUserInfo'],
+    'editorUI': ['initFS', 'checkLogin'],
     'dashBoardUI': ['setCardInfo']
+}
+
+var checkLogin = {
+    objectModel: "$window.localStorage",
+    method: "getItem",
+    arguments: "loggedIn",
+    response: "loggedIn",
+    callback: {
+        condition: "$l.loggedIn == 'true'",
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: "setUserInfo"
+    }
 }
 
 var generalUi = [{

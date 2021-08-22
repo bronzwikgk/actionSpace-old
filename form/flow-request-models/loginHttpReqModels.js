@@ -1,6 +1,6 @@
 var client_id = '340849040042-3oe5g1cnjtp2fvvqu7nk1lsabmkfo3dn.apps.googleusercontent.com',
     client_secret = 'qFxEEvsHxlIXHDDcjKEnd-r_',
-    redirect_uri = 'http://127.0.0.1:5500/v3/redirect.html',
+    redirect_uri = 'https://bronzwikgk.github.io/actionSpace/redirect.html',
     auth_scopes = [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile'
@@ -85,14 +85,11 @@ var generateAccessToken = [{
             }, { // Handle result
                 condition: "$l.signinResp && l.signinResp.access_token",
                 declare: {
-                    "loginStats": {
-                        "loggedIn": "$true",
-                        "loggedData": "$l.signinResp"
-                    }
+                    "loginData":  "$l.signinResp"
                 },
                 objectModel: '$window.localStorage',
                 method: 'setItem',
-                arguments: ["login_stats", '$JSON.stringify(l.loginStats)']
+                arguments: ["login_data", '$JSON.stringify(l.loginData)']
             }, {
                 // condition: "$!(l.signinResp && l.signinResp.ok)",
                 // objectModel: 'window',
@@ -109,24 +106,24 @@ var getUserLoginInfo = {
     callback: [{
         objectModel: "$window.localStorage",
         method: "getItem",
-        arguments: "login_stats",
-        response: "loginStats",
+        arguments: "login_data",
+        response: "loginData",
         callback: [{
-            condition: "$!l.loginStats",
+            condition: "$!l.loginData",
             objectModel: "ActionEngine",
             method: "processRequest",
             arguments: "generateAccessToken",
         }, {
-            condition: "$l.loginStats",
+            condition: "$l.loginData",
             objectModel: "$window.JSON",
             method: "parse",
-            arguments: "$l.loginStats",
-            response: "loginStatsObj"
+            arguments: "$l.loginData",
+            response: "loginDataObj"
         }]
     }, {
-        condition: "$l.loginStats && l.loginStatsObj.loggedIn",
+        condition: "$l.loginData",
         declare: {
-            "data": "$l.loginStatsObj.loggedData"
+            "data": "$l.loginDataObj"
         },
         callback: {
             declare: {

@@ -1,5 +1,5 @@
 const useHash = true;
-var apiUrl = 'http://127.0.0.1:5500';
+var apiUrl = 'https://bronzwikgk.github.io/actionSpace';
 var routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView', 'signInView'];
 // const rootElem = document.getElementById("root");
 

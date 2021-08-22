@@ -50,7 +50,7 @@ var handleClickEvent = [{
             condition: "$l.actionType == 'loginPrompt'",
             objectModel: "ActionEngine",
             method: "processRequest",
-            arguments: "generateAuthCode"
+            arguments: "setUserInfo"
         },
         //////////////////////////////////////// loginView events ////////////////////////////////////////
         {
