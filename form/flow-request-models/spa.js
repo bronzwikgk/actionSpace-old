@@ -1,5 +1,5 @@
 const useHash = true;
-var apiUrl = 'http://localhost:8000';
+var apiUrl = 'http://127.0.0.1:5500';
 var routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView', 'signInView'];
 // const rootElem = document.getElementById("root");
 
@@ -8,7 +8,8 @@ var routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView
 var pageReqModels = {
   '': 'editorUI',
   'editorView': 'editorUI',
-  'signInView': 'loginUI'
+  'signInView': 'loginUI',
+  'dashBoardView': 'dashBoardUI'
 };
 
 /*
@@ -131,29 +132,43 @@ var evtPopState = {
 
 var getPage = function (page) {
 
-  const separator = useHash ? "#" : "/";
+  var separator = useHash ? "#" : "/";
 
-  page = page[0] == separator ? page.slice(1) : page;
+  if (page[0] == separator) page = page.slice(1);
+
+  page = page.split('?');
+
+  if (routes.indexOf(page[0]) < 0) {
+    console.error('Page Not Found: ', page[0]);
+    return;
+  }
 
   const rootElem = document.getElementById('root'),
-    title = `${page} | EHH`;
+    title = `${page[0]} | EHH`;
   rootElem.innerHTML = '';
 
   ActionEngine.processRequest('generalUi', {
-    'pageReqModel': pageReqModels[page]
+    'pageReqModel': pageReqModels[page[0]]
   });
 
   window.history.pushState({
     'content': rootElem.innerHTML,
     'title': title
-  }, title, `${separator}${page}`);
+  }, title, separator + page[0]);
+
+  // ActionEngine.processRequest('getUserLoginInfo');
 };
 
 (function (fn = function () {
-  const separator = useHash ? "#" : "/",
-    page = window.location.hash.split(separator).pop();
 
-  window.getPage(routes.indexOf(page) >= 0 ? page : routes[0]);
+  var separator = useHash ? "#" : "/",
+    page = window.location.hash.split(separator).pop().split('?');
+
+  if (routes.indexOf(page[0]) < 0) page[0] = routes[0];
+
+  page = page.join('?');
+
+  window.getPage(page);
 }) {
   if (document.readyState != 'loading') {
     fn();
@@ -161,7 +176,7 @@ var getPage = function (page) {
     document.addEventListener('DOMContentLoaded', fn);
   }
 })();
-
+ 
 /* (function(fn = function() {
     const page = useHash ?
       window.location.hash.split('#').pop() :

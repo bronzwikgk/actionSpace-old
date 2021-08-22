@@ -46,6 +46,12 @@ var handleClickEvent = [{
             method: "getPage",
             arguments: "$l.actionValue"
         },
+        {
+            condition: "$l.actionType == 'loginPrompt'",
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: "generateAuthCode"
+        },
         //////////////////////////////////////// loginView events ////////////////////////////////////////
         {
             condition: "$l.actionType == 'switchLoginOrSignup'",
@@ -292,7 +298,8 @@ var evtHover = {
 
 var handleLoadEventFunc = async function (event) {
     await ActionEngine.processRequest([
-        'evtPopState'
+        'evtPopState',
+        'evtClick'
     ])
     document.getElementById('loaderPage').remove();
 }

@@ -228,9 +228,10 @@ var settings = {
     "items": {}
 }
 
-var userInfo = {
+var userInfoElem = {
     "name": "span",
     "attributes": {
+        "id": "userInfo",
         "class": "user-info dropdown",
         "data-dropdown-position": "bottom",
         // "data-action-type": "anchorLink",
@@ -260,7 +261,7 @@ var userInfo = {
                     "name": "a",
                     "attributes": {
                         "data-action-type": "switchView",
-                        "data-action-value": "#signInView"
+                        "data-action-value": "signInView"
                     },
                     "items": {
                         "text##0": "SignIn"
@@ -283,7 +284,7 @@ var actionBar = {
         "element##2": share,
         "element##3": explore,
         "element##4": settings,
-        "element##5": userInfo
+        "element##5": userInfoElem
     }
 }
 

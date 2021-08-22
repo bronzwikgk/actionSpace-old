@@ -294,7 +294,7 @@ var loginUI = {
             "name": "a",
             "attributes": {
                 "class": "glogin",
-                "href": "https://www.google.com"
+                "data-action-type": "loginPrompt"
             },
             "items": {
                 "element##0": {

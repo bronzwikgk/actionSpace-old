@@ -303,8 +303,8 @@ var editorUI = [
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 var pageAssocReq = {
-    'editorUI': ['initFS', 'evtClick'],
-    'loginUI': ['evtClick']
+    'editorUI': ['initFS', 'setUserInfo'],
+    'dashBoardUI': ['setCardInfo']
 }
 
 var generalUi = [{
@@ -322,6 +322,7 @@ var generalUi = [{
         arguments: ['$window[l.pageReqModel]', '$l.root']
     }
 }, {
+    condition: "$pageAssocReq[l.pageReqModel] && pageAssocReq[l.pageReqModel].length > 0",
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: "$pageAssocReq[l.pageReqModel]"
