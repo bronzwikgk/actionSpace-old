@@ -44,66 +44,6 @@ var dashBoardUI = {
         "element##4": {
             "name": "a",
             "attributes": {
-                "href": "#"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fa fa-dribbble"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##5": {
-            "name": "a",
-            "attributes": {
-                "href": "#"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fa fa-twitter"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##6": {
-            "name": "a",
-            "attributes": {
-                "href": "#"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fa fa-linkedin"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##7": {
-            "name": "a",
-            "attributes": {
-                "href": "#"
-            },
-            "items": {
-                "element##0": {
-                    "name": "i",
-                    "attributes": {
-                        "class": "fa fa-facebook"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##8": {
-            "name": "a",
-            "attributes": {
                 "href": ""
             },
             "items": {

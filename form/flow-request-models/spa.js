@@ -100,23 +100,28 @@ var pageReqModels = {
   arguments: ["getPage", "$l.args"]
 }] */
 
-var handlePopStateEvent = [{
+/* var handlePopStateEvent = [{
   objectModel: "document",
   method: "getElementById",
   arguments: "root",
   response: "rootElem"
 }, {
   declare: {
-    "state": "$l.event.state",
-    "rootElem.innerHTML": "$l.state.content"
-  }
+    // "state": "$l.event.state",
+    "doc": "$document",
+    "doc.title": "$l.event.title",
+    "rootElem.innerHTML": "$l.event.state.content"
+  },
+  objectModel: "window",
+  method: "alert",
+  arguments: "hash changed!!"
 }]
 
 var evtPopState = {
   objectModel: 'eventManager',
   method: 'addRequestListener',
   arguments: ['$window', 'popstate', 'handlePopStateEvent']
-}
+} */
 
 /* var loadUi = [{
   condition: "$document.readyState != 'loading'",
@@ -130,7 +135,12 @@ var evtPopState = {
   arguments: ['$window', 'DOMContentLoaded', 'processPage']
 }] */
 
-var getPage = function (page) {
+window.addEventListener('popstate', (e)=>{
+  document.getElementById('root').innerHTML = e.state.content;
+  document.title = e.title;
+})
+
+var getPage = async function (page) {
 
   var separator = useHash ? "#" : "/";
 
@@ -143,11 +153,13 @@ var getPage = function (page) {
     return;
   }
 
-  const rootElem = document.getElementById('root'),
+  var rootElem = document.getElementById('root'),
     title = `${page[0]} | EHH`;
+  
   rootElem.innerHTML = '';
 
-  ActionEngine.processRequest('generalUi', {
+  document.title = title;
+  await ActionEngine.processRequest('generalUi', {
     'pageReqModel': pageReqModels[page[0]]
   });
 
@@ -176,7 +188,7 @@ var getPage = function (page) {
     document.addEventListener('DOMContentLoaded', fn);
   }
 })();
- 
+
 /* (function(fn = function() {
     const page = useHash ?
       window.location.hash.split('#').pop() :

@@ -1,4 +1,8 @@
 var setCardInfo = [{
+    objectModel: "localStorage",
+    method: "setItem",
+    arguments: ["fromRedirect", "false"],
+}, {
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: "getUserLoginInfo",
@@ -10,7 +14,7 @@ var setCardInfo = [{
         method: "querySelector",
         arguments: ".card",
         response: "cardElem"
-    },{
+    }, {
         declare: {
             "nameElem": "$l.cardElem.children[1]",
             "eIdElem": "$l.cardElem.children[2]",
@@ -19,7 +23,7 @@ var setCardInfo = [{
             "nameElem.innerText": "$l.userInfoObj.name",
             "eIdElem.innerText": "$l.userInfoObj.email",
             "idElem.innerText": "$l.userInfoObj.id",
-            "contactElem.href": "$'mailto:'+l.userInfoObj.email"   
+            "contactElem.href": "$'mailto:'+l.userInfoObj.email"
         }
     }, {
         declare: {

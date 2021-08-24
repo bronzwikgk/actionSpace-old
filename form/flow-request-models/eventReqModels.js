@@ -298,7 +298,7 @@ var evtHover = {
 
 var handleLoadEventFunc = async function (event) {
     await ActionEngine.processRequest([
-        'evtPopState',
+        // 'evtPopState',
         'evtClick'
     ])
     document.getElementById('loaderPage').remove();

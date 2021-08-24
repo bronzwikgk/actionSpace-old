@@ -246,7 +246,6 @@
     </div>
 
     <script>
-
         const redirect_uri = "https://bronzwikgk.github.io/actionSpace/index.html";
 
         (function (params) {
@@ -265,7 +264,7 @@
 
             if (Object.keys(result).length > 0) {
                 result_str = JSON.stringify(result);
-                localStorage.setItem('loggedIn', true);
+                localStorage.setItem('fromRedirect', "true");
                 localStorage.setItem('login_auth', result_str);
                 console.log(result);
             }

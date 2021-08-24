@@ -307,18 +307,21 @@ var pageAssocReq = {
     'dashBoardUI': ['setCardInfo']
 }
 
-var checkLogin = {
-    objectModel: "$window.localStorage",
+var checkLogin = [{
+    objectModel: "localStorage",
     method: "getItem",
-    arguments: "loggedIn",
-    response: "loggedIn",
-    callback: {
-        condition: "$l.loggedIn == 'true'",
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: "setUserInfo"
-    }
-}
+    arguments: "fromRedirect",
+    response: "fromRedirect"
+}, {
+    condition: "$l.fromRedirect != 'true'",
+    objectModel: "localStorage",
+    method: "setItem",
+    arguments: ["fromRedirect", "false"],
+}, {
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "setUserInfo"
+}]
 
 var generalUi = [{
     objectModel: "console",
