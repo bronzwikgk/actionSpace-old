@@ -8,7 +8,7 @@ var client_id = '340849040042-3oe5g1cnjtp2fvvqu7nk1lsabmkfo3dn.apps.googleuserco
 
 var generateAuthCode = {
     declare: {
-        "url": "$'https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=auto&response_type=code&client_id='+ client_id + '&scope=' + login_auth_scopes.join(' ') + '&redirect_uri=' + redirect_uri"
+        "url": "$'https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=auto&response_type=code&client_id='+ client_id + '&scope=' + l.auth_scopes + '&redirect_uri=' + redirect_uri"
     },
     objectModel: "location",
     method: "assign",
@@ -22,9 +22,14 @@ var generateAccessToken = [{
         response: "auth",
         callback: [{
             condition: "$!l.auth",
+            declare: {
+                "args": {
+                    "auth_scopes": "$l.auth_scopes"
+                }
+            },
             objectModel: "ActionEngine",
             method: "processRequest",
-            arguments: "generateAuthCode",
+            arguments: ["generateAuthCode", "$l.args"],
         }, {
             condition: "$l.auth",
             objectModel: "JSON",
@@ -62,21 +67,21 @@ var generateAccessToken = [{
                         objectModel: 'HttpService',
                         method: 'fetchRequest',
                         arguments: ['$l.url', '$l.req'],
-                        response: 'signinResp',
+                        response: 'accessGrantResp',
                         callback: [{
                             objectModel: "localStorage",
                             method: "removeItem",
                             arguments: "login_auth"
                         }, { // Handle errors
-                            condition: "$l.signinResp && l.signinResp.error",
+                            condition: "$l.accessGrantResp && l.accessGrantResp.error",
                             declare: {
-                                "err_type": "$l.signinResp.error",
-                                "err_msg": "$l.signinResp.error_description"
+                                "err_type": "$l.accessGrantResp.error",
+                                "err_msg": "$l.accessGrantResp.error_description"
                             },
                             callback: [{
                                 objectModel: "localStorage",
                                 method: "setItem",
-                                arguments: ["loggedIn", "false"]
+                                arguments: ["access_granted", "false"]
                             }, {
                                 objectModel: "console",
                                 method: "error",
@@ -91,19 +96,19 @@ var generateAccessToken = [{
                                 // exit: true,
                             }]
                         }, { // Handle result
-                            condition: "$l.signinResp && l.signinResp.access_token",
+                            condition: "$l.accessGrantResp && l.accessGrantResp.access_token",
                             objectModel: "JSON",
                             method: "stringify",
-                            arguments: "$l.signinResp",
-                            response: "loginDataStr",
+                            arguments: "$l.accessGrantResp",
+                            response: "accessGrantRespStr",
                             callback: [{
                                 objectModel: "localStorage",
                                 method: "setItem",
-                                arguments: ["loggedIn", "true"]
+                                arguments: ["access_granted", "true"]
                             }, {
                                 objectModel: 'localStorage',
                                 method: 'setItem',
-                                arguments: ["login_data", '$l.loginDataStr'],
+                                arguments: ["access_data", '$l.accessGrantRespStr'],
                             }]
                         }]
                     }
@@ -127,37 +132,42 @@ var getUserLoginInfo = {
         arguments: "fromRedirect"
     }, {
         condition: "$(!l.fromRedirect) || l.fromRedirect == 'true'", //login needs to be initiated
+        declare: {
+            "args": {
+                "auth_scopes": "$login_auth_scopes.join(' ')"
+            }
+        },
         objectModel: "ActionEngine",
         method: "processRequest",
-        arguments: "generateAccessToken",
+        arguments: ["generateAccessToken", "$l.args"],
     }, {
         objectModel: "localStorage",
         method: "getItem",
-        arguments: "loggedIn",
-        response: "loggedIn",
+        arguments: "access_granted",
+        response: "access_granted",
     }, {
-        condition: "$!l.loggedIn",
+        condition: "$!l.access_granted",
         // objectModel: "localStorage",
         // method: "getItem",
-        // arguments: "login_data",
+        // arguments: "access_data",
         // response: "loginData",
     }, {
-        condition: "$l.loggedIn == 'false'", // login unsuccessful
+        condition: "$l.access_granted == 'false'", // login unsuccessful
         objectModel: "console",
         method: "error",
         arguments: "Login Error",
         exit: true
     }, {
-        condition: "$l.loggedIn == 'true'", // login successful
+        condition: "$l.access_granted == 'true'", // login successful
         objectModel: "localStorage",
         method: "getItem",
-        arguments: "login_data",
+        arguments: "access_data",
         response: "loginData",
         callback: [{
             condition: "$!l.loginData",
             objectModel: "localStorage",
             method: "removeItem",
-            arguments: "loggedIn",
+            arguments: "access_granted",
             callback: {
                 objectModel: "window",
                 method: "alert",
@@ -203,11 +213,11 @@ var getUserLoginInfo = {
                             callback: [{
                                 objectModel: "localStorage",
                                 method: "removeItem",
-                                arguments: "login_data"
+                                arguments: "access_data"
                             }, {
                                 objectModel: "localStorage",
                                 method: "removeItem",
-                                arguments: "loggedIn"
+                                arguments: "access_granted"
                             }, {
                                 objectModel: "console",
                                 method: "error",
@@ -235,10 +245,10 @@ var getUserLoginInfo = {
 }
 
 var setUserInfo = [{
-    objectModel: "ActionEngine",
-    method: "processRequest",
-    arguments: "getUserLoginInfo",
-    response: "userInfoObj"
+    // objectModel: "ActionEngine",
+    // method: "processRequest",
+    // arguments: "getUserLoginInfo",
+    // response: "userInfoObj"
 }, {
     condition: "$l.userInfoObj && !l.userInfoObj.error",
     callback: [{
