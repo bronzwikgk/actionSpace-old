@@ -1,3 +1,18 @@
+(function () {
+
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    // you may need references to some window.IDB* objects:
+    window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {
+        READ_WRITE: "readwrite"
+    }; // This line should only be needed if it is needed to support the object's constants for older browsers
+    window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
+    // check browser support for indexedDB
+    if (!window.indexedDB) {
+        console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+    }
+})();
+
 window.IndexedDataBase = class {
     static promisifyRequest(request) {
         return new Promise((resolve, reject) => {
@@ -17,7 +32,7 @@ window.IndexedDataBase = class {
 
     static defaultGetStore() {
         if (!defaultGetStoreFunc) {
-            defaultGetStoreFunc = this.createStore('keyval-store', 'keyval');
+            defaultGetStoreFunc = this.createStore('ActionSpaceDefaultDB', 'defaultStore');
         }
         return defaultGetStoreFunc;
     }
@@ -27,7 +42,7 @@ window.IndexedDataBase = class {
      * @param key
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static get(key, customStore = defaultGetStore()) {
+    static get(key, customStore = this.defaultGetStore()) {
         return customStore('readonly', (store) => this.promisifyRequest(store.get(key)));
     }
     /**
@@ -37,7 +52,7 @@ window.IndexedDataBase = class {
      * @param value
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static set(key, value, customStore = defaultGetStore()) {
+    static set(key, value, customStore = this.defaultGetStore()) {
         return customStore('readwrite', (store) => {
             store.put(value, key);
             return this.promisifyRequest(store.transaction);
@@ -50,7 +65,7 @@ window.IndexedDataBase = class {
      * @param entries Array of entries, where each entry is an array of `[key, value]`.
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static setMany(entries, customStore = defaultGetStore()) {
+    static setMany(entries, customStore = this.defaultGetStore()) {
         return customStore('readwrite', (store) => {
             entries.forEach((entry) => store.put(entry[1], entry[0]));
             return this.promisifyRequest(store.transaction);
@@ -62,7 +77,7 @@ window.IndexedDataBase = class {
      * @param keys
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static getMany(keys, customStore = defaultGetStore()) {
+    static getMany(keys, customStore = this.defaultGetStore()) {
         return customStore('readonly', (store) => Promise.all(keys.map((key) => this.promisifyRequest(store.get(key)))));
     }
     /**
@@ -72,7 +87,7 @@ window.IndexedDataBase = class {
      * @param updater A callback that takes the old value and returns a new value.
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static update(key, updater, customStore = defaultGetStore()) {
+    static update(key, updater, customStore = this.defaultGetStore()) {
         return customStore('readwrite', (store) =>
             // Need to create the promise manually.
             // If I try to chain promises, the transaction closes in browsers
@@ -94,7 +109,7 @@ window.IndexedDataBase = class {
      * @param key
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static del(key, customStore = defaultGetStore()) {
+    static del(key, customStore = this.defaultGetStore()) {
         return customStore('readwrite', (store) => {
             store.delete(key);
             return this.promisifyRequest(store.transaction);
@@ -105,7 +120,7 @@ window.IndexedDataBase = class {
      *
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static clear(customStore = defaultGetStore()) {
+    static clear(customStore = this.defaultGetStore()) {
         return customStore('readwrite', (store) => {
             store.clear();
             return this.promisifyRequest(store.transaction);
@@ -130,7 +145,7 @@ window.IndexedDataBase = class {
      *
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static keys(customStore = defaultGetStore()) {
+    static keys(customStore = this.defaultGetStore()) {
         const items = [];
         return eachCursor(customStore, (cursor) => items.push(cursor.key)).then(() => items);
     }
@@ -139,7 +154,7 @@ window.IndexedDataBase = class {
      *
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static values(customStore = defaultGetStore()) {
+    static values(customStore = this.defaultGetStore()) {
         const items = [];
         return eachCursor(customStore, (cursor) => items.push(cursor.value)).then(() => items);
     }
@@ -148,7 +163,7 @@ window.IndexedDataBase = class {
      *
      * @param customStore Method to get a custom store. Use with caution (see the docs).
      */
-    static entries(customStore = defaultGetStore()) {
+    static entries(customStore = this.defaultGetStore()) {
         const items = [];
         return eachCursor(customStore, (cursor) => items.push([cursor.key, cursor.value])).then(() => items);
     }

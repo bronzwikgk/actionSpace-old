@@ -18,7 +18,7 @@ var generateAuthCode = {
 var generateAccessToken = [{
         objectModel: "localStorage",
         method: "getItem",
-        arguments: "login_auth",
+        arguments: "auth",
         response: "auth",
         callback: [{
             condition: "$!l.auth",
@@ -71,7 +71,7 @@ var generateAccessToken = [{
                         callback: [{
                             objectModel: "localStorage",
                             method: "removeItem",
-                            arguments: "login_auth"
+                            arguments: "auth"
                         }, { // Handle errors
                             condition: "$l.accessGrantResp && l.accessGrantResp.error",
                             declare: {
@@ -122,133 +122,147 @@ var generateAccessToken = [{
 var getUserLoginInfo = {
     objectModel: "localStorage",
     method: "getItem",
-    arguments: "fromRedirect",
+    arguments: "from_redirect",
     response: "fromRedirect",
     return: "$l.userInfoObj",
     callback: [{
-        condition: "$l.fromRedirect",
-        objectModel: "localStorage",
-        method: "removeItem",
-        arguments: "fromRedirect"
-    }, {
-        condition: "$(!l.fromRedirect) || l.fromRedirect == 'true'", //login needs to be initiated
-        declare: {
-            "args": {
-                "auth_scopes": "$login_auth_scopes.join(' ')"
-            }
-        },
-        objectModel: "ActionEngine",
-        method: "processRequest",
-        arguments: ["generateAccessToken", "$l.args"],
-    }, {
-        objectModel: "localStorage",
-        method: "getItem",
-        arguments: "access_granted",
-        response: "access_granted",
-    }, {
-        condition: "$!l.access_granted",
-        // objectModel: "localStorage",
-        // method: "getItem",
-        // arguments: "access_data",
-        // response: "loginData",
-    }, {
-        condition: "$l.access_granted == 'false'", // login unsuccessful
-        objectModel: "console",
-        method: "error",
-        arguments: "Login Error",
-        exit: true
-    }, {
-        condition: "$l.access_granted == 'true'", // login successful
-        objectModel: "localStorage",
-        method: "getItem",
-        arguments: "access_data",
-        response: "loginData",
-        callback: [{
-            condition: "$!l.loginData",
+            condition: "$l.fromRedirect",
             objectModel: "localStorage",
             method: "removeItem",
-            arguments: "access_granted",
-            callback: {
-                objectModel: "window",
-                method: "alert",
-                arguments: "Some error occured! Please try again."
-            }
+            arguments: "from_redirect"
         }, {
-            condition: "$l.loginData",
-            objectModel: "JSON",
-            method: "parse",
-            arguments: "$l.loginData",
-            response: "loginDataObj",
-            callback: {
-                condition: "$!operate.isUseless(l.loginDataObj)",
-                declare: {
-                    "data": "$l.loginDataObj"
-                },
+            condition: "$(!l.fromRedirect) || l.fromRedirect == 'true'", //login needs to be initiated
+            declare: {
+                "args": {
+                    "auth_scopes": "$login_auth_scopes.join(' ')"
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["generateAccessToken", "$l.args"],
+        }, {
+            objectModel: "localStorage",
+            method: "getItem",
+            arguments: "access_granted",
+            response: "access_granted",
+        }, {
+            condition: "$!l.access_granted",
+            objectModel: "window",
+            method: "alert",
+            arguments: "Some error occured!!\tPlease try again",
+            callback: [{
+                objectModel: "localStorage",
+                method: "removeItem",
+                arguments: "auth",
+            }, {
+                objectModel: "localStorage",
+                method: "removeItem",
+                arguments: "access_data",
+            }, {
+                objectModel: "localStorage",
+                method: "removeItem",
+                arguments: "access_granted",
+            }, {
+                objectModel: "localStorage",
+                method: "removeItem",
+                arguments: "from_redirect",
+            }]
+        },
+        {
+            condition: "$l.access_granted == 'false'", // login unsuccessful
+            objectModel: "console",
+            method: "error",
+            arguments: "Login Error",
+            exit: true
+        },
+        {
+            condition: "$l.access_granted == 'true'", // login successful
+            objectModel: "localStorage",
+            method: "getItem",
+            arguments: "access_data",
+            response: "loginData",
+            callback: [{
+                condition: "$!l.loginData",
+                objectModel: "localStorage",
+                method: "removeItem",
+                arguments: "access_granted",
                 callback: {
+                    objectModel: "window",
+                    method: "alert",
+                    arguments: "Some error occured! Please try again."
+                }
+            }, {
+                condition: "$l.loginData",
+                objectModel: "JSON",
+                method: "parse",
+                arguments: "$l.loginData",
+                response: "loginDataObj",
+                callback: {
+                    condition: "$!operate.isUseless(l.loginDataObj)",
                     declare: {
-                        "headers": {
-                            "Authorization": "$l.data.token_type + ' ' + l.data.access_token"
-                        }
+                        "data": "$l.loginDataObj"
                     },
-                    objectModel: 'HttpService',
-                    method: 'requestBuilder',
-                    arguments: ["GET", "$l.headers"],
-                    response: 'req',
                     callback: {
                         declare: {
-                            "url": "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+                            "headers": {
+                                "Authorization": "$l.data.token_type + ' ' + l.data.access_token"
+                            }
                         },
                         objectModel: 'HttpService',
-                        method: 'fetchRequest',
-                        arguments: ['$l.url', '$l.req'],
-                        response: 'userInfoObj',
-                        callback: [{ // Handle errors
-                            condition: "$l.userInfoObj && l.userInfoObj.error",
+                        method: 'requestBuilder',
+                        arguments: ["GET", "$l.headers"],
+                        response: 'req',
+                        callback: {
                             declare: {
-                                "err_code": "$l.userInfoObj.error.code",
-                                "err_status": "$l.userInfoObj.error.status",
-                                "err_msg": "$l.userInfoObj.error.message",
-                                // "userInfoObj": "$undefined"
+                                "url": "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
                             },
-                            callback: [{
-                                objectModel: "localStorage",
-                                method: "removeItem",
-                                arguments: "access_data"
-                            }, {
-                                objectModel: "localStorage",
-                                method: "removeItem",
-                                arguments: "access_granted"
-                            }, {
-                                objectModel: "console",
-                                method: "error",
-                                arguments: ["$'code: ' + l.err_code", "$'\\nstatus: ' + l.err_status", "$'\\nmessage: ' + l.err_msg"]
-                            }, {
-                                objectModel: "window",
-                                method: "alert",
-                                arguments: "Some error occured! Please try again.",
-                                // condition: "$l.err_code == 401 && l.err_status == 'UNAUTHENTICATED'",
-                                // objectModel: "ActionEngine",
-                                // method: "processRequest",
-                                // arguments: "generateAccessToken"
+                            objectModel: 'HttpService',
+                            method: 'fetchRequest',
+                            arguments: ['$l.url', '$l.req'],
+                            response: 'userInfoObj',
+                            callback: [{ // Handle errors
+                                condition: "$l.userInfoObj && l.userInfoObj.error",
+                                declare: {
+                                    "err_code": "$l.userInfoObj.error.code",
+                                    "err_status": "$l.userInfoObj.error.status",
+                                    "err_msg": "$l.userInfoObj.error.message"
+                                },
+                                callback: [{
+                                    objectModel: "localStorage",
+                                    method: "removeItem",
+                                    arguments: "access_data"
+                                }, {
+                                    objectModel: "localStorage",
+                                    method: "removeItem",
+                                    arguments: "access_granted"
+                                }, {
+                                    objectModel: "console",
+                                    method: "error",
+                                    arguments: ["$'code: ' + l.err_code", "$'\\nstatus: ' + l.err_status", "$'\\nmessage: ' + l.err_msg"]
+                                }, {
+                                    objectModel: "window",
+                                    method: "alert",
+                                    arguments: "Some error occured! Please try again.",
+                                }]
+                            }, { // Handle result
+                                condition: "$l.userInfoObj",
+                                // objectModel: 'console',
+                                // method: 'log',
+                                // arguments: ['$l.userInfoObj']
                             }]
-                        }, { // Handle result
-                            condition: "$l.userInfoObj",
-                            // objectModel: 'console',
-                            // method: 'log',
-                            // arguments: ['$l.userInfoObj']
-                        }]
+                        }
                     }
                 }
-            }
-        }]
-    }]
+            }]
+        }
+    ]
 }
 
 var setUserInfo = [{
-    // objectModel: "ActionEngine",
-    // method: "processRequest",
-    // arguments: "getUserLoginInfo",
-    // response: "userInfoObj"
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "getUserLoginInfo",
+    response: "userInfoObj"
 }, {
     condition: "$l.userInfoObj && !l.userInfoObj.error",
     callback: [{

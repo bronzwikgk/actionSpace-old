@@ -1,5 +1,3 @@
-
-
 class ActionEvent{
     constructor(bubble = true){ this.listeners = {}; this.bubble = bubble;}
     addListener(domElement, events, func, ...args){

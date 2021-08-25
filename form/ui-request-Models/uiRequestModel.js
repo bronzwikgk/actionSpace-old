@@ -310,13 +310,13 @@ var pageAssocReq = {
 var checkLogin = [{
     objectModel: "localStorage",
     method: "getItem",
-    arguments: "fromRedirect",
+    arguments: "from_redirect",
     response: "fromRedirect"
 }, {
     condition: "$l.fromRedirect != 'true'",
     objectModel: "localStorage",
     method: "setItem",
-    arguments: ["fromRedirect", "false"],
+    arguments: ["from_redirect", "false"],
 }, {
     objectModel: "ActionEngine",
     method: "processRequest",

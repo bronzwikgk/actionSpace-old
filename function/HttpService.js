@@ -1,6 +1,6 @@
-const boundary = '-------314159265358979323846';
-const delimiter = "\r\n--" + boundary + "\r\n";
-const close_delim = "\r\n--" + boundary + "--";
+const boundary = '-------314159265358979323846',
+    delimiter = "\r\n--" + boundary + "\r\n",
+    close_delim = "\r\n--" + boundary + "--";
 window.HttpService = class {
     static urlBuilder(url, params) {
         var service = url + "?" + HttpService.buildEncodedUri(params);
@@ -42,20 +42,16 @@ window.HttpService = class {
     static async fetchRequest(url, request, res_type = "json") {
         var res;
         // console.log("URL : " + url);
-        // console.log('Request : ', request)
         // console.log("Request method :" + request['method'] + "headers:" + request['headers'] + "body: " + request['body']);
         await fetch(url, request)
             .then(response => {
-                // console.log(response);
                 if (!response[res_type]) {
                     return response;
                 }
                 return response[res_type]();
             })
             .then(data => {
-                // console.log(data);
                 res = data;
-                //  if(data.error) console.error(`error: ${data.error},\nmessage: ${data.error_description}`)
             })
             .catch(err => {
                 console.log("Failed to make a request due to " + err);
@@ -70,7 +66,7 @@ window.HttpService = class {
         return response.join('&');
     }
     static unbuildEndodedUri(request) {
-        var urifragment = request.split("&"),
+        var urifragment = request.indexOf('?') > -1 ? request.split('?').pop() : request ,
             data = {},
             i, parts;
         //process each par
