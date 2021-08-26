@@ -1,7 +1,7 @@
 var setCardInfo = [{
     objectModel: "localStorage",
     method: "setItem",
-    arguments: ["fromRedirect", "false"],
+    arguments: ["from_redirect", "false"],
 }, {
     objectModel: "ActionEngine",
     method: "processRequest",
