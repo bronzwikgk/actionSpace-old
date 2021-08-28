@@ -80,4 +80,7 @@ window.HttpService = class {
         console.log(data);
         return data;
     }
+    static convertStringToURI(str = ""){
+        
+    }
 }
