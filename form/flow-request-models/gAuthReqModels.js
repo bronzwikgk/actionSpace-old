@@ -1,6 +1,6 @@
 var client_id = '340849040042-3oe5g1cnjtp2fvvqu7nk1lsabmkfo3dn.apps.googleusercontent.com',
     client_secret = 'qFxEEvsHxlIXHDDcjKEnd-r_',
-    redirect_uri = 'https:///bronzwikgk.github.io/actionSpace/redirect.html',
+    redirect_uri = 'https://bronzwikgk.github.io/actionSpace/redirect.html',
     login_auth_scopes = [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile'

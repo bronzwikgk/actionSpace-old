@@ -33,11 +33,28 @@ var handleClickEvent = [{
     arguments: ["getTrueTarget", "$l.args"],
     response: "trueTarget",
 }, {
+    declare: {
+        "actionTypeStr": "$l.trueTarget.dataset.actionType"
+    },
+    objectModel: "$l.actionTypeStr",
+    method: "split",
+    arguments: " ",
+    response: "actionTypeArr"
+}, {
+    declare: {
+        "actionValStr": "$l.trueTarget.dataset.actionValue"
+    },
+    objectModel: "$l.actionValStr",
+    method: "split",
+    arguments: " ",
+    response: "actionValArr"
+}, {
     condition: "$l.trueTarget",
     declare: {
-        "actionType": "$l.trueTarget.dataset.actionType",
-        "actionValue": "$l.trueTarget.dataset.actionValue"
+        "actionType": "$l.actionTypeArr[l.x ? ++l.x : l.x=0]",
+        "actionValue": "$l.actionValArr[l.x] == '-' ? undefined : l.actionValArr[l.x]"
     },
+    loop: "$l.actionTypeArr.length",
     callback: [
         //////////////////////////////////////// common events ////////////////////////////////////////
         {
@@ -83,7 +100,54 @@ var handleClickEvent = [{
             objectModel: "$l.pEl.classList",
             method: "toggle",
             arguments: "$l.actionValue",
-        }, {
+        },
+        // [{
+        //     declare: {
+        //         "n": "$l.event.path.length - 2",
+        //         "x": 0,
+        //         "flag": true
+        //     },
+        //     callback: {
+        //         condition: "$l.flag",
+        //         declare: {
+        //             "elem": "$l.event.path[l.x++]"
+        //         },
+        //         loop: "$l.n",
+        //         callback: {
+        //             condition: "$l.element.hasAttribute('data-action-type')",
+        //             declare: {
+        //                 "trueTarget": "$l.element",
+        //                 "flag": false
+        //             }
+        //         }
+        //     }
+        // },
+        //     {
+        //     objectModel: "document",
+        //     method: "querySelectorAll",
+        //     arguments: ".dropdown.active[data-multiple-open=\"false\"]",
+        //     response: "activeDropdowns",
+        //     callback: [{
+        //         declare: {
+        //             "activeDropdown": "$l.activeDropdowns[l.x ? ++l.x : l.x=0]"
+        //         },
+        //         loop: "$l.activeDropdowns.length",
+        //         callback: {
+        //             condition: "$l.activeDropdown != l.trueTarget.parentElement",
+        //             objectModel: "$l.activeDropdown.classList",
+        //             method: "remove",
+        //             arguments: "active"
+        //         }
+        //     }]
+        // },
+        // {
+        //     condition: "$l.actionType == 'toggleDropdown'",
+        //     declare: {
+        //         "pEl": "$l.trueTarget.parentElement"
+        //     },
+
+        // }],
+        {
             condition: "$l.trueTarget.parentElement.classList.contains('collection')",
             declare: {
                 "pEl": "$l.trueTarget.parentElement"

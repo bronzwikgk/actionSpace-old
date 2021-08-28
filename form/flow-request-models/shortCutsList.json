@@ -1,0 +1,14 @@
+[{
+    "__id": "g58d4c0qci",
+    "shortListIdf": "vscode",
+    "list": {
+        "ctrl+n": {
+            "action": "newFileReqFlow",
+            "desc":"Create new file"
+        },
+        "ctrl+s": {
+            "action": "saveFileFlowReq",
+            "desc": "Save current file"
+        }
+    }
+}]

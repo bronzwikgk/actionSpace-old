@@ -14,70 +14,131 @@ var logoImg = {
     },
 }
 
-var fileMenuItems = {
+var searchBar = {};
+var actionCreateItems = {
     "element##0": {
         "name": "span",
         "attributes": {
-            "id": "newFile",
-            "title": "New",
-            // "class": "fas fa-plus",
+            // "id": "actionStory",
+            "title": "actionStory",
             "data-action-type": "processFileOrDir",
             "data-action-value": "newFileReqFlow"
         },
         "items": {
-            "text##0": "New"
+            "text##0": "actionStory"
+        }
+    }
+}
+
+var actionImportItems = {
+    "element##0": {
+        "name": "span",
+        "attributes": {
+            // "id": "actionStory",
+            "title": "file",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "getUserInputFile"
+        },
+        "items": {
+            "text##0": "file"
         }
     },
     "element##1": {
         "name": "span",
         "attributes": {
-            "id": "openFile",
-            "title": "Open File",
-            // "class": "fas fa-external-link-alt",
-            "data-action-type": "processFileOrDir",
-            "data-action-value": "getUserInputFile"
-        },
-        "items": {
-            "text##0": "Open File"
-        }
-    },
-    "element##2": {
-        "name": "span",
-        "attributes": {
-            "id": "dir",
-            "title": "Open Directory",
-            // "class": "fas fa-folder-plus",
+            // "id": "actionStory",
+            "title": "directory",
             "data-action-type": "processFileOrDir",
             "data-action-value": "getUserInputDir"
         },
         "items": {
-            "text##0": "Open Directory"
+            "text##0": "directory",
+
+        }
+    }
+}
+
+var actionMenuItems = {
+    "element##0": {
+        "name": "span",
+        "attributes": {
+            "id": "create",
+            "class": "dropdown",
+            "data-dropdown-position": "right"
+        },
+        "items": {
+            "element##0": {
+                "name": "label",
+                "attributes": {
+                    "class": "dropbtn",
+                    "title": "create (do not press ctrl+n ,key shortcuts needs to be added)",
+                    "data-action-type": "toggleClass",
+                    "data-action-value": "active",
+                },
+                "items": {
+                    "text##0": "create ctrl+n"
+                }
+            },
+            "element##1": {
+                "name": "div",
+                "attributes": {
+                    "class": "dropdown-content"
+                },
+                "items": actionCreateItems
+            }
+        }
+    },
+    "element##1": {
+        "name": "span",
+        "attributes": {
+            "id": "import",
+            "class": "dropdown",
+            "data-dropdown-position": "right",
+        },
+        "items": {
+            "element##0": {
+                "name": "label",
+                "attributes": {
+                    "class": "dropbtn",
+                    "title": "import (do not press ctrl+i ,key shortcuts needs to be added)",
+                    "data-action-type": "toggleClass",
+                    "data-action-value": "active",
+                },
+                "items": {
+                    "text##0": "import ctrl+i"
+                }
+            },
+            "element##1": {
+                "name": "div",
+                "attributes": {
+                    "class": "dropdown-content"
+                },
+                "items": actionImportItems
+            }
         }
     },
     "element##3": {
         "name": "span",
         "attributes": {
             "id": "dir",
-            "title": "Save File",
-            // "class": "fas fa-folder-plus",
+            "title": "save (do not press ctrl+s ,key shortcuts needs to be added)",
             "data-action-type": "processFileOrDir",
             "data-action-value": "saveFile"
         },
         "items": {
-            "text##0": "Save File"
+            "text##0": "save ctrl+s"
         }
     },
     "element##4": {
         "name": "span",
         "attributes": {
             "id": "dir",
-            "title": "Export File",
-            // "class": "fas fa-folder-plus",
+            "title": "export (do not press ctrl+e ,key shortcuts needs to be added)",
             "data-action-type": "processFileOrDir",
             "data-action-value": "exportFile"
         },
         "items": {
-            "text##0": "Export File"
+            "text##0": "export ctrl+e"
         }
     }
 }
@@ -92,21 +153,22 @@ var menuBar = {
         "element##0": {
             "name": "span",
             "attributes": {
-                "id": "fileMenu",
+                "id": "actionMenu",
                 "class": "menu-item dropdown",
                 "data-dropdown-position": "bottom",
+                // "data-multiple-open": "false"
             },
             "items": {
                 "element##0": {
                     "name": "label",
                     "attributes": {
                         "class": "dropbtn",
-                        "title": "File",
+                        "title": "action",
                         "data-action-type": "toggleClass",
                         "data-action-value": "active"
                     },
                     "items": {
-                        "text##0": "File"
+                        "text##0": "action"
                     }
                 },
                 "element##1": {
@@ -114,14 +176,14 @@ var menuBar = {
                     "attributes": {
                         "class": "dropdown-content"
                     },
-                    "items": fileMenuItems
+                    "items": actionMenuItems
                 }
             }
         },
         "element##1": {
             "name": "span",
             "attributes": {
-                "id": "editMenu",
+                "id": "peopleMenu",
                 "class": "menu-item dropdown"
             },
             "items": {
@@ -129,10 +191,12 @@ var menuBar = {
                     "name": "label",
                     "attributes": {
                         "class": "dropbtn",
-                        "title": "Edit"
+                        "title": "people",
+                        "data-action-type": "toggleClass",
+                        "data-action-value": "active"
                     },
                     "items": {
-                        "text##0": "Edit"
+                        "text##0": "people"
                     }
                 },
                 "element##1": {
@@ -147,7 +211,7 @@ var menuBar = {
         "element##2": {
             "name": "span",
             "attributes": {
-                "id": "insertMenu",
+                "id": "settingMenu",
                 "class": "menu-item dropdown"
             },
             "items": {
@@ -155,36 +219,12 @@ var menuBar = {
                     "name": "label",
                     "attributes": {
                         "class": "dropbtn",
-                        "title": "Insert"
+                        "title": "setting",
+                        "data-action-type": "toggleClass",
+                        "data-action-value": "active"
                     },
                     "items": {
-                        "text##0": "Insert"
-                    }
-                },
-                "element##1": {
-                    "name": "div",
-                    "attributes": {
-                        "class": "dropdown-content"
-                    },
-                    "items": {}
-                }
-            }
-        },
-        "element##3": {
-            "name": "span",
-            "attributes": {
-                "id": "viewMenu",
-                "class": "menu-item dropdown"
-            },
-            "items": {
-                "element##0": {
-                    "name": "label",
-                    "attributes": {
-                        "class": "dropbtn",
-                        "title": "View"
-                    },
-                    "items": {
-                        "text##0": "View"
+                        "text##0": "setting"
                     }
                 },
                 "element##1": {
@@ -280,11 +320,9 @@ var actionBar = {
     },
     "items": {
         "element##0": logoImg,
-        "element##1": menuBar,
-        "element##2": share,
-        "element##3": explore,
-        "element##4": settings,
-        "element##5": userInfoElem
+        "element##1": searchBar,
+        "element##2": menuBar,
+        "element##3": userInfoElem
     }
 }
 
