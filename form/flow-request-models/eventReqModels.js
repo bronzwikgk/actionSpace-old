@@ -148,7 +148,7 @@ var handleClickEvent = [{
 
         // }],
         {
-            condition: "$l.trueTarget.parentElement.classList.contains('collection')",
+            condition: "$l.trueTarget.parentElement && l.trueTarget.parentElement.classList.contains('collection')",
             declare: {
                 "pEl": "$l.trueTarget.parentElement"
             },

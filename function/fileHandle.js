@@ -68,7 +68,12 @@ window.HandleFileSys = class {
                     }
                 }
 
-                fileHandle = await window.showSaveFilePicker(dirHandleOrOpts);
+                try {
+                    fileHandle = await window.showSaveFilePicker(dirHandleOrOpts);
+                } catch (error) {
+                    console.error(error);
+                    fileHandle = undefined;
+                }
             } else {
                 // For Chrome 85 and earlier...
 
@@ -83,16 +88,27 @@ window.HandleFileSys = class {
                     }
                 }
 
-                fileHandle = await window.chooseFileSystemEntries(dirHandleOrOpts);
+                try {
+                    fileHandle = await window.chooseFileSystemEntries(dirHandleOrOpts);
+                } catch (error) {
+                    console.error(error);
+                    fileHandle = undefined;
+                }
+                
             }
 
         } else {
 
             fileName = this.getValidFileName(fileName);
             // In this new directory, create a file named "fileName".
-            fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
-                create: create
-            });
+            try {
+                fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
+                    create: create
+                });
+            } catch (error) {
+                fileHandle = undefined;
+                console.error(error);
+            }
 
         }
 
@@ -127,9 +143,14 @@ window.HandleFileSys = class {
             dirName = "New Folder";
         }
 
-        var newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
-            create: create
-        });
+        try {
+            var newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
+                create: create
+            });
+        } catch (error) {
+            console.error(error);
+            newDirHandle = undefined;
+        }
         return newDirHandle;
     }
 

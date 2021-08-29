@@ -147,7 +147,11 @@ var newFileReqFlow = [{
         condition: "$l.selectedColl",
         declare: {
             "path": "$l.selectedColl.dataset.pathFromRoot",
-            "handle": "$newFileParams",
+            "handle": {
+                "kind": "$newFileParams.kind ? newFileParams.kind : 'file'",
+                "name": "$newFileParams.name ? newFileParams.name : 'NoName'"
+            },
+            "content": "$newFileParams.content ? newFileParams.content : sampleActionStory",
             "args": {
                 "uid": "$l.selectedColl.dataset.rootUid"
             }
@@ -158,14 +162,37 @@ var newFileReqFlow = [{
         response: "rootHandle",
         callback: [{
             condition: "$editorDataSet.fsSync && l.rootHandle",
+            declare: {
+                "fileName": "$l.handle.name.slice(0,l.handle.name.lastIndexOf('.'))",
+                "fileExt": "$l.handle.name.slice(l.handle.name.lastIndexOf('.'))",
+                // "content": ""
+            },
             callback: [{
+                condition: "$l.handle",
                 declare: {
+                    "modFileName": "$l.fileName + (l.x ? ++l.x : l.x = 1).toString()",
+                    "modFileExt": "$l.fileExt",
                     "args": {
-                        'handle': '$l.rootHandle',
-                        'fileName': '$l.handle.name',
-                        'pathFromRoot': '$l.path == "" ? "./" : l.path ',
-                        'create': '$true'
+                        "handle": "$l.rootHandle",
+                        "fileName": "$l.modFileName + l.modFileExt",
+                        "pathFromRoot": "$l.path == '' ? './' : l.path",
+                        'create': '$false'
                     }
+                },
+                objectModel: "ActionEngine",
+                method: "processRequest",
+                arguments: ["getHandleFromDirHandle", "$l.args"],
+                response: "handle",
+                loop: 100,
+                callback: {
+                    objectModel: "console",
+                    method: "log",
+                    arguments: "$l.args",
+                }
+            }, {
+                condition: "$!l.handle",
+                declare: {
+                    "args.create": "$true",
                 },
                 objectModel: "ActionEngine",
                 method: "processRequest",
@@ -177,6 +204,7 @@ var newFileReqFlow = [{
                 arguments: ["$l.handle"]
             }],
         }, {
+            condition: "$l.handle && l.handle.kind == 'file'",
             declare: {
                 "args": {
                     'handle': "$l.handle",
@@ -190,11 +218,10 @@ var newFileReqFlow = [{
             arguments: ["enumContents", "$l.args"]
         }]
     }
-
 }, {
     declare: {
         "args": "$l.handle",
-        "args.content": "$newFileParams.content",
+        "args.content": "$l.content",
         "args.uid": "$l.selectedColl.children[1].lastElementChild.dataset.fileUid"
     },
     objectModel: "ActionEngine",
@@ -891,44 +918,36 @@ var saveFile = [{
 }, {
     declare: {
         "args": {
-            "uid": "$l.uid"
+            "uid": "$l.openFileTab ? l.openFileTab.dataset.rootUid : l.uid"
         }
     },
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: ["getHandleFromIDB", "$l.args"],
-    response: "rootHandle",
+    response: "handle",
     callback: {
-        condition: "$l.rootHandle",
-        callback: [{
-            condition: "$l.openFileTab && l.rootHandle.kind == 'directory'",
-            declare: {
-                "args": {
-                    'handle': '$l.rootHandle',
-                    'fileName': '$l.openFileTab.dataset.fileName',
-                    'pathFromRoot': '$l.openFileTab.dataset.pathFromRoot',
-                    'create': '$false'
-                }
-            },
-            objectModel: "ActionEngine",
-            method: "processRequest",
-            arguments: ["getHandleFromDirHandle", "$l.args"],
-            response: "handle"
-        }, {
-            condition: "$l.rootHandle.kind == 'file'",
-            declare: {
-                "handle": "$l.rootHandle"
+        condition: "$l.handle && l.handle.kind == 'directory' && l.openFileTab",
+        declare: {
+            "args": {
+                "handle": "$l.handle",
+                "pathFromRoot": "$l.openFileTab.dataset.pathFromRoot",
+                "fileName": "$l.openFileTab.dataset.fileName",
+                "create": "$false"
             }
-        }, {
-            condition: "$l.handle && l.handle.kind == 'file' && HandleFileSys.verifyPermission(l.handle, true)",
-            declare: {
-                'content': '$l.resp.editor.innerText'
-            },
-            objectModel: 'HandleFileSys',
-            method: 'writeFile',
-            arguments: ['$l.handle', '$l.content']
-        }]
+        },
+        objectModel: "ActionEngine",
+        method: "processRequest",
+        arguments: ["getHandleFromDirHandle", "$l.args"],
+        response: "handle",
     }
+}, {
+    condition: "$l.handle && l.handle.kind == 'file' && HandleFileSys.verifyPermission(l.handle, true)",
+    declare: {
+        'content': '$l.resp.editor.innerText'
+    },
+    objectModel: 'HandleFileSys',
+    method: 'writeFile',
+    arguments: ['$l.handle', '$l.content']
 }]
 
 var exportFile = [{
