@@ -1,4 +1,9 @@
 /**
+ * Current Documentation at
+ * https://bronzwikgk.github.io/actionSpace/docs/copyAs.html
+ */
+
+/**
  * Wrapper function for copyAsUtil. 
  * Copies the input as per the schema model model contains keys and values as a path query.
  * @param {*} input 
