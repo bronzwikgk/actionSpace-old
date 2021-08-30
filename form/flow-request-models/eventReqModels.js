@@ -174,9 +174,14 @@ var handleClickEvent = [{
             }]
         }, {
             condition: "$l.actionType == 'processFileOrDir'",
+            declare: {
+                "args": {
+                    "entityType": "$l.trueTarget.dataset.entityType"
+                }
+            },
             objectModel: "ActionEngine",
             method: "processRequest",
-            arguments: "$l.actionValue"
+            arguments: ["$l.actionValue", "$l.args"]
         }, {
             condition: "$l.actionType == 'switchFileNavTab'",
             declare: {
@@ -215,6 +220,23 @@ var handleClickEvent = [{
                 method: 'processRequest',
                 arguments: ['openFileInEditor', '$l.args']
             }
+        },
+        //////////////////////////////////////// workflow doc events ////////////////////////////////////////
+        {
+            condition: "$l.actionType == 'addNewWorkflowItem'",
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: "addNewWorkflowItem"
+        }, {
+            condition: "$l.actionType == 'switchWorkflowDoc'",
+            declare: {
+                "args": {
+                    "docId": "$l.actionValue"
+                }
+            },
+            objectModel: "ActionEngine",
+            method: "processRequest",
+            arguments: ["switchWorkflowDoc", "$l.args"]
         }
     ]
 }]

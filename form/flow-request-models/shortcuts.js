@@ -98,20 +98,18 @@ window.ShortcutKeyAction = class {
     //     return list;
     // }
 
-    // commandOnHold = {
-    //     "isHolded": false, //boolean
-    //     "name": "",
-    //     "isCombinedWith": ""
-    // };
+    commandOnHold = {
+        "isHolded": false, //boolean
+        "name": "",
+        // "isCombinedWith": ""
+    };
 
-    // get registerShortcut(){
+    // get registerShortcut(){// restrict getter
     //     console.error("you can't view this function's defination");
     //     return undefined;
     // }
 
-    // name = "", funcOrReqModel, description = ""
-
-    registerShortcut(obj = {}) { // restrict getter
+    registerShortcut(obj = {}) {
         for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
                 var value = obj[key];
@@ -128,8 +126,8 @@ window.ShortcutKeyAction = class {
         }
 
         if (!result) {
-            console.log('no shortcut defined');
-        } else if (operate.isUseless(name) || !operate.isObject(result)) {
+            console.log('no shortcut defined for', name);
+        } else if (!operate.isObject(result)) {
             console.error('invalid shortcut value');
             delete this.registeredShortcuts[name];
         }
@@ -138,7 +136,6 @@ window.ShortcutKeyAction = class {
     };
 
     processKeyEvent(e) {
-        e.preventDefault();
 
         var commandKey = '',
             commandLevel = 0;
@@ -146,7 +143,7 @@ window.ShortcutKeyAction = class {
         if (!operate.isInsideArray(e['key'], ShortcutKeyAction.modifiers.key)) {
             for (const keyName in ShortcutKeyAction.modifiers.keyMap) {
                 let keyStr = ShortcutKeyAction.modifiers.keyMap[keyName];
-                // console.log(keyStr)
+
                 if (e[keyName]) {
                     commandKey += keyStr + "+";
                 }
@@ -163,80 +160,78 @@ window.ShortcutKeyAction = class {
 
         if (!operate.isInsideArray(e['key'], ShortcutKeyAction.modifiers.key)) commandKey += e["key"].toLowerCase();
 
-        // if (commandLevel == 0) {
-        //     e.defaultPrevented = false;
-        // }
-        console.log(commandKey, commandLevel);
+
+        if (commandLevel == 2 && !this.getShortcut(commandKey)) {
+            if (this.commandOnHold.isHolded) {
+                var cmd = `${commandKey} ${this.commandOnHold.name}`,
+                    revcmd = `${this.commandOnHold.name} ${commandKey}`;
+
+                this.commandOnHold.isHolded = false;
+                this.commandOnHold.name = '';
+
+                if (this.getShortcut(cmd)) {
+                    commandKey = cmd;
+                } else if (this.getShortcut(revcmd)) {
+                    commandKey = revcmd;
+                } else {
+                    commandKey = '';
+                }
+            } else {
+                this.commandOnHold.isHolded = true;
+                this.commandOnHold.name = commandKey;
+                commandKey = '';
+            }
+        }
+
         this.actionCommand(commandKey);
-        // if (commandLevel === 2) {
-        //     e.preventDefault();
-        //     // console.log("cmd lvl 2 called");
-        //     if (this.getShortcut(commandKey))(this.getShortcut(commandKey))();
-        //     else console.log("No command defined");
-        // } else if (commandLevel === 1) {
-        //     console.log("cmd lvl 1 called");
-        // } else if (commandLevel === 0) {
-        //     console.log("cmd lvl 0 called");
-        // } else {
-        //     console.log("cmd lvl -1 called, Key:" + e.code)
-        // }
 
     }
 
     actionCommand(command = "") {
-        if(command == "") return;
+        // console.log(command);
+        if (command == "") return;
         var shortcutVal = this.getShortcut(command),
             actionVal;
         if (shortcutVal) {
-           actionVal = shortcutVal['action'];
-           if(operate.isString(actionVal) || operate.isObject(actionVal)){
-               ActionEngine.processRequest(actionVal);
-           } else if(operate.isFunction(actionVal)){
-               actionVal();
-           } else{
-               console.error('not a valid action type');
-           }
+            actionVal = shortcutVal['action'];
+            if (operate.isString(actionVal) || operate.isObject(actionVal)) {
+                ActionEngine.processRequest(actionVal);
+            } else if (operate.isFunction(actionVal)) {
+                actionVal();
+            } else {
+                console.error('not a valid action type');
+            }
         }
     }
 };
 
-(async function () {
-    var response, initialShortcutsList = {},
-        shortcutObj;
-    var resp = await fetch('./form/flow-request-models/shortCutsList.json', {
+(function () {
+
+    fetch('./form/flow-request-models/shortCutsList.json', {
         method: "GET",
         cache: 'no-cache',
-    });
-    response = await resp.json();
-    response.forEach(obj => {
-        shortcutObj = new ShortcutKeyAction(obj["__id"], obj["shortListIdf"]);
-        console.log(shortcutObj.registerShortcut(obj["list"]));
-        window.addEventListener('keydown', shortcutObj.processKeyEvent);
-        // console.log(response, shortcutObj);
-    });
+    }).then(resp => {
 
+        return resp.json();
+
+    }).then(resp => {
+
+        var response,
+            shortcutObj;
+
+        [response] = resp;
+
+        shortcutObj = new ShortcutKeyAction(response["__id"], response["shortListIdf"]);
+        console.log(shortcutObj.registerShortcut(response["list"]));
+
+        window.addEventListener('keydown', e => {
+            e.preventDefault();
+        });
+        
+        window.addEventListener('keyup', e => {
+            e.preventDefault();
+            shortcutObj.processKeyEvent(e);
+        });
+    });
+    // console.log(response, shortcutObj);
 })();
-
-// vs code shortcuts
-// (function () {
-//     const sel = window.getSelection();
-//     const range = document.createRange();
-//     const textarea = document.querySelector("#textarea");
-
-//     vscodeSort.addShortcut({
-//         ctrl_KeyA: () => {
-
-//             range.setStart(textarea.firstChild, 0);
-//             range.setEnd(textarea.lastChild, textarea.lastChild.nodeValue.length);
-//             sel.removeAllRanges();
-//             sel.addRange(range);
-//         },
-//         ctrl_KeyC: () => {
-//             navigator.clipboard.writeText(sel.getRangeAt(0).toString()).then(function () {
-//                 // copy success code here
-//             }, function (err) {
-//                 // copy failed code here
-//             });
-//         }
-//     })
-// })();
