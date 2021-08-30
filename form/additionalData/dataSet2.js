@@ -1,7 +1,10 @@
-var newFileParams = { // pseudo FileSystemFileHandle
-    "kind": "file",
-    "name": "Untitled.txt",
-    "content": "This is Sample VIP Story"
+var newFileParams = {
+    "name": "Untitled",
+    "type": "text"
+}
+
+var newDirectoryParams = {
+    "name": "new folder",
 }
 
 var defaultDir = {
@@ -27,24 +30,24 @@ Free spirit responsible human being.`;
 var sampleActionStoryV2 = `Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`;
 
-/* var mimeMap = {
-    ".txt": "text/plain"
-} */
+var extEntityTypeMap = {
+    ".txt": "text",
+    ".html": "html",
+    ".wf": "workflow"
+}
 
-/* var editorMap = {
-    "text": ["", ".txt"],
-    "html": [".html"],
-    "code": [".css", ".js", ".json", ".c", ".cpp"],
-    "sheet": []
-} */
-
-var extMap = {
-    ".txt": {
+var entityTypeMap = {
+    "text": {
         "mimeType": "text/plain",
-        "editorType": "text"
+        "ext": ".txt"
     },
-    ".html": {
+    "html": {
         "mimeType": "text/html",
-        "editorType": "html"
+        "ext": ".html"
+    },
+    "workflow": {
+        "mimeType": "text/html",
+        "ext": ".wf",
+        "entityReqModels": "initWorkflowUI"
     }
 }

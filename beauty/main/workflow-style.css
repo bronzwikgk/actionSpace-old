@@ -1,0 +1,98 @@
+.workflow-doc {
+    --bullet-point-radius: 20px;
+    --default-bg-color: #fff;
+}
+
+.workflow-doc .title-container {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.workflow-doc .title-container>.title {
+    outline: none;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 5px;
+    width: max-content;
+    border-bottom: 2px solid;
+    border-color: transparent;
+    /* border-radius: 10px; */
+}
+
+.workflow-doc .title-container>.title:hover,
+.workflow-doc .title-container>.title:focus {
+    border-bottom-color: #cecece;
+}
+
+.workflow-doc .title-container>.back-btn {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 8px 15px;
+    margin: 0px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.workflow-doc .title-container>.back-btn::before {
+    content: '❮';
+    position: relative;
+}
+
+.workflow-doc .title-container>.back-btn:hover {
+    background-color: rgb(214, 214, 214);
+}
+
+.workflow-doc .bullet-point {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    background-color: black;
+    border: 5px solid var(--default-bg-color);
+    width: var(--bullet-point-radius);
+    height: var(--bullet-point-radius);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.workflow-doc .bullet-point:hover {
+    border-color: rgb(141, 141, 141);
+}
+
+/* Accordion styles */
+
+.workflow-doc .accordian {
+    overflow: hidden;
+    /* display: inline-block; */
+}
+
+.workflow-doc .accordian-label {
+    position: relative;
+    padding-left: 40px;
+}
+
+.workflow-doc .accordian-label::before {
+    content: '❯';
+    display: inline-block;
+    position: relative;
+    left: -5px;
+    cursor: pointer;
+    transition: all ease 0.35s;
+}
+
+.workflow-doc .accordian-content {
+    max-height: 0;
+    padding: 0 1em;
+    margin: 0 0.5em;
+    transition: all ease 0.35s;
+}
+
+.workflow-doc .accordian.active>.accordian-label::before {
+    transform: rotate(90deg);
+}
+
+.workflow-doc .accordian.active>.accordian-content {
+    max-height: 100vh;
+    padding: 1em;
+}

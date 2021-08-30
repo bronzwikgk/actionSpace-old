@@ -37,7 +37,7 @@ window.HandleFileSys = class {
                 fileHandle = await window.chooseFileSystemEntries();
             }
         }
-        
+
         return fileHandle;
     }
 
@@ -94,7 +94,7 @@ window.HandleFileSys = class {
                     console.error(error);
                     fileHandle = undefined;
                 }
-                
+
             }
 
         } else {
@@ -102,9 +102,12 @@ window.HandleFileSys = class {
             fileName = this.getValidFileName(fileName);
             // In this new directory, create a file named "fileName".
             try {
-                fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
-                    create: create
-                });
+                var perm = HandleFileSys.verifyPermission(dirHandleOrOpts, true); // verify permission
+                if (perm) {
+                    fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
+                        create: create
+                    });
+                }
             } catch (error) {
                 fileHandle = undefined;
                 console.error(error);
@@ -144,9 +147,13 @@ window.HandleFileSys = class {
         }
 
         try {
-            var newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
-                create: create
-            });
+            var perm = HandleFileSys.verifyPermission(dirHandle, true), // verify permission
+                newDirHandle; 
+            if (perm) {
+                newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
+                    create: create
+                });
+            }
         } catch (error) {
             console.error(error);
             newDirHandle = undefined;
@@ -160,10 +167,16 @@ window.HandleFileSys = class {
      * @return {File} - returns file.
      */
     static async getFile(fileHandle) {
+        var file;
         if (!fileHandle) {
             fileHandle = await this.getFileHandle();
         }
-        const file = await fileHandle.getFile();
+
+        var perm = HandleFileSys.verifyPermission(fileHandle, true); // verify permission
+        if (perm) {
+            file = await fileHandle.getFile();
+        }
+
         return file;
     }
 
@@ -226,13 +239,6 @@ window.HandleFileSys = class {
         await writable.close();
     }
 
-    /**
-     * Under Construction
-     */
-    static async updateFile() {
-
-    }
-
     static async deleteFile(dirHandle, fileName) {
         if (!operate.isUseless(fileName) && fileName !== "") {
 
@@ -257,6 +263,16 @@ window.HandleFileSys = class {
         }
     }
 
+    /**
+     * Under Construction
+     */
+     static async updateFile() {
+
+    }
+
+    /**
+     * Under Construction
+     */
     static async putHandleInIDB() {
 
     }
@@ -265,11 +281,17 @@ window.HandleFileSys = class {
      * Verify the user has granted permission to read or write to the file, if
      * permission hasn't been granted, request permission.
      *
-     * @param {FileSystemFileHandle} fileHandle File handle to check.
-     * @param {boolean} withWrite True if write permission should be checked.
+     * @param {FileSystemFileHandle | FileSystemDirectoryHandle} handle File/Directory handle to check permission for.
+     * @param {boolean} withWrite True if write permission should be checked.(default false)
      * @return {boolean} True if the user has granted read/write permission.
      */
-    static async verifyPermission(fileHandle, withWrite) {
+    static async verifyPermission(handle, withWrite = false) {
+
+        if (operate.isUseless(handle) || !(handle instanceof FileSystemFileHandle || handle instanceof FileSystemDirectoryHandle)) {
+            console.error('Not a valid instance of "FileSystemFileHandle" or "FileSystemDirectoryHandle"');
+            return;
+        }
+
         const opts = {};
         if (withWrite) {
             opts.writable = true;
@@ -277,11 +299,11 @@ window.HandleFileSys = class {
             opts.mode = 'readwrite';
         }
         // Check if we already have permission, if so, return true.
-        if (await fileHandle.queryPermission(opts) === 'granted') {
+        if (await handle.queryPermission(opts) === 'granted') {
             return true;
         }
         // Request permission to the file, if the user grants permission, return true.
-        if (await fileHandle.requestPermission(opts) === 'granted') {
+        if (await handle.requestPermission(opts) === 'granted') {
             return true;
         }
         // The user did nt grant permission, return false.

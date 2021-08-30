@@ -22,10 +22,37 @@ var actionCreateItems = {
             // "id": "actionStory",
             "title": "actionStory",
             "data-action-type": "processFileOrDir",
-            "data-action-value": "newFileReqFlow"
+            "data-action-value": "newEntityReqFlow",
+            "data-entity-type": "text"
         },
         "items": {
             "text##0": "actionStory"
+        }
+    },
+    "element##1": {
+        "name": "span",
+        "attributes": {
+            // "id": "actionStory",
+            "title": "workFlow Doc",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "newEntityReqFlow",
+            "data-entity-type": "workflow",
+        },
+        "items": {
+            "text##0": "workFlow Doc"
+        }
+    },
+    "element##2": {
+        "name": "span",
+        "attributes": {
+            // "id": "actionStory",
+            "title": "directory",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "newEntityReqFlow",
+            "data-entity-type": "directory",
+        },
+        "items": {
+            "text##0": "directory"
         }
     }
 }
@@ -123,7 +150,7 @@ var actionMenuItems = {
             "id": "dir",
             "title": "save (do not press ctrl+s ,key shortcuts needs to be added)",
             "data-action-type": "processFileOrDir",
-            "data-action-value": "saveFile"
+            "data-action-value": "saveFileReqFlow"
         },
         "items": {
             "text##0": "save ctrl+s"
