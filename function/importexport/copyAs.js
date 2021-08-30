@@ -1,3 +1,26 @@
+/**
+ * Wrapper function for copyAsUtil. 
+ * Copies the input as per the schema model model contains keys and values as a path query.
+ * @param {*} input 
+ * @param {*} model 
+ * @returns 
+ */
+
+
+/**
+ * Examples : 
+ * var HTMLSchema = {
+ *                name:'tagName',
+ *             type:"$condition-(wholeText && tagName != 'SCRIPT')?'text':((data)?'comment' : 'element')",
+ *             attributes:'attributes.$all.$into-parent.$only-object.$follow-HTMLAttributeSchema',
+ *             items:'childNodes.$all.$only-object.$follow-HTMLSchema',
+ *             text:"$condition-(wholeText)?wholeText:((data)?data:text)",
+ *                }
+ * var HTMLAttributeSchema = {
+ *       '~name':'nodeValue'
+ *                }
+ * 
+ */
 async function copyAs(input, model){
   input = await copyAsUtil(input, model);
   // var index = 0;
@@ -33,6 +56,12 @@ async function copyAs(input, model){
   // await Entity.walk(input, cb);
   return input;
 }
+/**
+ * Fills the actual values in the model instead of the path queries with the help of matchObject.
+ * @param {*} input 
+ * @param {*} model 
+ * @returns 
+ */
 async function copyAsUtil(input, model){
 
    if(!(input instanceof Object && (!operate.isFunction(input)))){
@@ -98,7 +127,17 @@ async function copyAsUtil(input, model){
    // if(model.items)
    // console.log(JSON.parse(JSON.stringify(model.items))) ;
    return model;
-}
+}/**
+ *  Fetches a result to a single path query on Obj.
+
+ * @param {*} obj 
+ * @param {*} path 
+ * @param {*} result 
+ * @param {*} specific 
+ * @param {*} pkey 
+ * @param {*} lkey 
+ * @returns 
+ */
 async function matchObject(obj, path, result, specific, pkey, lkey){
    if(!result) result = {"length":0};
    if(!specific) specific = {"specific":true};
