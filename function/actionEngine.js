@@ -1,6 +1,16 @@
+/**
+ * Observations : 
+ *    1. We should follow a basic template of defining the classes.
+ *  class ActionEngine {
+ * }, hence re adapt it acordingly.
+ *  Do write a small note about the class, method, arguments, parameters, use cases, samples, entity created inside  method should have a comment about it's use in the method.
+ *    
+ */
+
 window.ActionEngine = class{
    
    static maxDebugDepth = 100;
+
    static async processRequest(flowRequest, l = {}){
 
       if(! operate.isArray(flowRequest)){
