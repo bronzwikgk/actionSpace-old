@@ -10,8 +10,8 @@ header:{
     searchOutput:{
         search_Rollover:{},
         search_filters:{},
-     search_Result :{},
-      pagination :{},
+         search_Result :{},
+        pagination :{},
 
     },
 },
