@@ -1,5 +1,6 @@
 /**
  * It gets user login info
+ ** Return :- object with user name, user email(google), etc.
  */
  var getUserLoginInfo = {
     declare: {
@@ -18,6 +19,9 @@
     return: "$l.response"
 }
 
+/**
+ * It sets the user's info to top right user's icon
+ */
 var setUserInfo = [{
     objectModel: "ActionEngine",
     method: "processRequest",

@@ -1,4 +1,4 @@
-var CSSViewer_ui_main = {
+var CSSViewer_ui = {
     "name": "div",
     "attributes": {
         "class": "CSSViewer",

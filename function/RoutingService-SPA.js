@@ -1,24 +1,91 @@
 const useHash = true;
-var apiUrl = 'https://bronzwikgk.github.io/actionSpace';
-var routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView', 'signInView'];
-// const rootElem = document.getElementById("root");
+// const apiUrl = 'https://bronzwikgk.github.io/actionSpace';
+const routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView', 'signInView'];
+const rootElem = document.getElementById("root");
 
-// Temporary solution
-
+/**
+ * default reqModels associated with each with each view in `'routes'`
+ */
 var pageReqModels = {
-  '': 'editorUI',
   'editorView': 'editorUI',
   'signInView': 'loginUI',
-  'dashBoardView': 'dashBoardUI'
+  'dashBoardView': 'dashBoardUI',
+  'cardView': '',
+  'listView': '',
+  'outputView': ''
 };
 
-/*
-{
-    'page': <name of page view (should be any one out of 'routes' array items)>
-}
-*/
+window.addEventListener('popstate', (e)=>{
+  document.getElementById('root').innerHTML = e.state.content;
+  document.title = e.title;
+});
 
-/* var getPage = [{
+/**
+ ** It gets a requested page name (available in `'routes'`) and renders in view
+ ** It also makes a `'pushState'` in history of browser accordingly
+ */
+var getPage = async function (page) {
+
+  var separator = useHash ? "#" : "/";
+
+  if (page[0] == separator) page = page.slice(1);
+
+  page = page.split('?');
+
+  if (routes.indexOf(page[0]) < 0) {
+    console.error('Page Not Found: ', page[0]);
+    return;
+  }
+
+  var rootElem = document.getElementById('root'),
+    title = `${page[0]} | EHH`;
+  
+  rootElem.innerHTML = '';
+
+  document.title = title;
+  await ActionEngine.processRequest('generalUi', {
+    'pageReqModel': pageReqModels[page[0]]
+  });
+
+  window.history.pushState({
+    'content': rootElem.innerHTML,
+    'title': title
+  }, title, separator + page[0]);
+
+};
+
+/** 
+ * Everything Starts Here
+ ** As soon as this page is loaded, this function is executed.
+ ** It reads page's requested `'hash'` and checks whether that entry exists in `'routes'` array.
+ ** If requested `'hash'` is not found in `'routes'` array, it goes to zeroth index of `'routes'`, i.e. `editorView`
+  */
+var init = function () {
+  if (document.readyState != 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+};
+
+// Initialization
+init(fn = function () {
+
+  var separator = useHash ? "#" : "/",
+    page = window.location.hash.split(separator).pop().split('?');
+
+  if (routes.indexOf(page[0]) < 0) page[0] = routes[0];
+
+  page = page.join('?');
+
+  window.getPage(page);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* 
+// 'page': <name of page view (should be any one out of 'routes' array items)>
+var getPage = [{
   objectModel: 'document',
   method: 'getElementById',
   arguments: 'root',
@@ -47,33 +114,33 @@ var pageReqModels = {
   arguments: ['$l.data', '$l.title', '$l.url']
 }] */
 
+/* 
 // Solution after Integration of backend
-
-// var getPage = {
-//     declare: {
-//         'url': '$apiUrl + "/" + l.page',
-//         'reqParams': {
-//             method: 'GET',
-//             cache: 'no-cache',
-//         }
-//     },
-//     objectModel: 'HttpService',
-//     method: 'fetchRequest',
-//     arguments: ['$l.url', '$l.reqParams'],
-//     response: 'resp',
-//     callback: {
-//         declare: {
-//             'data': {
-//                 'content': '$l.resp.content',
-//                 'title': '$l.resp.title + " | EHH"'
-//             },
-//             'pageUrl': '$useHash ? "#" + l.page : l.page',
-//         },
-//         objectModel: 'window.history',
-//         method: 'pushState',
-//         arguments: ['$l.data', '$l.data.title', '$l.url']
-//     }
-// }
+var getPage = {
+    declare: {
+        'url': '$apiUrl + "/" + l.page',
+        'reqParams': {
+            method: 'GET',
+            cache: 'no-cache',
+        }
+    },
+    objectModel: 'HttpService',
+    method: 'fetchRequest',
+    arguments: ['$l.url', '$l.reqParams'],
+    response: 'resp',
+    callback: {
+        declare: {
+            'data': {
+                'content': '$l.resp.content',
+                'title': '$l.resp.title + " | EHH"'
+            },
+            'pageUrl': '$useHash ? "#" + l.page : l.page',
+        },
+        objectModel: 'window.history',
+        method: 'pushState',
+        arguments: ['$l.data', '$l.data.title', '$l.url']
+    }
+} */
 
 /* var processPage = [{
   declare: {
@@ -135,80 +202,7 @@ var evtPopState = {
   arguments: ['$window', 'DOMContentLoaded', 'processPage']
 }] */
 
-window.addEventListener('popstate', (e)=>{
-  document.getElementById('root').innerHTML = e.state.content;
-  document.title = e.title;
-})
-
-var getPage = async function (page) {
-
-  var separator = useHash ? "#" : "/";
-
-  if (page[0] == separator) page = page.slice(1);
-
-  page = page.split('?');
-
-  if (routes.indexOf(page[0]) < 0) {
-    console.error('Page Not Found: ', page[0]);
-    return;
-  }
-
-  var rootElem = document.getElementById('root'),
-    title = `${page[0]} | EHH`;
-  
-  rootElem.innerHTML = '';
-
-  document.title = title;
-  await ActionEngine.processRequest('generalUi', {
-    'pageReqModel': pageReqModels[page[0]]
-  });
-
-  window.history.pushState({
-    'content': rootElem.innerHTML,
-    'title': title
-  }, title, separator + page[0]);
-
-  // ActionEngine.processRequest('getUserLoginInfo');
-};
-
-(function (fn = function () {
-
-  var separator = useHash ? "#" : "/",
-    page = window.location.hash.split(separator).pop().split('?');
-
-  if (routes.indexOf(page[0]) < 0) page[0] = routes[0];
-
-  page = page.join('?');
-
-  window.getPage(page);
-}) {
-  if (document.readyState != 'loading') {
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
-})();
-
-/* (function(fn = function() {
-    const page = useHash ?
-      window.location.hash.split('#').pop() :
-      window.location.href.split('/').pop();
-      ActionEngine.processRequest('getPage', {
-          'page': page
-      })
-    // get(routes.indexOf(page) >= 0 ? page : routes[0]);
-  }) {
-    if (document.readyState != 'loading'){
-      fn();
-    } else {
-      document.addEventListener('DOMContentLoaded', fn);
-    }
-  })(); */
-
-// //////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /* 
-
 const useHash = true;
 const apiUrl = 'https://lucasreta.com/stack-overflow/spa-vanilla-js/api';
 const routes = ['section-1', 'section-2'];
@@ -259,6 +253,4 @@ for(let i = 0; i < links.length; i++) {
     document.addEventListener('DOMContentLoaded', fn);
   }
 })();
-
-
 */

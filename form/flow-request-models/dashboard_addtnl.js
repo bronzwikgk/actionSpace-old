@@ -1,3 +1,6 @@
+/**
+ * It creates and sets a card with user info (from google login)
+ */
 var setCardInfo = [{
     objectModel: "localStorage",
     method: "setItem",

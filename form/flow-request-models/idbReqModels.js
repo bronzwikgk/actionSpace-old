@@ -1,10 +1,11 @@
-/*
-{
-    'DBName': <Name of the DataBase>,
-    'storeName': <Name of the Store>,
-    'key': <key>
-}
-*/
+/**
+ * It gets value at a `key` from Indexed DataBase (`IDB`).
+ ** Initial Variables :- 
+        ** `'DBName'`: Name of the DataBase,
+        ** `'storeName'`: Name of the Store,
+        ** `'key'`: key
+ ** Return :- value present for the given `key` (if not present, `undefined`)
+ */
 var getFromIDB = {
     objectModel: 'IndexedDataBase',
     method: 'createStore',
@@ -20,14 +21,14 @@ var getFromIDB = {
     }
 }
 
-/*
-{
-    'DBName': <Name of the DataBase>,
-    'storeName': <Name of the Store>,
-    'key': <key>,
-    'value': <value>
-}
-*/
+/**
+ * It sets value at a `key` in Indexed DataBase (`IDB`).
+ ** Initial Variables :- 
+        ** `'DBName'`: Name of the DataBase,
+        ** `'storeName'`: Name of the Store,
+        ** `'key'`: key
+        ** `'value'`: value
+ */
 var setToIDB = {
     objectModel: 'IndexedDataBase',
     method: 'createStore',
@@ -41,11 +42,14 @@ var setToIDB = {
     }
 }
 
-/*
-{
-    'handle': <file/directory handle>
-}
-*/
+/**
+ * It sets handle (`FileSystemFileHandle`/`FileSystemDirectoryHandle`) at a `key ('uid')` in Indexed DataBase (`IDB`) and returns the stored handle.
+ * It first generates a `uid` and then stors the handle.
+ * It stores at Database `ActionSpaceDefaultDB`, and Store `fileOrDirHandles`.
+ ** Initial Variables :- 
+        ** `'handle'`: file/directory handle
+ ** Return :- An array with first element as `key('uid')` (at which the handle is stored), and second element as `value('handle')`
+ */
 var storeHandleToIDB = {
     return: "$[l.uid, l.handle]",
     callback: [{
@@ -55,6 +59,7 @@ var storeHandleToIDB = {
         arguments: 20,
         response: 'uid',
     }, {
+        condition: "$l.handle instanceOf FileSystemFileHandle || l.handle instanceOf FileSystemDirectoryHandle",
         declare: {
             'IDBSetReqArgs': {
                 'DBName': 'ActionSpaceDefaultDB',
@@ -82,11 +87,13 @@ var storeHandleToIDB = {
     }]
 }
 
-/*
-{
-    'uid': <uid for file/directory handle>
-}
-*/
+/**
+ * It gets value (`FileSystemFileHandle`/`FileSystemDirectoryHandle`) at a `key ('uid')` in Indexed DataBase (`IDB`) and returns the `value('handle')`.
+ * It gets from Database `ActionSpaceDefaultDB`, and Store `fileOrDirHandles`.
+ ** Initial Variables :- 
+        ** `'uid'`: `key('uid')` of file/directory handle in IDB
+ ** Return :- returns the `value('handle')` at the given key.
+ */
 var getHandleFromIDB = {
     declare: {
         'IDBGetReqArgs': {

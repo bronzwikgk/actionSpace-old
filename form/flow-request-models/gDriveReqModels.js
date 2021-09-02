@@ -1,6 +1,9 @@
-var drive_auth_scopes = ["https://www.googleapis.com/auth/drive.file"],
-    queryStr = "";
+const drive_auth_scopes = ["https://www.googleapis.com/auth/drive.file"];
+var queryStr = "";
 
+/**
+ * It gets data from the gdrive from the given `'queryStr'`.
+ */
 var getDriveData = {
     declare: {
         "args": {

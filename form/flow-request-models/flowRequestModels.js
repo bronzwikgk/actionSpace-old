@@ -1,4 +1,62 @@
-/*  */
+/**
+ * additional Request Models which are associated with a given view ( view and UI name mapping in `'pageReqModels'`)
+ */
+var pageAssocReq = {
+    'editorUI': ['initFS', 'checkLogin', 'addCSSViewerBox'],
+    'dashBoardUI': ['setCardInfo']
+}
+
+/**
+ * checks if user is logged in via google and set user's info at user icon at top right 
+ */
+var checkLogin = [{
+    objectModel: "localStorage",
+    method: "getItem",
+    arguments: "from_redirect",
+    response: "fromRedirect"
+}, {
+    condition: "$l.fromRedirect != 'true'",
+    objectModel: "localStorage",
+    method: "setItem",
+    arguments: ["from_redirect", "false"],
+}, {
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "setUserInfo"
+}]
+
+/**
+ * It processes UI for a given view (view and UI name mapping in `'pageReqModels'`)
+ */
+var generalUi = [{
+    objectModel: "console",
+    method: "log",
+    arguments: ["i'm here", "$l.pageReqModel"]
+}, {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'root',
+    response: 'root',
+    callback: {
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$window[l.pageReqModel]', '$l.root']
+    }
+}, {
+    condition: "$pageAssocReq[l.pageReqModel] && pageAssocReq[l.pageReqModel].length > 0",
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "$pageAssocReq[l.pageReqModel]"
+}]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * It gets set of element required generally
+ ** Return:-
+        ** Object containing html elements' references
+ */
 var getEditorElementSet = {
     return: "$l",
     callback: [{
@@ -24,14 +82,15 @@ var getEditorElementSet = {
     }]
 }
 
-/*
-{
-    'resp': <set of Editor Elements>,
-    'uid': <uid of file>,
-    'fileName': <file Name>,
-    'fileExt': <file Extension>
-}
-*/
+/**
+ * It creates a new tabLink element in the tabLinks
+ ** Initial Variables :-
+        ** `'resp'` : set of Editor Elements
+        ** `'uid'` : uid of file
+        ** `'fileName'` : name of file
+        ** `'fileExt'` : extension of file
+ ** Return :- It returns newly created tablink HTML Element
+ */
 var newTabLink = {
     objectModel: "CreateEntity",
     method: "create",
@@ -53,16 +112,16 @@ var newTabLink = {
     }
 }
 
-/*
-{
-    'resp': <set of Editor Elements>,
-    'uid': <uid of file>,
-    'fileName': <file Name>,
-    'fileExt': <file Extension>,
-    'fileType': <mime Type of file>,
-    'fileContent': <content of file>
-    'tabLink': <HTML element .tab-link which we want to go to / click target tablink element>
-}
+/**
+ * It switches from one tab to another (or one opened editor to another).
+ ** Initial Variables :-
+        ** `'resp'` : set of Editor Elements
+        ** `'uid'` : uid of file
+        ** `'fileName'` : name of file
+        ** `'fileExt'` : extension of file
+        ** `'fileType'` : mime Type of file
+        ** `'fileContent'` : content of file
+        ** `'tabLink'` : HTML element `.tab-link` which we want to go to / click target tablink element
 */
 var switchToTab = [{
     condition: "$l.resp.activeTabLink",
@@ -97,10 +156,10 @@ var switchToTab = [{
     arguments: "active"
 }]
 
-/*
-{
-    'tabLink': <HTML element .tab-link which we want to go to / click target tablink element>
-}
+/**
+ * It opens the given tab and sets content in editor from a given tablink.
+ ** Initial Variables :-
+        ** 'tabLink': HTML element .tab-link which we want to go to / click target tablink element
 */
 var openTab = [{
     objectModel: "ActionEngine",
@@ -133,11 +192,11 @@ var openTab = [{
     }
 }]
 
-// New File Request Model Flow
-/* 'handle': <file/directory handle>,
-    'rootUid': <uid of root directory>,
-    'pathFromRoot': <path of file/directory from root directory>,
-    'nav': <element to whom the new entry is to be appended> */
+/**
+ * It is request flow for creating a new entity (actionStory, directory, workflow doc)
+ ** Initial Variables :-
+        ** `'entityType'`: type of entity
+ */
 var newEntityReqFlow = [{
     objectModel: "document",
     method: "querySelector",
@@ -242,12 +301,13 @@ var newEntityReqFlow = [{
     arguments: ["openFileInEditor", "$l.args"]
 }]
 
-/*
-{
-    'uid': <uid of fileHandle in IDB>,
-    'name': <full name of file (with ext)>
-    'content': <content of file>
-}
+/**
+ * It opens a file in the editor (editable area), with given params
+ ** Initial Variables :-
+        ** `'uid'`: uid of file,
+        ** `'name'`: full name of file (with ext)
+        ** `'content'`: content of file
+
 */
 var openFileInEditor = [{
     objectModel: "ActionEngine",
@@ -310,16 +370,10 @@ var openFileInEditor = [{
     method: "setObjKeyVal",
     arguments: ["$editorDataSet['fileContents']", "$l.openUid", "$l.openFileContent"],
 }]
-/* 
-{
-    objectModel: "Entity",
-    method: "setObjKeyVal",
-    arguments: ["$editorDataSet['fileContents']", "$l.uid", "$l.content"],
-}
-*/
 
-// Open File Request Flow Model
-/*  */
+/**
+ * It takes input file (`FileSystemFileHandle`) from user, sets it (file handle) to IDB and opens it in editor
+ */
 var getUserInputFile = [{
     objectModel: 'HandleFileSys',
     method: 'getFileHandle',
@@ -364,11 +418,11 @@ var getUserInputFile = [{
     arguments: ['openFileInEditor', '$l.args']
 }]
 
-/*
-{
-    'trueTarget': <close element in .tab-link which is clicked>
-}
-*/
+/**
+ * It closes a given tablink and also switch to previous tablink (if no previous tablink, then next tablink)
+ ** Initial Variables :-
+        ** `'trueTarget'`: close element in `.tab-link` which is clicked 
+ */
 var closeTab = {
     declare: {
         "prevSib": "$l.trueTarget.parentElement.previousElementSibling",
@@ -402,9 +456,9 @@ var closeTab = {
     }]
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// open Directory Request Flow Model
-/*  */
+/**
+ * It takes input directory (`FileSystemDirectoryHandle`) from user, and opens it in actionSpace
+ */
 var getUserInputDir = [{
     objectModel: "HandleFileSys",
     method: "getDirHandle",
@@ -435,11 +489,11 @@ var getUserInputDir = [{
     }]
 }]
 
-/*
-{
-    'handle': <directory handle>
-}
-*/
+/**
+ * It sets given directory (`FileSystemDirectoryHandle`) to IDB and opens in left side nav bar (by enumerating its contents)
+ ** Initial Variables :-
+        ** `'handle'`: directory handle (`FileSystemDirectoryHandle`)
+ */
 var setUserInputDir = [{
     declare: {
         "args": {
@@ -505,13 +559,13 @@ var setUserInputDir = [{
     arguments: ["itrDirItems", "$l.args"],
 }]
 
-/*
-{
-    'handle': <directory handle>,
-    'callbackReq': <reqest model name, which is to be called for each item in directory>,
-    'callbackReqParams': <parameters of callback request>
-}
-*/
+/**
+ * It iterates through each item in directory and calls a request model for each.
+ ** Initial Variables :-
+        ** `'handle'`: directory handle
+        ** `'callbackReq'`: reqest model, which is to be called for each item in directory
+        ** `'callbackReqParams'`: parameters of callback request
+ */
 var itrDirItems = {
     condition: "$(l.handle.kind === 'directory' && l.handle instanceOf FileSystemDirectoryHandle)",
     objectModel: '$l.handle',
@@ -535,14 +589,14 @@ var itrDirItems = {
     }
 }
 
-/*
-{
-    'handle': <file/directory handle>,
-    'rootUid': <uid of root directory>,
-    'pathFromRoot': <path of file/directory from root directory>,
-    'nav': <element to whom the new entry is to be appended>
-}
-*/
+/**
+ * It takes a handle (not necessarily `FileSystemFileHandle`/`FileSystemDirectoryHandle`, you can create an Object with similar properties and use), and makes entries in given `nav` and if it's directory, then request goes recursive
+ ** Initial Variables :-
+        ** `'handle'`: file/directory handle
+        ** `'rootUid'`: uid of root directory
+        ** `'pathFromRoot'`: path of file/directory from root directory
+        ** `'nav'`: element to whom the new entry is to be appended
+ */
 var enumContents = [{
     objectModel: 'CreateEntity',
     method: 'uniqueId',
@@ -607,15 +661,16 @@ var enumContents = [{
     }]
 }]
 
-/*
-{
-    'uid': <uid of file>,
-    'rootUid': <uid of root directory>,
-    'fileName': <name of file>,
-    'pathFromRoot': <path of directory from root directory>,
-    'nav': <element to whom the new entry is to be appended>
-}
-*/
+/**
+ * It creates html like an file entry in left side nav bar and appends it to given `nav`
+ ** Initial Variables :-
+        ** `'uid'`: uid of file
+        ** `'rootUid'`: uid of root directory
+        ** `'fileName'`: name of file
+        ** `'pathFromRoot'`: path of directory from root directory
+        ** `'nav'`: element to whom the new entry is to be appended
+ ** Return :- newly created HTML element.
+ */
 var addFileToFilesNavigation = {
     objectModel: "CreateEntity",
     method: "create",
@@ -640,15 +695,16 @@ var addFileToFilesNavigation = {
     }
 }
 
-/*
-{
-    'uid': <uid of directory>,
-    'rootUid': <uid of root directory>,
-    'dirName': <name of directory>,
-    'pathFromRoot': <path of directory from root directory>,
-    'nav': <element to whom the new entry is to be appended>
-}
-*/
+/**
+ * It creates html like a directory entry in left side nav bar and appends it to given `nav`
+ ** Initial Variables :-
+        ** `'uid'`: uid of directory
+        ** `'rootUid'`: uid of root directory
+        ** `'fileName'`: name of directory
+        ** `'pathFromRoot'`: path of directory from root directory
+        ** `'nav'`: element to whom the new entry is to be appended
+ ** Return :- newly created HTML element.
+ */
 var addDirToFilesNavigation = {
     objectModel: 'CreateEntity',
     method: 'create',
@@ -672,9 +728,9 @@ var addDirToFilesNavigation = {
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-// initFileInEditor
-/*  */
+/**
+ * opens a default directory (initially) in left side nav bar
+ */
 var initFS = [{
         objectModel: 'CreateEntity',
         method: 'uniqueId',
@@ -770,12 +826,13 @@ var initFS = [{
     }
 ]
 
-/*
-{
-    'initialPath': <initial path (string)>,
-    'pathToAdd': <path to be added (string/array)>
-}
-*/
+/**
+ * It makes a path (used in `pathFromRoot`, or generally `'relative'` path to file), from given params
+ ** Initial Variables :-
+        ** `'initialPath'`: initial path (string)
+        ** `'pathToAdd'`: path to be added (string/array)
+ ** Return :- created path (string).
+ */
 var makePath = {
     declare: {
         'newPath': '$l.initialPath'
@@ -796,14 +853,15 @@ var makePath = {
     }]
 }
 
-/*
-{
-    'handle': <handle of root directory>,
-    'pathFromRoot': <path of directory from root directory>,
-    'fileName'/'dirName': <file/directory name whose handle is needed (optional)>,
-    'create': <whether to create a handle or not, if not present>
-}
-*/
+/**
+ * It gets a file/directory handle inside the given directory handle(`FileSystemDirectoryHandle`), from a given name (of file/directory), and if it does not exists, whether to create it or not (if given intial variable is `'create'` true, then it is created)
+ ** Initial Variables :-
+        ** `'handle'`: handle of root directory
+        ** `'pathFromRoot'`: path of directory from root directory
+        ** `'fileName'`/`'dirName'`: file/directory name whose handle is needed (optional)
+        ** `'create'`: whether to create a handle or not, if not present
+ ** Return :- a required handle.
+ */
 var getHandleFromDirHandle = {
     condition: "$l.handle && l.handle.kind == 'directory' && HandleFileSys.verifyPermission(l.handle, true)",
     declare: {
@@ -820,9 +878,6 @@ var getHandleFromDirHandle = {
         declare: {
             "currName": "$l.pathFromRootArr[l.x++]"
         },
-        // objectModel: "console",
-        // method: "log",
-        // arguments: "$l.currName",
         loop: "$l.pathFromRootArr.length",
         callback: {
             condition: "$l.currName != '' && l.currName != '.' && HandleFileSys.verifyPermission(l.respHandle, true)",
@@ -831,10 +886,6 @@ var getHandleFromDirHandle = {
             arguments: ["$l.respHandle", "$l.currName", "$false"],
             response: "respHandle",
         }
-    }, {
-        objectModel: "console",
-        method: "log",
-        arguments: ["$l.respHandle", "$l.dirName", "$l.create"]
     }, {
         condition: "$l.fileName && l.fileName.indexOf('.') > -1",
         objectModel: "HandleFileSys",
@@ -850,14 +901,15 @@ var getHandleFromDirHandle = {
     }]
 }
 
-/*
-{
-    'uid': <uid of file>,
-    'fileName': <full name of file (with ext)>
-    'handle': <handle of file/root directory>,
-    'pathFromRoot': <path of directory from root directory (if root directory is used)>
-}
-*/
+/**
+ * It gets content (text content) from either a given file id (which is stored in `editorDataSet['fileContents']`), or from a handle.
+ ** Initial Variables :-
+        ** `'uid'`: uid of file
+        ** `'fileName'`: full name of file (with ext)
+        ** `'handle'`: handle of file/root directory
+        ** `'pathFromRoot'`: path of directory from root directory (if root directory is used)
+ ** Return :- required file's content.
+ */
 var getFileContent = {
     condition: "$l.uid",
     declare: {
@@ -911,39 +963,10 @@ var getFileContent = {
         }]
     }
 }
-/* 
- {
-            objectModel: "Entity",
-            method: "setObjKeyVal",
-            arguments: ["$editorDataSet['fileContents']", "$l.uid", "$l.fileContent"]
-        }
-*/
-/* 
 
-var saveFileToLS = {
-    objectModel: 'document',
-    method: 'getElementById',
-    arguments: 'editor',
-    response: 'editor',
-    callback: {
-        condition: '$l.editor.getAttribute("data-is-unsaved") === "true"', // 
-        objectModel: "CreateEntity",
-        method: 'getProps',
-        arguments: ['$l.editor', ['data-open-fileid']],
-        response: 'respArr',
-        callback: {
-            declare: {
-                'fileID': '$l.respArr[0]'
-            },
-            objectModel: "StorageHelper",
-            method: 'set',
-            arguments: ['$l.fileID', '$l.editor.innerHTML']
-        }
-    }
-}
-
-*/
-
+/**
+ * It saves (to fileSystem, if it is from fileSystem, either opened (import) by user as a file, or a directory) the current open file in editor.
+ */
 var saveFileReqFlow = [{
     objectModel: "ActionEngine",
     method: "processRequest",
@@ -992,6 +1015,10 @@ var saveFileReqFlow = [{
     arguments: ['$l.handle', '$l.content']
 }]
 
+/**
+ * It exports the current open file in editor to user's desired location.
+ * Irrespective of the fact that whether the file is opened from file system or not
+ */
 var exportFile = [{
     objectModel: "ActionEngine",
     method: "processRequest",
@@ -1038,3 +1065,31 @@ var exportFile = [{
     method: 'writeFile',
     arguments: ['$l.fH', '$l.content']
 }]
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/* 
+
+var saveFileToLS = {
+    objectModel: 'document',
+    method: 'getElementById',
+    arguments: 'editor',
+    response: 'editor',
+    callback: {
+        condition: '$l.editor.getAttribute("data-is-unsaved") === "true"', // 
+        objectModel: "CreateEntity",
+        method: 'getProps',
+        arguments: ['$l.editor', ['data-open-fileid']],
+        response: 'respArr',
+        callback: {
+            declare: {
+                'fileID': '$l.respArr[0]'
+            },
+            objectModel: "StorageHelper",
+            method: 'set',
+            arguments: ['$l.fileID', '$l.editor.innerHTML']
+        }
+    }
+}
+
+*/

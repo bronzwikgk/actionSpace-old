@@ -1,3 +1,6 @@
+/**
+ * It initiates ui in editor, required for a workflow doc.
+ */
 var initWorkflowUI = [{
     objectModel: "document",
     method: "getElementById",
@@ -29,44 +32,24 @@ var initWorkflowUI = [{
     objectModel: "CreateEntity",
     method: "create",
     arguments: ["$workflowUI", "$l.editor"],
-    response: "workflowRoot",
-    callback: [{
-        declare: {
-            "props": {
-                "data-doc-id": "$l.uid"
-            }
-        },
-        objectModel: "CreateEntity",
-        method: "setProps",
-        arguments: ["$l.workflowRoot", "$l.props"],
-    }, {
-        objectModel: "$l.workflowRoot",
-        method: "querySelector",
-        arguments: ".title-container>.title",
-        response: "titleElem",
-        callback: {
-            declare: {
-                "titleElem.innerText": "$l.rootNode.value"
-            }
-        }
-    }]
-}, {
-    objectModel: "Entity",
-    method: "setObjKeyVal",
-    arguments: ["$HeapNode", "activeNode", "$l.rootNode"],
 }, {
     declare: {
         "args": {
-            "node": "$l.rootNode",
-            "elem": "$l.workflowRoot"
+            "docIdOrNode": "$l.rootNode"
         }
     },
     objectModel: "ActionEngine",
     method: "processRequest",
-    arguments: ["addNewWorkflowItem", "$l.args"]
+    arguments: ["switchWorkflowDoc", "$l.args"]
+}, {
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: "addNewWorkflowItem"
 }]
 
-
+/**
+ * It inserts a new workflow item at the `active node`
+ */
 var addNewWorkflowItem = [{
     declare: {
         "node": "$HeapNode.activeNode"
@@ -81,6 +64,7 @@ var addNewWorkflowItem = [{
     arguments: 20,
     response: "uid"
 }, {
+    condition: "$(!operate.isUseless(l.node)) && l.node instanceOf HeapNode", 
     declare: {
         "content": "$'item id: ' + l.uid"
     },
@@ -100,16 +84,24 @@ var addNewWorkflowItem = [{
     arguments: ["setWorkflowItems", "$l.args"]
 }]
 
-// node, callbackReq, callbackReqParams
+/**
+ * It iterates given node's children, nad for each children in the node, it executes a callback request with given params.
+ ** Initial Variable :- 
+        ** `'node'` : a workflow node
+        ** `'callbackReq'` : callback request's name, which is to be executed for each child in the given node
+        ** `'callbackReqParams'` : callback request's params      
+ */
 var itrWorkflowNodeChildren = {
     condition: "$!operate.isUseless(l.node)",
     declare: {
         "children": "$l.node.descendants",
+        "x": 0
     },
     callback: {
         condition: "$!operate.isUseless(l.children)",
         declare: {
-            "child": "$l.children[l.x ? ++l.x : l.x = 0]",
+            "child": "$l.children[l.x]",
+            "x": "$l.x + 1",
             "callbackReqParams.node": "$l.child"
         },
         objectModel: "ActionEngine",
@@ -119,7 +111,12 @@ var itrWorkflowNodeChildren = {
     }
 }
 
-// node, elem
+/**
+ * It creates a new item (HTML Element), in the given element, with the given info from node.
+ ** Initial Variable :- 
+        ** `'node'` : a workflow node
+        ** `'elem'` : where the newly created item's template is to be appended (HTML Element)   
+ */
 var setWorkflowItems = {
     condition: "$l.node && l.elem",
     objectModel: "CreateEntity",
@@ -167,31 +164,56 @@ var setWorkflowItems = {
     }]
 }
 
-// docId
-// 
+/**
+ * It finds a node in the `rootNode` of the `activeNode` with a given id.
+ ** Initial Variables :-
+        ** `'docIdOrNode'` : docId or a workflow node
+ ** Return :- a workflow node (if input is not a string, then returns the input)
+ */
+var getHeapNode = {
+    condition: "$!operate.isUseless(l.docIdOrNode)",
+    return: "$l.node",
+    callback: [{
+        condition: "$!operate.isString(l.docIdOrNode)",
+        declare: {
+            "node": "$l.docIdOrNode"
+        }
+    }, {
+        condition: "$operate.isString(l.docIdOrNode)",
+        declare: {
+            "activeNode": "$HeapNode.activeNode"
+        },
+        callback: {
+            condition: "$!operate.isUseless(l.activeNode)",
+            objectModel: "$l.activeNode",
+            method: "findNodeDfs",
+            arguments: ["$l.docIdOrNode", "$true"],
+            response: "node"
+        }
+    }]
+}
+
+/**
+ * It switches from one workflow doc to another with given docId or Node (whether it is via back button, or bullet point), and sets it, and all it's children, in the workflow's root element.
+ ** Initial Variables :-
+        ** `'docIdOrNode'` : docId or a workflow node
+ */
 var switchWorkflowDoc = [{
-    objectModel: "console",
-    method: "log",
-    arguments: ["switchWorkflowDoc","$l.docId"]
-}, {
-    condition: "$!(operate.isUseless(l.docId) || l.docId == '')",
-    declare: {
-        "activeNode": "$HeapNode.activeNode"
-    },
     objectModel: "document",
     method: "getElementById",
     arguments: "workflowRoot",
     response: "workflowRoot"
 }, {
-    condition: "$!operate.isUseless(l.activeNode)",
-    objectModel: "$l.activeNode",
-    method: "findNodeDfs",
-    arguments: ["$l.docId", "$true"],
+    condition: "$!operate.isUseless(l.docIdOrNode)",
+    declare: {
+        "args": {
+            "docIdOrNode": "$l.docIdOrNode"
+        }
+    },
+    objectModel: "ActionEngine",
+    method: "processRequest",
+    arguments: ["getHeapNode", "$l.args"],
     response: "node"
-}, {
-    objectModel: "console",
-    method: "log",
-    arguments: ["$l.node"]
 }, {
     condition: "$!operate.isUseless(l.node)",
     callback: [{
@@ -214,12 +236,7 @@ var switchWorkflowDoc = [{
             },
             objectModel: "$l.item",
             method: "remove",
-            loop: "$l.items.length",
-            callback: {
-                objectModel: "console",
-                method: "log",
-                arguments: "$l.item.children[0].children[0].dataset.actionValue"
-            }
+            loop: "$l.items.length"
         }
     }, {
         declare: {
@@ -231,7 +248,6 @@ var switchWorkflowDoc = [{
         method: "setProps",
         arguments: ["$l.workflowRoot", "$l.props"],
     }, {
-        condition: "$!operate.isUseless(l.node)",
         objectModel: "$l.workflowRoot",
         method: "querySelector",
         arguments: ".title-container>.title",
@@ -242,7 +258,6 @@ var switchWorkflowDoc = [{
             }
         }
     }, {
-        condition: "$!operate.isUseless(l.node)",
         objectModel: "$l.workflowRoot",
         method: "querySelector",
         arguments: ".title-container>.back-btn",
@@ -273,100 +288,3 @@ var switchWorkflowDoc = [{
         arguments: ["itrWorkflowNodeChildren", "$l.args"],
     }]
 }]
-
-// function switchDoc(docID) {
-//     if (docID == "") {
-//         return;
-//     }
-
-//     activeNode = activeNode.findNodeDfs(docID, true);
-//     var rootDoc = document.getElementById('rootDoc'),
-//         parentID = "";
-
-//     if (activeNode) {
-//         rootDoc.querySelectorAll('.item').forEach(item => {
-//             item.remove();
-//         });
-//         rootDoc.setAttribute('data-doc-id', docID);
-//         if (activeNode.parent) {
-//             parentID = activeNode.parent.value
-//         }
-//         rootDoc.querySelector('.pageTitle>.backIcon').setAttribute('data-action-value', parentID);
-//         rootDoc.querySelector('.pageTitle>.title').innerHTML = dataContainer[docID];
-//         if (activeNode.descendants.length > 0) {
-//             getItems(activeNode, rootDoc);
-//         }
-//         // else{
-//         //     addItem(activeNode, rootDoc);
-//         // }
-
-//     }
-// }
-
-// function getItems(node, elem) {
-//     var children = node.descendants,
-//         item, tabLabel, tabContent;
-//     children.forEach(child => {
-//         CreateEntity.create(itemTemp, elem);
-//         item = elem.lastElementChild;
-//         tabLabel = item.querySelector('.tab:last-child>.tab-label');
-//         tabContent = item.querySelector('.tab:last-child>.tab-content');
-//         tabLabel.children[0].setAttribute('data-action-value', child.value);
-//         tabLabel.children[1].innerHTML = dataContainer[child.value];
-//         getItems(child, tabContent);
-//     })
-// }
-
-
-// function addItem(node, elem) {
-//     if (!node) {
-//         node = activeNode;
-//     }
-//     if (!elem) {
-//         elem = document.getElementById('rootDoc');
-//     }
-//     var uid, item, itemTab, itemLabel;
-//     uid = uniqueID();
-//     node.add(uid);
-//     CreateEntity.create(itemTemp, elem);
-//     item = elem.lastElementChild;
-//     itemLabel = item.querySelector('.tab:last-child>.tab-label');
-//     itemLabel.children[0].setAttribute('data-action-value', uid);
-//     itemLabel.children[1].innerText = `item id: ${uid}`;
-//     dataContainer[uid] = itemLabel.children[1].innerHTML;
-// }
-
-// (function () {
-//     var initId, rootNode, rootDoc;
-//     initId = uniqueID();
-//     rootNode = new HeapNode(initId);
-//     HeapNode.rootNodes.push(rootNode);
-//     activeNode = rootNode;
-//     CreateEntity.create(ui, document.getElementById('root'));
-
-//     rootDoc = document.getElementById('rootDoc');
-//     rootDoc.setAttribute('data-doc-id', initId);
-//     rootDoc.querySelector('.pageTitle>.title').innerText = `item id: ${rootNode.value}`
-//     dataContainer[rootNode.value] = rootDoc.querySelector('.pageTitle>.title').innerHTML;
-
-//     addItem(rootNode, rootDoc);
-//     addItem(rootNode, rootDoc);
-//     console.log(HeapNode.rootNodes);
-//     console.log(dataContainer);
-
-//     window.onclick = function (e) {
-//         var target = e.target,
-//             actionType = target.getAttribute('data-action-type'),
-//             actionValue = target.getAttribute('data-action-value');
-//         if (actionType === "accordianToggle") {
-//             target.parentElement.classList.toggle(actionValue);
-//         } else if (actionType === "switchDoc") {
-//             switchDoc(actionValue.trim());
-//         } else if (actionType === "addDoc") {
-//             addItem();
-//         }
-//     }
-// });
-// ();
-
-var tempWorkflowDataContainer = {};

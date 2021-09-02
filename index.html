@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <!-- <link rel="stylesheet" href="./beauty/req-models-form/form_style.css">
-  <link rel="stylesheet" href="./beauty/click-and-draw/style.css">
-  <link rel="stylesheet" href="./beauty/css-viewer/new.css"> -->
+  <link rel="stylesheet" href="./beauty/click-and-draw/style.css"> -->
   <!-- <link rel="stylesheet" href="../pari/css/pari.css">
   <link rel="stylesheet" href="../pari/css/themes/light-theme.css"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link rel="stylesheet" href="https://bronzwikgk.github.io/pariwip/css/pari.css">
   <link rel="stylesheet" href="https://bronzwikgk.github.io/pariwip/css/themes/light-theme.css">
   <link rel="stylesheet" href="./beauty/loader.css">
+  <link rel="stylesheet" href="./beauty/css-viewer/new.css">
   <link rel="stylesheet" href="./beauty/main/workflow-style.css">
   <link rel="stylesheet" href="./beauty/main/dashboard.css">
   <link rel="stylesheet" href="./beauty/login-signup/login_style.css">
@@ -36,43 +36,62 @@
     </div>
   </div>
 
-
+  <!-- Root Element -->
   <div id="root"></div>
   <!-- <canvas id="drawlines"></canvas>
   <div class="fc" data-tag="editable"></div> -->
   <!-- <button id="clickBtn">click me</button> -->
 
 
-  <script src="./form/additionalData/appDataSet.js"></script>
-  <script src="./form/additionalData/sampleStory.js"></script>
+  <!-- Essetials -->
+  <!-- Utitlites -->
+  <script src="./form/additionalData/appDataSet.js"></script> <!-- To be Changed-->
+  <script src="./form/additionalData/sampleStory.js"></script> <!-- To be Changed-->
+  <script src="./function/HttpService-fetch.js"></script>
+  <script src="./function/DataBase-IDB.js"></script>
+  <script src="./function/DataBase-localStorage.js"></script>
+  <script src="./function/FileHandleService-FileSystem.js"></script>
+  <!-- Engine -->
   <script src="./function/operate.js"></script>
-  <script src="./function/HttpService.js"></script>
-  <script src="./function/actionDatabaseTemp.js"></script>
-  <script src="./function/actionStorageV1.js"></script>
   <script src="./function/createEntity.js"></script>
   <script src="./function/actionEvent.js"></script>
   <script src="./function/actionEntity.js"></script>
   <script src="./function/actionEngine.js"></script>
-  <script src="./function/fileHandle.js"></script>
-  <!-- <script src="./form/sampleDataModel.js"></script> -->
+  <script src="./function/RoutingService-SPA.js"></script>
 
-  <!-- main editor -->
-  <script src="./form/flow-request-models/spa.js"></script>
-  <script src="./form/flow-request-models/idbReqModels.js"></script>
-  <script src="./form/flow-request-models/editorConfig.js"></script>
-  <script src="./form/additionalData/dataSet2.js"></script>
+
+  <!-- Editor View -->
+  <!-- UI -->
   <script src="./form/ui-request-Models/navbarTopUI.js"></script>
+  <script src="./form/ui-request-Models/rightNavBar_ui.js"></script>
   <script src="./form/ui-request-Models/uiRequestModel.js"></script>
+  <!-- Request Models -->
+  <script src="./form/flow-request-models/editorConfig.js"></script> <!-- To be changed -->
+  <script src="./form/flow-request-models/idbReqModels.js"></script>
   <script src="./form/flow-request-models/flowRequestModels.js"></script>
   <script src="./form/flow-request-models/eventReqModels.js"></script>
+  <!-- css viewer feature -->
+  <script src="./form/ui-request-Models/CSSViewer_ui.js"></script>
+  <script src="./form/flow-request-models/CSSViewer_adtnl.js"></script>
+  <!-- workflow feature -->
+  <script src="./form/ui-request-Models/workflow_ui.js"></script>
+  <script src="./function/workFlowNode.js"></script>
+  <script src="./form/flow-request-models/workflow_addtnl.js"></script>
 
-  <!-- Css Viewer -->
-  <!-- <script src="./form/CSSViewer/CSSViewer_ui.js"></script>
-  <script src="./form/CSSViewer/CSSViewer_adtnl.js"></script> -->
 
-  <!-- Click and Draw & Drag and Drop -->
-  <!-- <script src="./form/click-and-draw/sorted-set.js"></script>
-  <script src="./form/click-and-draw/cad.js"></script> -->
+  <!-- SignIn View -->
+  <!-- UI -->
+  <script src="./form/ui-request-Models/login_ui.js"></script>
+  <!-- Request Models -->
+  <script src="./form/flow-request-models/login_addtnl.js"></script>
+
+
+  <!-- DashBoard View -->
+  <!-- UI -->
+  <script src="./form/ui-request-Models/dashboard_ui.js"></script>
+  <!-- Request Models -->
+  <script src="./form/flow-request-models/dashboard_addtnl.js"></script>
+
 
   <!-- Google Authorization and fetching data -->
   <script src="./form/flow-request-models/gAuthReqModels.js"></script>
@@ -80,27 +99,21 @@
   <script src="./form/flow-request-models/gSheetsReqModels.js"></script>
   <script src="./form/flow-request-models/gDriveReqModels.js"></script>
 
-  <!-- Login Page -->
-  <script src="./form/ui-request-Models/login_ui.js"></script>
-  <script src="./form/flow-request-models/login_addtnl.js"></script>
 
-  <!-- DashBoard -->
-  <script src="./form/ui-request-Models/dashboard_ui.js"></script>
-  <script src="./form/flow-request-models/dashboard_addtnl.js"></script>
+  <!-- Click and Draw & Drag and Drop -->
+  <!-- <script src="./form/click-and-draw/sorted-set.js"></script>
+  <script src="./form/click-and-draw/cad.js"></script> -->
 
   <!-- Request Models Form -->
   <!-- <script src="./form/reqModelsForm/form_ui.js"></script>
   <script src="./form/reqModelsForm/form_addtnl.js"></script>
   <script src="./form/reqModelsForm/form_ds.js"></script> -->
 
-  <!-- Pari JS -->
+  <!-- Pari's JS -->
   <!-- <script src="../pari/js/pari.js"></script> -->
 
   <!-- Testing Files -->
   <!-- <script src="./form/flow-request-models/shortcuts.js"></script> -->
-  <script src="./function/workFlowNode.js"></script>
-  <script src="./form/ui-request-Models/workflow_ui.js"></script>
-  <script src="./form/flow-request-models/workflow_addtnl.js"></script>
 
 </body>
 

@@ -1,5 +1,5 @@
-var client_id = '340849040042-3oe5g1cnjtp2fvvqu7nk1lsabmkfo3dn.apps.googleusercontent.com',
-    client_secret = 'qFxEEvsHxlIXHDDcjKEnd-r_',
+const client_id = '<YOUR CLIENT_ID HERE>',
+    client_secret = '<YOUR CLIENT_SECRET HERE>',
     redirect_uri = 'https://bronzwikgk.github.io/actionSpace/redirect.html',
     login_auth_scopes = [
         'https://www.googleapis.com/auth/userinfo.email',
@@ -102,7 +102,7 @@ var generateAccessToken = [{
                                 objectModel: "window",
                                 method: "alert",
                                 arguments: "$l.err_type + ' : ' + l.err_msg",
-                                // objectModel: "ActionEngine",    // this could result in infinite looping
+                                // objectModel: "ActionEngine",    // this might result in infinite looping
                                 // method: "processRequest",
                                 // arguments: "generateAuthCode",
                                 // exit: true,
