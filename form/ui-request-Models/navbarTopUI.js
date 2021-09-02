@@ -7,7 +7,7 @@ var logoImg = {
     "attributes": {
         "id": "logoImg",
         "class": "logo-img",
-        "src": "./assets/download.jpg",
+        "src": "./assets/ehh_logo_live.jpg",
         "alt": "Ehh",
         // "width": "80",
         // "height": "60"
