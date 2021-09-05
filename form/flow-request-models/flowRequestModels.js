@@ -2,7 +2,7 @@
  * additional Request Models which are associated with a given view ( view and UI name mapping in `'pageReqModels'`)
  */
 var pageAssocReq = {
-    'editorUI': ['initFS', 'checkLogin', 'addCSSViewerBox'],
+    'editorUI': ['initFS', 'checkLogin'],
     'dashBoardUI': ['setCardInfo']
 }
 
@@ -478,11 +478,12 @@ var getUserInputDir = [{
     arguments: '.collection[data-collection-type="userCollection"]',
     response: "coll",
     callback: [{
+        condition: "$l.coll",
         objectModel: "$l.coll.classList",
         method: "add",
         arguments: "selected"
     }, {
-        condition: "$!l.coll.classList.contains('active')",
+        condition: "$l.coll && !l.coll.classList.contains('active')",
         objectModel: "$l.coll.classList",
         method: "add",
         arguments: "active"
@@ -567,7 +568,7 @@ var setUserInputDir = [{
         ** `'callbackReqParams'`: parameters of callback request
  */
 var itrDirItems = {
-    condition: "$(l.handle.kind === 'directory' && l.handle instanceOf FileSystemDirectoryHandle)",
+    condition: "$l.handle.kind === 'directory'",
     objectModel: '$l.handle',
     method: 'values',
     response: 'dirValuesItr',
@@ -863,7 +864,7 @@ var makePath = {
  ** Return :- a required handle.
  */
 var getHandleFromDirHandle = {
-    condition: "$l.handle && l.handle.kind == 'directory' && HandleFileSys.verifyPermission(l.handle, true)",
+    condition: "$l.handle && l.handle.kind == 'directory'",
     declare: {
         "x": 0,
         "pathFromRoot": "$l.pathFromRoot.trim()",
@@ -880,7 +881,7 @@ var getHandleFromDirHandle = {
         },
         loop: "$l.pathFromRootArr.length",
         callback: {
-            condition: "$l.currName != '' && l.currName != '.' && HandleFileSys.verifyPermission(l.respHandle, true)",
+            condition: "$l.currName != '' && l.currName != '.'",
             objectModel: "HandleFileSys",
             method: "getNewDirHandle",
             arguments: ["$l.respHandle", "$l.currName", "$false"],
@@ -1065,6 +1066,10 @@ var exportFile = [{
     method: 'writeFile',
     arguments: ['$l.fH', '$l.content']
 }]
+
+var autoSave = {
+
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

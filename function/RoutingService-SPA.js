@@ -1,5 +1,11 @@
+/**
+ * Where to use hash(`#`) or (`/`) in the window's hash name (in the location/url bar of browser).
+ */
 const useHash = true;
 // const apiUrl = 'https://bronzwikgk.github.io/actionSpace';
+/**
+ * Possible List of routes, a browser in this context can go.
+ */
 const routes = ['editorView', 'cardView', 'listView', 'dashBoardView', 'outputView', 'signInView'];
 const rootElem = document.getElementById("root");
 

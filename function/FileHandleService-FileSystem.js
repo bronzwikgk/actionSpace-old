@@ -94,23 +94,23 @@ window.HandleFileSys = class {
                     console.error(error);
                     fileHandle = undefined;
                 }
-
             }
-
         } else {
 
             fileName = this.getValidFileName(fileName);
             // In this new directory, create a file named "fileName".
-            try {
-                var perm = HandleFileSys.verifyPermission(dirHandleOrOpts, true); // verify permission
-                if (perm) {
-                    fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
-                        create: create
-                    });
+            if (dirHandleOrOpts && dirHandleOrOpts instanceof FileSystemDirectoryHandle) {
+                try {
+                    var perm = HandleFileSys.verifyPermission(dirHandleOrOpts, true); // verify permission
+                    if (perm) {
+                        fileHandle = await dirHandleOrOpts.getFileHandle(fileName, {
+                            create: create
+                        });
+                    }
+                } catch (error) {
+                    fileHandle = undefined;
+                    console.error(error);
                 }
-            } catch (error) {
-                fileHandle = undefined;
-                console.error(error);
             }
 
         }
@@ -146,17 +146,20 @@ window.HandleFileSys = class {
             dirName = "New Folder";
         }
 
-        try {
-            var perm = HandleFileSys.verifyPermission(dirHandle, true), // verify permission
-                newDirHandle; 
-            if (perm) {
-                newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
-                    create: create
-                });
+        var newDirHandle;
+
+        if (dirHandle && dirHandle instanceof FileSystemDirectoryHandle) {
+            try {
+                var perm = HandleFileSys.verifyPermission(dirHandle, true);
+                if (perm) {
+                    newDirHandle = await dirHandle.getDirectoryHandle(dirName, {
+                        create: create
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                newDirHandle = undefined;
             }
-        } catch (error) {
-            console.error(error);
-            newDirHandle = undefined;
         }
         return newDirHandle;
     }
@@ -221,22 +224,26 @@ window.HandleFileSys = class {
      */
     static async writeFile(fileHandle, contents) {
         // Support for Chrome 82 and earlier.
-        if (fileHandle.createWriter) {
-            // Create a writer (request permission if necessary).
-            const writer = await fileHandle.createWriter();
-            // Write the full length of the contents
-            await writer.write(0, contents);
-            // Close the file and write the contents to disk
-            await writer.close();
-            return;
+        var perm = HandleFileSys.verifyPermission(fileHandle, true); // verify permission
+        if (perm) {
+            if (fileHandle.createWriter) {
+                // Create a writer.
+                const writer = await fileHandle.createWriter();
+                // Write the full length of the contents
+                await writer.write(0, contents);
+                // Close the file and write the contents to disk
+                await writer.close();
+                return;
+            }
+            // For Chrome 83 and later.
+            // Create a FileSystemWritableFileStream to write to.
+            const writable = await fileHandle.createWritable();
+            // Write the contents of the file to the stream.
+            await writable.write(contents);
+            // Close the file and write the contents to disk.
+            await writable.close();
         }
-        // For Chrome 83 and later.
-        // Create a FileSystemWritableFileStream to write to.
-        const writable = await fileHandle.createWritable();
-        // Write the contents of the file to the stream.
-        await writable.write(contents);
-        // Close the file and write the contents to disk.
-        await writable.close();
+
     }
 
     static async deleteFile(dirHandle, fileName) {
@@ -266,7 +273,7 @@ window.HandleFileSys = class {
     /**
      * Under Construction
      */
-     static async updateFile() {
+    static async updateFile() {
 
     }
 

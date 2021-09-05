@@ -59,7 +59,7 @@ var storeHandleToIDB = {
         arguments: 20,
         response: 'uid',
     }, {
-        condition: "$l.handle instanceOf FileSystemFileHandle || l.handle instanceOf FileSystemDirectoryHandle",
+        condition: "$l.handle",
         declare: {
             'IDBSetReqArgs': {
                 'DBName': 'ActionSpaceDefaultDB',

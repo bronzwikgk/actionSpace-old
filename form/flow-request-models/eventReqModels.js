@@ -2,25 +2,26 @@
  * It gets the true target (element in `(event's)path` hierarchy, for which we are supposed to act), and returns it.
  * Element in `(event's)path` hierarchy, having the attribute `data-action-type` (except `window` and `document`), is known as true target.
  ** Initial Variables :-
-        ** `'event'`: event object
+ ** `'event'`: event object
  ** Return :- true target (HTML elemnent's reference).
  */
 var getTrueTarget = {
     declare: {
         "trueTarget": "$l.event.target",
         "n": "$l.event.path.length - 2",
-        "x": 0,
-        "flag": true
+        "flag": true,
+        "x": 0
     },
     return: "$l.trueTarget",
     callback: {
         condition: "$l.flag",
         declare: {
-            "element": "$l.event.path[l.x++]"
+            "element": "$l.event.path[l.x]",
+            "x": "$l.x + 1"
         },
         loop: "$l.n",
         callback: {
-            condition: "$l.element && l.element.hasAttribute('data-action-type')",
+            condition: "$l.element && l.element.hasAttribute && l.element.hasAttribute('data-action-type')",
             declare: {
                 "trueTarget": "$l.element",
                 "flag": false
@@ -33,42 +34,47 @@ var getTrueTarget = {
  * It handles the click event and acts accordingly.
  * It first gets true target, then gets required attributes of the true target, and then acts accordingly.
  ** Initial Variables :-
-        ** `'event'` : click event object
+ ** `'event'` : click event object
  */
 var handleClickEvent = [{
     condition: "$l.event",
     declare: {
         "args": {
             "event": "$l.event"
-        }
+        },
+        "actionTypeArr": [],
+        "actionValArr": []
     },
     objectModel: "ActionEngine",
     method: "processRequest",
     arguments: ["getTrueTarget", "$l.args"],
     response: "trueTarget",
 }, {
+    condition: "$l.trueTarget && l.trueTarget.hasAttribute && l.trueTarget.hasAttribute('data-action-type')",
     declare: {
-        "actionTypeStr": "$l.trueTarget.dataset.actionType"
+        "actionTypeStr": "$l.trueTarget.dataset.actionType ? l.trueTarget.dataset.actionType : ''",
+        "actionValStr": "$l.trueTarget.dataset.actionValue ? l.trueTarget.dataset.actionValue : ''",
+        "x": 0
     },
-    objectModel: "$l.actionTypeStr",
-    method: "split",
-    arguments: " ",
-    response: "actionTypeArr"
+    callback: [{
+        objectModel: "$l.actionTypeStr.trim()",
+        method: "split",
+        arguments: " ",
+        response: "actionTypeArr"
+    }, {
+        objectModel: "$l.actionValStr",
+        method: "split",
+        arguments: " ",
+        response: "actionValArr"
+    }]
 }, {
+    condition: "$(!operate.isUseless(l.actionTypeArr)) && operate.isArray(l.actionTypeArr)",
     declare: {
-        "actionValStr": "$l.trueTarget.dataset.actionValue"
+        "actionType": "$l.actionTypeArr[l.x]",
+        "actionValue": "$l.actionValArr[l.x] == '-' ? undefined : l.actionValArr[l.x]",
+        "x": "$l.x + 1"
     },
-    objectModel: "$l.actionValStr",
-    method: "split",
-    arguments: " ",
-    response: "actionValArr"
-}, {
-    condition: "$l.trueTarget",
-    declare: {
-        "actionType": "$l.actionTypeArr[l.x ? ++l.x : l.x=0]",
-        "actionValue": "$l.actionValArr[l.x] == '-' ? undefined : l.actionValArr[l.x]"
-    },
-    loop: "$l.actionTypeArr.length",
+    loop: "$l.actionTypeArr.length", 
     callback: [
         //////////////////////////////////////// common events ////////////////////////////////////////
         {

@@ -1,87 +1,87 @@
 var CSSViewer_categoriesProperties = {
-    'pFontText': {
-        'font-family': '',
-        'font-size': '',
-        'font-style': '',
-        'font-variant': '',
-        'font-weight': '',
-        'letter-spacing': '',
-        'line-height': '',
-        'text-decoration': '',
-        'text-align': '',
-        'text-indent': '',
-        'text-transform': '',
-        'vertical-align': '',
-        'white-space': '',
-        'word-spacing': ''
-    },
-    'pColorBg': {
-        'background-attachment': '',
-        'background-color': '',
-        'background-image': '',
-        'background-position': '',
-        'background-repeat': '',
-        'color': '',
-    },
-    'pBox': {
-        'height': '',
-        'width': '',
-        'border': '',
-        'border-top': '',
-        'border-right': '',
-        'border-bottom': '',
-        'border-left': '',
-        'margin': '',
-        'padding': '',
-        'max-height': '',
-        'min-height': '',
-        'max-width': '',
-        'min-width': ''
-    },
-    'pPositioning': {
-        'position': '',
-        'top': '',
-        'bottom': '',
-        'right': '',
-        'left': '',
-        'float': '',
-        'display': '',
-        'clear': '',
-        'z-index': ''
-    },
-    'pList': {
-        'list-style-image': '',
-        'list-style-type': '',
-        'list-style-position': ''
-    },
-    'pTable': {
-        'border-collapse': '',
-        'border-spacing': '',
-        'caption-side': '',
-        'empty-cells': '',
-        'table-layout': ''
-    },
-    'pMisc': {
-        'overflow': '',
-        'cursor': '',
-        'visibility': ''
-    },
-    'pEffect': {
-        'transform': '',
-        'transition': '',
-        'outline': '',
-        'outline-offset': '',
-        'box-sizing': '',
-        'resize': '',
-        'text-shadow': '',
-        'text-overflow': '',
-        'word-wrap': '',
-        'box-shadow': '',
-        'border-top-left-radius': '',
-        'border-top-right-radius': '',
-        'border-bottom-left-radius': '',
-        'border-bottom-right-radius': ''
-    }
+    'pFontText': [
+        'font-family',
+        'font-size',
+        'font-style',
+        'font-variant',
+        'font-weight',
+        'letter-spacing',
+        'line-height',
+        'text-decoration',
+        'text-align',
+        'text-indent',
+        'text-transform',
+        'vertical-align',
+        'white-space',
+        'word-spacing'
+    ],
+    'pColorBg': [
+        'background-attachment',
+        'background-color',
+        'background-image',
+        'background-position',
+        'background-repeat',
+        'color',
+    ],
+    'pBox': [
+        'height',
+        'width',
+        'border',
+        'border-top-color',
+        'border-right-color',
+        'border-bottom-color',
+        'border-left-color',
+        'margin',
+        'padding',
+        'max-height',
+        'min-height',
+        'max-width',
+        'min-width'
+    ],
+    'pPositioning': [
+        'position',
+        'top',
+        'bottom',
+        'right',
+        'left',
+        'float',
+        'display',
+        'clear',
+        'z-index'
+    ],
+    'pList': [
+        'list-style-image',
+        'list-style-type',
+        'list-style-position'
+    ],
+    'pTable': [
+        'border-collapse',
+        'border-spacing',
+        'caption-side',
+        'empty-cells',
+        'table-layout'
+    ],
+    'pMisc': [
+        'overflow',
+        'cursor',
+        'visibility'
+    ],
+    'pEffect': [
+        'transform',
+        'transition',
+        'outline',
+        'outline-offset',
+        'box-sizing',
+        'resize',
+        'text-shadow',
+        'text-overflow',
+        'word-wrap',
+        'box-shadow',
+        'border-top-left-radius',
+        'border-top-right-radius',
+        'border-bottom-left-radius',
+        'border-bottom-right-radius'
+    ]
 }
 
 var CSSViewer_categoriesTitle = {
@@ -96,139 +96,140 @@ var CSSViewer_categoriesTitle = {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * we can use it as a tool to view css
+ */
 var addCSSViewerBox = [{
-        objectModel: "document",
-        method: "getElementById",
-        arguments: "rightNavTabs",
-        response: "rightNavTabs"
-    }, {
-        objectModel: 'document',
-        method: 'querySelector',
-        arguments: '.CSSViewerActiveElem',
-        response: 'activeElem',
-    }, {
+    objectModel: "document",
+    method: "getElementById",
+    arguments: "rightNavTabs",
+    response: "rightNavTabs",
+    callback: {
         objectModel: "$l.rightNavTabs.classList",
         method: "add",
         arguments: "CSSViewerActiveElem"
+    }
+}, {
+    objectModel: 'document',
+    method: 'querySelector',
+    arguments: '.CSSViewerActiveElem',
+    response: 'activeElem',
+}, {
+    objectModel: "window",
+    method: "compCss",
+    arguments: "$l.activeElem",
+    response: "cssValObj"
+}, {
+    objectModel: 'CreateEntity',
+    method: 'create',
+    arguments: ['$CSSViewer_ui', '$document.body'],
+    response: "cssBox"
+}, {
+    declare: {
+        'className': '$l.activeElem.className',
     },
-    // {
-    //     objectModel: 'CreateEntity',
-    //     method: 'create',
-    //     arguments: ['$CSSViewer_ui', '$l.rightNavTabs.children[1]'],
-    //     response: "cssBox"
-    // },
-    {
+    objectModel: "$l.className",
+    method: "split",
+    arguments: " ",
+    response: "classNameArr",
+    callback: {
+        declare: {
+            'tagName': '$l.activeElem.tagName',
+            'id': '$l.activeElem.id',
+            "class": "$l.classNameArr.join('.')",
+            "idf": '$l.tagName + (l.id != "" ? "#" : "") + l.id + (l.class != "" ? "." : "") + l.class',
+            'cssBox.children[0].innerText': '$l.idf',
+            'cssBox.children[0].title': '$l.idf',
+            'x': 0,
+            'keys': "$Object.keys(CSSViewer_categoriesTitle)",
+            'container': '$l.cssBox.children[1]'
+        }
+    }
+}, {
+    declare: {
+        "key": "$l.keys[l.x]",
+        "x": "$l.x + 1",
+    },
+    objectModel: 'CreateEntity',
+    method: 'create',
+    arguments: ['$CSSViewerTabTemp', '$l.container'],
+    response: "tab",
+    loop: '$l.keys.length',
+    callback: [{
+        declare: {
+            "tab.id": "$l.key",
+            'tab.children[0].children[1].innerText': '$CSSViewer_categoriesTitle[l.key]',
+            'y': 0,
+            "ikeys": "$CSSViewer_categoriesProperties[l.key]",
+        }
+    }, {
+        declare: {
+            'ikey': '$l.ikeys[l.y]',
+            'y': '$l.y + 1'
+        },
+        objectModel: 'CreateEntity',
+        method: 'create',
+        arguments: ['$CSSViewerPropTemp', '$l.tab.children[1]'],
+        response: "prop",
+        loop: '$l.ikeys.length',
+        callback: {
+            declare: {
+                'prop.children[0].innerText': '$l.ikey',
+                "prop.children[0].title": "$l.ikey",
+                'prop.children[1].value': '$l.cssValObj[l.ikey] || ""',
+                "args": {
+                    "activeElem": "$l.activeElem"
+                }
+            },
+            objectModel: 'eventManager',
+            method: 'addRequestListener',
+            arguments: ['$l.prop.children[1]', 'change', 'setCss', '$l.args']
+        }
+    }]
+}]
 
-        // callback: {
-        //     declare: {
-        //         'activeElemTagName': '$l.activeElem.tagName',
-        //         'activeElemId': '$l.activeElem.id',
-        //         'activeElemClassName': '$l.activeElem.className',
-        //         'CSSBox.children[0].innerHTML': '$l.activeElemTagName + "#" + l.activeElemId + "." + l.activeElemClassName',
-        //         'tabContainer': '$l.CSSBox.children[1]',
-        //     },
-        // }
+String.prototype.camelize = function () {
+    return this.replace(/[-_]+/g, ' ').replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        if (+match === 0) return "";
+        return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+
+var setCss = [{
+    declare: {
+        "value": "$l.event.target.value",
+        "propName": "$l.event.target.previousElementSibling.title"
     },
-    // {
-    //     declare: {
-    //         'x': -1,
-    //         'm': Object.keys(CSSViewer_categoriesTitle).length,
-    //         'catkeys': Object.keys(CSSViewer_categoriesTitle),
-    //         'catTitles': Object.values(CSSViewer_categoriesTitle),
-    //         'catProperties': Object.values(CSSViewer_categoriesProperties)
-    //     },
-    //     objectModel: 'document',
-    //     method: 'getElementById',
-    //     arguments: 'CSSViewerBox',
-    //     response: 'CSSBox',
-    // }, {
-    //     declare: {
-    //         'x': '$l.x + 1',
-    //     },
-    //     objectModel: 'CreateEntity',
-    //     method: 'create',
-    //     arguments: ['$CSSViewerTabTemp', '$l.tabContainer'],
-    //     loop: '$l.m',
-    //     callback: {
-    //         objectModel: 'document',
-    //         method: 'querySelector',
-    //         arguments: '#CSSViewerBox>#tabContainer>.tab:last-child',
-    //         response: 'lastTab',
-    //         callback: {
-    //             declare: {
-    //                 'lastTabTitleElem': '$l.lastTab.children[0].children[1]',
-    //                 'lastTabContent': '$l.lastTab.children[1]',
-    //                 'props': {
-    //                     'id': '$l.catkeys[l.x]'
-    //                 }
-    //             },
-    //             objectModel: 'CreateEntity',
-    //             method: 'setProps',
-    //             arguments: ['$l.lastTab', '$l.props'],
-    //             callback: {
-    //                 declare: {
-    //                     'lastTabTitleElem.innerHTML': '$l.catTitles[l.x]'
-    //                 },
-    //                 objectModel: 'window.Object',
-    //                 method: 'keys',
-    //                 arguments: '$l.catProperties[l.x]',
-    //                 response: 'propertiesNames',
-    //                 callback: {
-    //                     declare: {
-    //                         'y': -1,
-    //                         'n': '$l.propertiesNames.length',
-    //                     },
-    //                     objectModel: 'window.Object',
-    //                     method: 'values',
-    //                     arguments: '$l.catProperties[l.x]',
-    //                     response: 'propertiesValues',
-    //                     callback: {
-    //                         objectModel: 'CreateEntity',
-    //                         method: 'create',
-    //                         arguments: ['$CSSViewerPropTemp', '$l.lastTabContent'],
-    //                         loop: '$l.n',
-    //                         callback: {
-    //                             declare: {
-    //                                 'y': '$l.y + 1',
-    //                             },
-    //                             callback: {
-    //                                 declare: {
-    //                                     // 'lastPropElem': '$l.lastTabContent.children[l.y]',
-    //                                     'lastPropNameElem': '$l.lastTabContent.children[l.y].children[0]',
-    //                                     'lastPropNameElem.innerHTML': '$l.propertiesNames[l.y]',
-    //                                     'lastPropValueElem': '$l.lastTabContent.children[l.y].children[1]',
-    //                                     'lastPropValueElem.value': '$l.propertiesValues[l.y]'
-    //                                 },
-    //                                 callback: {
-    //                                     declare: {
-    //                                     }
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-]
+    objectModel: "$l.propName",
+    method: "camelize",
+    response: "name",
+    callback: {
+        condition: "$l.activeElem.style[l.name] = l.value",
+        objectModel: "console",
+        method: 'log',
+        arguments: "$l.activeElem"
+    }
+}]
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// var updateCSSObj = function (elem, obj) {
-//     let CSSObj = window.getComputedStyle(elem);
+function compCss(elem) {
+    let CSSObj = window.getComputedStyle(elem),
+        obj = {};
 
-//     for (const key in obj) {
-//         if (Object.hasOwnProperty.call(obj, key)) {
-//             let value = obj[key];
-//             if (typeof value === 'object' && value.constructor.name.includes('Object')) updateCSSObj(elem, value)
-//             else if (typeof key === 'string') obj[key] = CSSObj.getPropertyValue(key);
-//         }
-//     }
-//     return obj;
-// }
+    for (const key in CSSViewer_categoriesProperties) {
+        if (Object.hasOwnProperty.call(CSSViewer_categoriesProperties, key)) {
+            let arr = CSSViewer_categoriesProperties[key];
+            if (Array.isArray(arr)) {
+                arr.forEach(key => {
+                    obj[key] = CSSObj.getPropertyValue(key);
+                })
+            }
+        }
+    }
+    return obj;
+}
 
 
 
@@ -254,38 +255,6 @@ async function loadCSSCors(stylesheet_uri) {
             res();
         }
     });
-
-
-
-
-    // console.log();
-    // var _xhr = window.XMLHttpRequest;
-    // var has_cred = false;
-    // try {
-    //     has_cred = _xhr && ('withCredentials' in (new _xhr()));
-    // } catch (e) {}
-    // if (!has_cred) {
-    //     console.error('CORS not supported');
-    //     return;
-    // }
-    // var xhr = new _xhr();
-    // xhr.open('GET', stylesheet_uri);
-    // xhr.onload = function () {
-    //     xhr.onload = xhr.onerror = null;
-    //     if (xhr.status < 200 || xhr.status >= 300) {
-    //         console.error('style failed to load: ' + stylesheet_uri);
-    //     } else {
-    //         var style_tag = document.createElement('style');
-    //         style_tag.appendChild(document.createTextNode(xhr.responseText));
-    //         document.head.appendChild(style_tag);
-    //         console.log(style_tag)
-    //     }
-    // };
-    // xhr.onerror = function () {
-    //     xhr.onload = xhr.onerror = null;
-    //     console.error('XHR CORS CSS fail:' + styleURI);
-    // };
-    // xhr.send();
 }
 
 function cssRuleToObj(rule) {
@@ -338,7 +307,10 @@ async function css(el) {
             for (var r in rules) {
                 if (el.matches(rules[r].selectorText)) {
                     console.log(rules[r].cssText);
-                    result = cssRuleToObj(rules[r]);
+                    result = {
+                        ...result,
+                        ...cssRuleToObj(rules[r])
+                    };
                 }
             }
         }
@@ -348,5 +320,6 @@ async function css(el) {
 
     document.querySelectorAll('style[data-for-href]').forEach(item => item.remove());
 
+    console.log(result)
     return result;
 }

@@ -91,6 +91,7 @@ var actionMenuItems = {
         "attributes": {
             "id": "create",
             "class": "dropdown",
+            "data-dropdown-type": "hover",
             "data-dropdown-position": "right"
         },
         "items": {
@@ -99,8 +100,7 @@ var actionMenuItems = {
                 "attributes": {
                     "class": "dropbtn",
                     "title": "create (do not press ctrl+n ,key shortcuts needs to be added)",
-                    "data-action-type": "toggleClass",
-                    "data-action-value": "active",
+                    "data-arrow-icon": ""
                 },
                 "items": {
                     "text##0": "create ctrl+n"
@@ -120,6 +120,7 @@ var actionMenuItems = {
         "attributes": {
             "id": "import",
             "class": "dropdown",
+            "data-dropdown-type": "hover",
             "data-dropdown-position": "right",
         },
         "items": {
@@ -128,8 +129,7 @@ var actionMenuItems = {
                 "attributes": {
                     "class": "dropbtn",
                     "title": "import (do not press ctrl+i ,key shortcuts needs to be added)",
-                    "data-action-type": "toggleClass",
-                    "data-action-value": "active",
+                    "data-arrow-icon": ""
                 },
                 "items": {
                     "text##0": "import ctrl+i"

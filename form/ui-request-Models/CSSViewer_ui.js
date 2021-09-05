@@ -8,8 +8,7 @@ var CSSViewer_ui = {
         "element##0": {
             "name": "span",
             "attributes": {
-                "class": "elemIdentifier",
-                "id": "elemIdentifier"
+                "class": "elemIdf",
             },
             "items": {
                 "text##0": "TAG#id.class"
@@ -18,7 +17,7 @@ var CSSViewer_ui = {
         "element##1": {
             "name": "div",
             "attributes": {
-                "class": "accordion scroll--simple",
+                "class": "accordion",
                 "id": "tabContainer"
             },
             "items": {}
@@ -37,7 +36,9 @@ var CSSViewerTabTemp = {
             "name": "span",
             "attributes": {
                 "class": "tabTitle",
-                "id": "tabTitle"
+                "id": "tabTitle",
+                "data-action-type": "toggleClass",
+                "data-action-value": "active"
             },
             "items": {
                 "element##0": {
@@ -94,7 +95,7 @@ var CSSViewerPropTemp = {
             "attributes": {
                 "class": "propVal",
                 "type": "text",
-                "value": "property Value"
+                "value": "property value"
             },
             "items": {}
         }
