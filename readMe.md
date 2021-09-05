@@ -25,6 +25,12 @@
 1. Click on `action` in the topmost menu bar.
 2. Now a dropdown appears, hover at `create` , and you'll see a side dropdown.
 3. In the recently opened dropdown, click on the type of entity you want to create.
+ 
+## Adding a menu Item.
+
+1. create ReqModel of the userFlow you want to add.
+2. open  navbarTopUi.js from uiReqestModels folder.
+3. add an entry in menu items.
 
 ### **Note:-**
 
