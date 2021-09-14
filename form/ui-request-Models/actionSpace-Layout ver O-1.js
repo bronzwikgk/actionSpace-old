@@ -31,8 +31,13 @@ body:{
     },
     playground:{
         editor:{
+            fixedtoolbar,
+            floating toolbar,
+            Content:[...blocks]
+                
 
-        }
+        },
+        output
     }
 
 }
