@@ -257,6 +257,13 @@ var handleClickEvent = [{
             objectModel: "ActionEngine",
             method: "processRequest",
             arguments: ["switchWorkflowDoc", "$l.args"]
+        },
+        //////////////////////////////////////// test events ////////////////////////////////////////
+        {
+            condition: "$l.actionType == 'switchTreeMap'",
+            objectModel: "$window",
+            method: "switchTreeMap",
+            arguments: "$l.actionValue"
         }
     ]
 }]
