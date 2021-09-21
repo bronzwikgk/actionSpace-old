@@ -67,7 +67,7 @@ var actionImportItems = {
             "data-action-value": "getUserInputFile"
         },
         "items": {
-            "text##0": "file"
+            "text##0": "a file"
         }
     },
     "element##1": {
@@ -79,7 +79,19 @@ var actionImportItems = {
             "data-action-value": "getUserInputDir"
         },
         "items": {
-            "text##0": "directory",
+            "text##0": "a directory",
+
+        }
+    },"element##2": {
+        "name": "span",
+        "attributes": {
+            // "id": "actionStory",
+            "title": "directory",
+            "data-action-type": "processFileOrDir",
+            "data-action-value": "getUserInputDir"
+        },
+        "items": {
+            "text##0": "from sheet",
 
         }
     }
