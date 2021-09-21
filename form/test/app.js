@@ -394,3 +394,5 @@ var inpObj = {
 ////////////////////////////////////////////////////////////////////////////////////////
 
 ActionEngine.processRequest('initTreeMapUI');
+init(inpObj);
+prcssDataObj(TreeMap.rootNode, document.getElementById('treeMapRoot'));
