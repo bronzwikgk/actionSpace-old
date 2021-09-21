@@ -393,6 +393,13 @@ var inpObj = {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-ActionEngine.processRequest('initTreeMapUI');
-init(inpObj);
-prcssDataObj(TreeMap.rootNode, document.getElementById('treeMapRoot'));
+// ActionEngine.processRequest('initTreeMapUI');
+// init(inpObj);
+// prcssDataObj(TreeMap.rootNode, document.getElementById('treeMapRoot'));
+
+
+(async function (){
+    await ActionEngine.processRequest('initTreeMapUI');
+    init(inpObj);
+    prcssDataObj(TreeMap.rootNode, document.getElementById('treeMapRoot'));
+    })();
